@@ -1,0 +1,49 @@
+<apex:page sidebar="false" showHeader="false" standardController="Admission_Granted__c" extensions="LostController" standardStylesheets="true">
+    <style>
+        .modal {
+        display: none;
+        }
+    </style>
+    <script>
+    function Closewindow()
+    {
+        if({!ErrorTrue}== true){
+            alert("Reason Lost Already Done !");
+        }else{
+        window.opener.location.href="/{!IdParamName}";
+        self.close();}
+    }
+    function Countle()
+    {
+        var strlen = document.getElementById('{!$Component.theForm.out.LeadReasonLosts}').value.length;
+        if(strlen <= 200){
+            alert("Make sure the input is greater than 200 characters long !");
+        }
+    }
+    </script>
+    <apex:slds />
+    <apex:form id="theForm">
+        
+        <apex:pageBlock title="" id="out" >
+            
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Save" action="{!AdmissionGrantedLostPopup}" rerender="out,LeadReasonLosts" status="actStatusId" onclick="setTimeout(Closewindow, 5000)" />
+                <apex:actionStatus id="actStatusId">
+                    <apex:facet name="start">
+                        <img src="/img/loading.gif" />
+                    </apex:facet>
+                </apex:actionStatus>
+            </apex:pageBlockButtons>
+            <apex:outputPanel id="ErrorTrue" rendered="{!ErrorTrue}"><apex:pageMessages ></apex:pageMessages>
+            </apex:outputPanel>
+            <apex:pageBlockSection collapsible="false" columns="1">
+               Lost Reasons : <apex:selectList value="{!Lost_Reasons}"  size="1">
+                    <apex:selectOptions value="{!LeadLost_Reasons}"/>
+                </apex:selectList>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection columns="1" collapsible="false">
+            Lost Comment: <apex:inputTextarea value="{!LeadReasonLosts}" onchange="Countle();" id="LeadReasonLosts" style="width: 670px;" cols="5"/>
+            </apex:pageBlockSection>
+        </apex:pageblock>
+    </apex:form>
+</apex:page>

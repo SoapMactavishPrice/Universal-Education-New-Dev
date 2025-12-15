@@ -1,0 +1,30 @@
+<apex:page standardController="Lead"  id="pgsendsms" extensions="LeadSendSMSController" standardStylesheets="true" lightningStylesheets="true" sidebar="false" showHeader="false">
+    <script>
+    function SmsTemplate(template){
+        debugger;
+        var sendTemplate = document.getElementById('pgsendsms:smsform:pgsms:smsInfo:sendTemplate');
+        sendTemplate.value = template
+    }
+    </script>
+    <apex:sectionHeader title="Send SMS" />
+    <apex:form id="smsform">
+        <apex:slds />
+        <apex:pageBlock title="Lead SMS" id="pgsms">
+            <apex:pageMessages id="smsmessage"></apex:pageMessages>
+            <apex:pageBlockSection title="SMS Information" columns="2" id="smsInfo" collapsible="false">
+                <apex:outputLabel value="Contact Name Or Number" />
+                <apex:outputLabel value="{!contactName}" />
+                <apex:outputLabel value="Sender Number" />
+                <apex:inputText value="{!sendTo}" id="sendto"/>
+                <apex:outputLabel value="SMS Template" />
+                <apex:selectList value="{!sendTemplate}" multiselect="false" size="1"  onChange="SmsTemplate(this.value)" >
+                    <apex:selectOptions value="{!smsTemplates}"/>
+                </apex:selectList>
+                <apex:outputLabel value="Message" />
+                <apex:inputTextarea id="sendTemplate" value="{!sendTemplate}" style="width:400px;height:80px" disabled="true" />
+                <apex:commandButton action="{!sendsms}"  value="Send" reRender="smsmessage" styleClass="slds-button slds-button_brand" />
+            </apex:pageBlockSection>
+
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

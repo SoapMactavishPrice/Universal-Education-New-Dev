@@ -1,0 +1,2 @@
+<apex:page standardController="Admission_Form__c" extensions="observationOfAdmission" action="{!goToPageTwo}">
+</apex:page>

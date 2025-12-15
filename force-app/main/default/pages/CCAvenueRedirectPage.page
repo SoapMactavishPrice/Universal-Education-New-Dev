@@ -1,0 +1,33 @@
+<apex:page controller="CCAvenuePaymentGateway_Cntl" sidebar="false" showHeader="false">
+<html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" lang="en">
+        <head>
+            <meta charset="utf-8" />
+            <meta http-equiv="x-ua-compatible" content="ie=edge" />
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <!-- Import the Design System style sheet -->
+            <apex:slds />
+        </head>
+    <body>
+    <div class="slds-scope">
+      <form method="post" name="redirect" action="{!IF($Setup.CC_Avenue_Settings__c.Use_Production_URL__c == true, $Setup.CC_Avenue_Settings__c.Production_URL__c,$Setup.CC_Avenue_Settings__c.Test_URL__c)}"> <!--https://secure.ccavenue.com/transaction/transaction.do?command=initiateTransaction-->
+          <div class="demo-only" style="height:6rem">
+              <div class="slds-spinner_container">
+                <div role="status" class="slds-spinner slds-spinner_medium slds-spinner_brand">
+                  <span class="slds-assistive-text">Loading</span>
+                  <div class="slds-spinner__dot-a"></div>
+                  <div class="slds-spinner__dot-b"></div>
+                </div>
+              </div>
+         </div>
+        <input type="hidden" name="encRequest" value="{!encRequest}"/>
+        <input type="hidden" name="access_code" value="{!$Setup.CC_Avenue_Settings__c.Access_Code__c}"/><!-- ﻿-->
+        </form>
+    </div>
+<script language='javascript'>
+    document.redirect.submit();
+</script>
+</body>
+</html>
+  
+  
+</apex:page>

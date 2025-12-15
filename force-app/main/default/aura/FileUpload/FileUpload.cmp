@@ -1,0 +1,39 @@
+<!--FileUpload.cmp-->
+<aura:component controller="FileUploadController">
+    <!-- 'parentId' Aura Attribute for store the Id for Parent Record where we are attach our file -->
+    <aura:attribute name="isrequired" type="Boolean" default="" />
+    <aura:attribute name="parentId" type="Id" default="" />
+    <aura:attribute name="photoText" type="String" default="Photo Text" />
+    <aura:attribute name="photoName" type="String" required="true" default="" />
+    <aura:attribute name="photoExt" type="String" default="jpg" />
+    <aura:attribute name="loadMessage" type="String" default="" />
+    <aura:attribute name="sourceData" type="String" default="https://s3-us-west-1.amazonaws.com/sfdc-demo/image-placeholder.png"  />
+   <!-- <aura:attribute name="required" type="Boolean" default="false" />-->
+
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}" />
+    <div style="text-align:center">
+        <img style="width: 200px;height:200px;" src="{!v.sourceData}" />
+
+        <div style="width: 200px;">
+            <lightning:input accept="image/png,image/jpg,image/jpeg"  aura:id="fuploader"
+            onchange="{!c.handleFilesChange}" type="file" name="file"  multiple="false" required="{!v.isrequired}"/>
+        </div>
+
+        <div>
+            <lightning:button label="Click Upload" onclick="{!c.handleSave}" variant="brand" class="custWidth"/>
+            <br/>
+            <p style="color:blue">
+                <b>
+                    {!v.loadMessage}
+                </b>
+            </p>
+        </div>
+
+        <div>
+            <b>
+                {!v.photoText}
+            </b>
+        </div>
+
+    </div>
+</aura:component>

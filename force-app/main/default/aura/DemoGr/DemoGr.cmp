@@ -1,0 +1,285 @@
+<aura:component controller="SkipEnquiry" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction,lightning:isUrlAddressable" access="global"  >    
+    <aura:attribute name="fieldMapEducation" type="Map"/>
+    <aura:attribute name="fieldMapOccupation" type="Map"/>
+    <aura:attribute name="fieldMapHow" type="Map"/>
+    
+    
+    <!--Declare Handler-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>  
+    
+    <aura:attribute name="isError" type="Boolean" default="false"/>
+    <aura:attribute name="isSuccess" type="Boolean" default="true"/>
+    <aura:attribute name="AccountName" type="String"/>
+    <aura:attribute name="orgcode" type="String"/>
+    <aura:attribute name="enquiryLabel" type="String" default="Enter Enquiry No" />
+    <aura:attribute name="enquiryIdLabel" type="String" default="Enter Enquiry id" />
+    <aura:attribute name="enquiryPrefix" type="String" default="ENQ/2026-2027/" />
+    <aura:attribute name="NoRecord" type="String"/>
+    <aura:attribute name="cfName" type="String"/>
+    <aura:attribute name="cLName" type="String"/>
+    <aura:attribute name="dob" type="String"/>
+    <aura:attribute name="gender" type="String"/>
+    <aura:attribute name="mobileno" type="String"/>
+    
+    
+    <aura:attribute name="email" type="String"/>
+    <aura:attribute name="leadname" type="String"/>
+    <aura:attribute name="grade" type="String"/>
+    <aura:attribute name="id" type="String"/>
+    
+    <aura:attribute name="simplenewContract" type="Contract" default="{'sobjectType':'Contract',
+                                                                      'StartDate':'',
+                                                                      'EndDate':'',
+                                                                      'View_Contract__c':'',
+                                                                      'Contract_Type__c':'','Pricebook2Id':'','Status':'','AccountId':''}"/>
+    <aura:attribute name="enq" type="Enquiry__c" default="{'sobjectType':'Enquiry__c', 
+                                                          'Demographic_Pin_code__c': '',
+                                                          'Apartment_Society__c': '',
+                                                          'Locality__c': '',
+                                                          'Father_s_Educational_Qualifications__c': '', 
+                                                          'Mother_s_Educational_Qualifications__c': '',
+                                                          'Father_s_Occupation__c':'' ,'Mother_s_Occupation__c':'','How_did_you_hear_about_us__c':'',
+                                                          'FatherOther_Occupation__c': '', 
+                                                          'Mother_Other_Occupation__c': '',
+                                                          'Current_school__c':'',
+                                                          }"/>
+    
+    <aura:attribute name="newContractError" type="String"/>
+    <aura:attribute name="enqno" type="String" default="{!v.enquiryPrefix}"/>
+    <aura:attribute name="Enqid" type="String" default=""/>
+    
+    <aura:attribute name="c__id" type="String" />
+    <aura:attribute name="leadid" type="String" />
+    <aura:attribute name="selectedRecordId" type="String" />
+    <aura:attribute name="pricebookId" type="String" />
+    <aura:attribute name="Relation" type="String" />
+    
+    <aura:attribute name="errorMsg" type="String" default="lk" />
+    <aura:attribute name="result" type="Boolean" default="false"/>
+    <aura:attribute name="isEditable" type="Boolean" default="false"/>
+    <aura:attribute name="filterby" type="String" />
+    <aura:attribute name="imageName" type="String" access="global" default="{!$Resource.UniversalLogo1}"/>
+    <aura:attribute name="fieldMap" type="Map"/>
+    <aura:attribute name="fieldMapContract" type="Map"/>
+    <lightning:workspaceAPI aura:id="workspace"/>    
+    <lightning:card  class="custom-card">
+        <div class="slds-modal__header slds-clearfix header ">
+            <div class="slds-media__figure slds-float_center">           
+                <img class="formLogo" src="{!v.imageName}"/> 
+            </div>
+        </div> 
+      <!-- 
+        <div class="page-title">
+           <h2 class="slds-section-title"> Pre-Counseling Form</h2>
+        </div>-->
+        
+        <div class="container">
+            
+            <aura:if isTrue="{!v.isError}">
+                
+                
+                
+                <aura:if isTrue="{!v.result}">
+                    <div class="slds-grid ">
+                        <div class="slds-col"> 
+                            <div >
+                                <div class="SuccessMsg1 slds-notify_container slds-is-relative">
+                                    Your request to add info is successful.
+                                    <br></br>
+                                    <br></br>
+                                    <div class="slds-size_1-of-2">
+                                        <lightning:button label="Back" variant="brand" onclick="{!c.handleBack}"/>
+                                    </div>
+                                </div> 
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <aura:set attribute="else">
+                        <div class="search-grid-form">
+                           <div class="slds-grid ">
+                            <div class="slds-col"> 
+                                <div >
+                                    
+                                    <div class="ErrorMsg slds-notify_container error-message slds-is-relative">
+                                        <div class="slds-notify__content">
+                                            <div class="">Your request could not be submitted.&nbsp; Error message - {!v.errorMsg}</div>  
+                                        </div>
+                                        
+                                        <br></br>
+                                    <lightning:input class="slds-m-bottom_x-small-width" aura:id="partnerField" label="Enter Lead id" value="{!v.leadid}"/>
+                                    <br></br>
+                                   <div class="ORmsg" >OR</div> 
+                                    <br></br>
+                                    <lightning:input class="slds-m-bottom_x-small-width" aura:id="partnerField" label="{!v.enquiryIdLabel}" value="{!v.Enqid}"/>    
+                                    </div>
+                                    <br></br>
+                                    
+                                    <div class="slds-size_1-of-1 form-actions">
+                                        <lightning:button label="Search" variant="brand" onclick="{!c.handleSearch}" class="slds-button slds-button_brand"/>
+                                        <lightning:button label="Back" variant="brand" onclick="{!c.handleBack}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        	</div>
+                        </div>
+                       
+                    </aura:set>
+                </aura:if>
+                
+                
+                
+                <br/>
+                <aura:set attribute="else">
+                    <aura:if isTrue="{!v.isSuccess}">
+                       <div class="search-grid-form">
+                       	<div class="slds-grid">
+                            <div class="slds-col"> 
+                                <div class="slds-size_1-of-1">
+                                    <lightning:input class="slds-m-bottom_x-small-width" aura:id="partnerField" label="{!v.enquiryLabel}" value="{!v.enqno}"/>  
+                                    <br>
+                                    </br>
+                                   
+                
+                                </div>
+                            </div>
+                        </div>
+                        <br></br>
+                       	<div class="slds-size_1-of-1 form-actions">
+                        	<lightning:button label="Search" variant="brand" onclick="{!c.handleSearch}" class="slds-button slds-button_brand"/>
+                       	</div>
+                       </div>
+                        
+                        <aura:set attribute="else">
+                            <aura:if isTrue="{!v.isEditable}">
+                                <div class="slds-grid ">
+                                    <div class="slds-col"> 
+                                        <div >
+                                            
+                                            <div class="ErrorMsg slds-notify_container no-padding error-message slds-is-relative">
+                                                <div class="slds-notify__content">
+                                                    <div>Record already submitted Test</div>  
+                                                </div>
+                                            </div>
+                                            <br></br>
+                                        </div>
+                                    </div>
+                                </div>
+                            </aura:if>
+                            <div class="section-box">
+                             
+                             <div class="slds-grid ">                               
+                                <div class="slds-col"> 
+                                     <lightning:input readonly="true" class="slds-m-bottom_x-small" aura:id="partnerField" label="Child First Name" value="{!v.cfName}"/>                    
+                                    <lightning:input readonly="true" class="slds-m-bottom_x-small" aura:id="partnerField" label="Date of Birth" value="{!v.dob}"/>  
+                                    
+                                    <lightning:input readonly="true" class="slds-m-bottom_x-small" aura:id="partnerField" label="Mobile No" value="{!v.mobileno}"/>                    
+                                         <lightning:input readonly="true" class="slds-m-bottom_x-small" aura:id="partnerField" label="Grade" value="{!v.grade}"/> 
+                                    
+                                    
+                                </div>
+                                <div class="slds-col second-col">
+
+                                    <lightning:input readonly="true" class="slds-m-bottom_x-small" aura:id="partnerField" label="Child Last Name" value="{!v.cLName}"/>                    
+                                    <lightning:input readonly="true" class="slds-m-bottom_x-small" aura:id="partnerField" label="Parents/Gurdian Name" value="{!v.leadname}"/>                    
+                                    <lightning:input readonly="true" class="slds-m-bottom_x-small" aura:id="partnerField" label="Email" value="{!v.email}"/>                    
+                                     <lightning:input readonly="true" class="slds-m-bottom_x-small" aura:id="partnerField" label="Relationship with the child" value="{!v.Relation}"/>   
+                                    
+                                </div>
+                             </div>
+                            </div>
+                            <div class="section-box">
+                            <h3 class="slds-section-title--divider section-title">Where do you stay?</h3>
+                            <div class="slds-grid ">
+                                <div class="slds-col"> 
+                                   <lightning:input class="slds-m-bottom_x-small" aura:id="contact" required="true" label="Apartment/Society" value="{!v.enq.Apartment_Society__c}"/>                    
+                                   <lightning:input class="slds-m-bottom_x-small" aura:id="contact" required="true" label="Pin code" value="{!v.enq.Demographic_Pin_code__c}"/>                    
+                                </div>
+                                <div class="slds-col second-col">
+                                     <lightning:input class="slds-m-bottom_x-small" aura:id="contact" label="Landmark" value="{!v.enq.Locality__c}" required="true" />
+                                </div>
+                            </div>
+                            </div>
+                            
+                            <div class="section-box">
+                            <h3 class="slds-section-title--divider section-title"  >Name of the school that your child is currently going to</h3>
+                            <div class="slds-grid ">
+                                <div class="slds-col"> 
+                                        <lightning:input class="slds-m-bottom_x-small" aura:id="contact" label="Your child's current school" value="{!v.enq.Current_school__c}" required="true" messageWhenValueMissing="Please add this" />
+                                              
+                                </div>
+                                
+                            </div>
+                            </div>
+                            
+                            
+                            
+                            <div class="section-box">
+                            <h3 class="slds-section-title--divider section-title">Can you help us understand your educational and professional background?</h3>
+                            <div class="slds-grid ">
+                                <div class="slds-col">   
+                                    <lightning:select class="slds-m-bottom_x-small custom-select" aura:id="contact6" required="true" value="{!v.enq.Mother_s_Educational_Qualifications__c}"  name="StatusContract" label="Mother's Educational Qualifications" messageWhenValueMissing="Please select option">
+                                        <option value="">--Select--</option>
+                                        <aura:iteration items="{!v.fieldMapEducation}" var="i" indexVar="key">
+                                            <option text="{!i.value}" value="{!i.key}" selected="{!i.key==v.enq.Mother_s_Educational_Qualifications__c}" />
+                                        </aura:iteration>
+                                    </lightning:select>
+                                    <lightning:select class="slds-m-bottom_x-small custom-select" aura:id="contact5" required="true" value="{!v.enq.Mother_s_Occupation__c}"  name="StatusContract" label="Mother's Occupation" messageWhenValueMissing="Please select option" >                        
+                                        <option value="">--Select--</option>
+                                        <aura:iteration items="{!v.fieldMapOccupation}" var="i" indexVar="key">
+                                            <option text="{!i.value}" value="{!i.key}" selected="{!i.key==v.enq.Mother_s_Occupation__c}" />
+                                        </aura:iteration>
+                                    </lightning:select>
+                                    <aura:if isTrue="{!v.enq.Mother_s_Occupation__c == 'Others (please specify)'}">
+                                     <lightning:input class="slds-m-bottom_x-small" aura:id="contact" label="Others (please specify)" value="{!v.enq.Mother_Other_Occupation__c}" required="true" />
+                                    </aura:if>
+                                      <lightning:select class="slds-m-bottom_x-small custom-select" aura:id="contact4" required="true" value="{!v.enq.How_did_you_hear_about_us__c}" messageWhenValueMissing="Please select option"  name="StatusContract" label="How did you hear about us?" >                        
+                                        <option value="">--Select--</option>
+                                        <aura:iteration items="{!v.fieldMapHow}" var="i" indexVar="key">
+                                            <option text="{!i.value}" value="{!i.key}" selected="{!i.key==v.enq.How_did_you_hear_about_us__c}" />
+                                        </aura:iteration>
+                                    </lightning:select>  
+                                    <!--<lightning:input class="slds-m-bottom_x-small" aura:id="contact" label="Your child's current school" value="{!v.enq.Current_school__c}" required="true" messageWhenValueMissing="Please select option" /> -->
+                                </div>                
+                                <div class="slds-col second-col">
+                                   
+                                    
+                                   
+                                    <lightning:select class="slds-m-bottom_x-small" aura:id="contact2" required="true" value="{!v.enq.Father_s_Educational_Qualifications__c}"  name="StatusContract" messageWhenValueMissing="Please select option" label="Father's Educational Qualifications" >                        
+                                        <option value="">--Select--</option>
+                                        <aura:iteration items="{!v.fieldMapEducation}" var="i" indexVar="key">
+                                            <option text="{!i.value}" value="{!i.key}" selected="{!i.key==v.enq.Father_s_Educational_Qualifications__c}" />
+                                        </aura:iteration>
+                                    </lightning:select>
+                                    <lightning:select class="slds-m-bottom_x-small" aura:id="contact3" required="true" value="{!v.enq.Father_s_Occupation__c}"  name="StatusContract" messageWhenValueMissing="Please select option" label="Father's Occupation" >                        
+                                        <option value="">--Select--</option>
+                                        <aura:iteration items="{!v.fieldMapOccupation}" var="i" indexVar="key">
+                                            <option text="{!i.value}" value="{!i.key}" selected="{!i.key==v.enq.Father_s_Occupation__c}" />
+                                        </aura:iteration>
+                                    </lightning:select>
+                                <aura:if isTrue="{!v.enq.Father_s_Occupation__c == 'Others (please specify)'}">
+                                     <lightning:input class="slds-m-bottom_x-small" aura:id="contact" label="Others (please specify)" value="{!v.enq.Father_s_Occupation__c}" required="true" />
+                                    </aura:if>
+                                    
+                                     
+                                    <!--current schhool InputNP_Finesse060324-->
+
+                                </div>
+                            </div>   
+                            </div>
+                            
+                            <div class="slds-grid slds-grid_vertical-align-center slds-grid_align-center">
+                                <div class="slds-m-top_large xl-form-actions">
+                                    <lightning:button label="Save" variant="brand" type="submit" onclick="{!c.handleSave}" disabled="{!v.isEditable}"/>
+                                    <lightning:button label="Cancel" variant="brand" type="cancel" onclick="{!c.handlecancel}" />
+                                </div>
+                            </div>
+                        </aura:set>
+                    </aura:if>  
+                    
+                </aura:set>
+            </aura:if>
+            
+        </div>
+    </lightning:card>
+</aura:component>

@@ -1,0 +1,16 @@
+<!--
+ - Created by Admin on 2018-08-16.
+ -->
+
+<apex:page id="SMSDetails" standardController="Contact" extensions="SMSDetailsController" lightningStylesheets="true" sidebar="false" showHeader="false">
+        <apex:pageBlock title="Contacts SMS" rendered="{!smsgupshups.size > 0}">
+            <apex:pageBlockTable value="{!smsgupshups}" var="sms">
+                <apex:column value="{!sms.Contact_Name_Number__c}"/>
+                <apex:column value="{!sms.Sender_Number__c}"/>
+                <apex:column value="{!sms.Message__c}"/>
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+        <apex:pageBlock title="Contacts SMS"  rendered="{!smsgupshups.size == 0}">
+            <b>There is no Contacts SMS available.</b>
+        </apex:pageBlock>
+</apex:page>

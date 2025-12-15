@@ -1,0 +1,317 @@
+<template>
+	<template if:true={isFormC1ModalOpen}>
+		<section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+			<div class="slds-modal__container">
+
+				<!-- Header -->
+				<header class="slds-modal__header">
+					<h2 class="slds-text-heading_medium">Disclosure</h2>
+				</header>
+
+				<div style="text-align: center; padding-top: 10px; padding-bottom: 15px; background-color: white;">
+					<img src={schoolLogo} alt="" class="imageClass">
+				</div>
+
+				<!-- Body with Rich Text -->
+				<div class="slds-modal__content slds-p-around_medium formC1High" onscroll={handleScrollFormC1} >
+					<div class="slds-box slds-box_xx-small">
+						<lightning-formatted-rich-text value={disclosureHtmlObject.formC1.terms}></lightning-formatted-rich-text>
+					</div>
+				</div>
+
+				<!-- Footer -->
+				<footer class="slds-modal__footer">
+					<lightning-button style="padding-left: 3px;" label="I Agree" variant="brand" disabled={disableAgreeFormC1} onclick={handleFormC1Agree}></lightning-button>
+					<lightning-button style="padding-left: 3px;" label="Cancel" variant="neutral" onclick={handleFormC1Cancel}></lightning-button>
+				</footer>
+
+			</div>
+		</section>
+		<div class="slds-backdrop slds-backdrop_open"></div>
+	</template>
+	<template if:true={isFormCModalOpen}>
+		<section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+			<div class="slds-modal__container">
+
+				<!-- Header -->
+				<header class="slds-modal__header">
+					<h2 class="slds-text-heading_medium">Disclosure</h2>
+				</header>
+
+				<div style="text-align: center; padding-top: 10px; padding-bottom: 15px; background-color: white;">
+					<img src={schoolLogo} alt="" class="imageClass">
+				</div>
+
+				<!-- Body with Rich Text -->
+				<div class="slds-modal__content slds-p-around_medium formCHigh" onscroll={handleScrollFormC} >
+					<div class="slds-box slds-box_xx-small">
+						<lightning-formatted-rich-text value={disclosureHtmlObject.formC.terms}></lightning-formatted-rich-text>
+					</div>
+				</div>
+
+				<!-- Footer -->
+				<footer class="slds-modal__footer">
+					<lightning-button style="padding-left: 3px;" label="I Agree" variant="brand" disabled={disableAgreeFormC} onclick={handleFormCAgree}></lightning-button>
+					<lightning-button style="padding-left: 3px;" label="Cancel" variant="neutral" onclick={handleFormCCancel}></lightning-button>
+				</footer>
+
+			</div>
+		</section>
+		<div class="slds-backdrop slds-backdrop_open"></div>
+	</template>
+	<template if:true={isFormDModalOpen}>
+		<section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+			<div class="slds-modal__container">
+
+				<!-- Header -->
+				<header class="slds-modal__header">
+					<h2 class="slds-text-heading_medium">Disclosure</h2>
+				</header>
+
+				<div style="text-align: center; padding-top: 10px; padding-bottom: 15px; background-color: white;">
+					<img src={schoolLogo} alt="" class="imageClass">
+				</div>
+
+				<!-- Body with Rich Text -->
+				<div class="slds-modal__content slds-p-around_medium formDHigh" onscroll={handleScrollFormD}>
+					<div class="slds-box slds-box_xx-small">
+						<lightning-formatted-rich-text value={disclosureHtmlObject.formD.terms}></lightning-formatted-rich-text>
+					</div>
+				</div>
+
+				<!-- Footer -->
+				<footer class="slds-modal__footer">
+					<lightning-button style="padding-left: 3px;" label="I Agree" variant="brand" disabled={disableAgreeFormD} onclick={handleFormDAgree}></lightning-button>
+					<lightning-button style="padding-left: 3px;" label="Cancel" variant="neutral" onclick={handleFormDCancel}></lightning-button>
+				</footer>
+
+			</div>
+		</section>
+		<div class="slds-backdrop slds-backdrop_open"></div>
+	</template>
+	<template if:true={isFormE1ModalOpen}>
+		<section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+			<div class="slds-modal__container">
+
+				<!-- Header -->
+				<header class="slds-modal__header">
+					<h2 class="slds-text-heading_medium">Disclosure</h2>
+				</header>
+
+				<div style="text-align: center; padding-top: 10px; padding-bottom: 15px; background-color: white;">
+					<img src={schoolLogo} alt="" class="imageClass">
+				</div>
+
+				<!-- Body with Rich Text -->
+				<div class="slds-modal__content slds-p-around_medium formE1High" onscroll={handleScrollFormE1}>
+					<div class="slds-box slds-box_xx-small">
+						<lightning-formatted-rich-text value={disclosureHtmlObject.formE1.terms}></lightning-formatted-rich-text>
+					</div>
+				</div>
+
+				<!-- Footer -->
+				<footer class="slds-modal__footer">
+					<lightning-button style="padding-left: 3px;" label="I Agree" variant="brand" disabled={disableAgreeFormE1} onclick={handleFormE1Agree}></lightning-button>
+					<lightning-button style="padding-left: 3px;" label="Cancel" variant="neutral" onclick={handleFormE1Cancel}></lightning-button>
+				</footer>
+
+			</div>
+		</section>
+		<div class="slds-backdrop slds-backdrop_open"></div>
+	</template>
+	<template if:true={isFormE2ModalOpen}>
+		<section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+			<div class="slds-modal__container">
+
+				<!-- Header -->
+				<header class="slds-modal__header">
+					<h2 class="slds-text-heading_medium">Disclosure</h2>
+				</header>
+
+				<div style="text-align: center; padding-top: 10px; padding-bottom: 15px; background-color: white;">
+					<img src={schoolLogo} alt="" class="imageClass">
+				</div>
+
+				<!-- Body with Rich Text -->
+				<div class="slds-modal__content slds-p-around_medium formE2High" onscroll={handleScrollFormE2}>
+					<div class="slds-box slds-box_xx-small">
+						<lightning-formatted-rich-text value={disclosureHtmlObject.formE2.terms}></lightning-formatted-rich-text>
+					</div>
+				</div>
+
+				<!-- Footer -->
+				<footer class="slds-modal__footer">
+					<lightning-button style="padding-left: 3px;" label="I Agree" variant="brand" disabled={disableAgreeFormE2} onclick={handleFormE2Agree}></lightning-button>
+					<lightning-button style="padding-left: 3px;" label="Cancel" variant="neutral" onclick={handleFormE2Cancel}></lightning-button>
+				</footer>
+
+			</div>
+		</section>
+		<div class="slds-backdrop slds-backdrop_open"></div>
+	</template>
+	<lightning-card class={cardClass} title="">
+		<div class={waterMarkClass}>
+			<img src={stellarWatermark}>
+		</div>
+		<lightning-layout multiple-rows>
+			<template if:false={isMobile}>
+				<lightning-layout-item size="1"></lightning-layout-item>
+			</template>
+			<lightning-layout-item size={itemSize}>
+				<div class="step-content slds-box slds-m-top_medium">
+
+					<template if:true={isStep3}>
+						<lightning-accordion allow-multiple-sections-open active-section-name={activeSection}>
+
+							<lightning-accordion-section class="accordian" name="photosAndSign"
+								label="Photographs and Signatures">
+								<div class="section">
+									<h2>Photographs and Signatures</h2>
+									<ul class="instructions">
+										<li>Kindly upload recent colour photo on a white background</li>
+										<li>The face must fill approximately 75% of the photo</li>
+										<li>Do not upload casual photos/with sunglasses/caps/face mask/headgears</li>
+										<li>Max size: 1 MB</li>
+									</ul>
+
+									<div class="slds-grid slds-wrap slds-gutters">
+										<template for:each={uploadFields} for:item="field">
+											<div key={field.label}
+												class="slds-col slds-size_1-of-1 slds-medium-size_1-of-5 uploadDiv">
+												<div class={uploadDivClass} style="height: 100px;">
+													<div class="slds-text-align_center">
+														<lightning-button label="Upload" icon-name="utility:upload"
+															onclick={openFileDialog} class="slds-m-around_medium"
+															data-id={field.dataId}>
+														</lightning-button>
+														<input type="file" accept=".png,.jpg,.jpeg"
+															style="display: none;" onchange={handleFileChange}
+															class={field.dataId} data-id={field.dataId} />
+														<div class="label">{field.label}</div>
+														<template if:true={field.isStudentPhoto}>
+															<template if:true={showStudentPhotoUploadedText}>
+																<div class="slds-text-color_success">Uploaded!</div>
+															</template>
+															<template if:true={showStudentPhotoValidation}>
+																<div class="slds-text-color_error">Document required!
+																</div>
+															</template>
+														</template>
+														<template if:true={field.isFatherPhoto}>
+															<template if:true={showFatherPhotoUploadedText}>
+																<div class="slds-text-color_success">Uploaded!</div>
+															</template>
+															<template if:true={showFathePhotoValidation}>
+																<div class="slds-text-color_error">Document required!
+																</div>
+															</template>
+														</template>
+														<template if:true={field.isMotherPhoto}>
+															<template if:true={showMotherPhotoUploadedText}>
+																<div class="slds-text-color_success">Uploaded!</div>
+															</template>
+															<template if:true={showMotherPhotoValidation}>
+																<div class="slds-text-color_error">Document required!
+																</div>
+															</template>
+														</template>
+														<template if:true={field.isFatherSign}>
+															<template if:true={showFatherSignUploadedText}>
+																<div class="slds-text-color_success">Uploaded!</div>
+															</template>
+															<template if:true={showFatherSignatureValidation}>
+																<div class="slds-text-color_error">Document required!</div>
+															</template>
+														</template>
+														<template if:true={field.isMotherSign}>
+															<template if:true={showMotherSignUploadedText}>
+																<div class="slds-text-color_success">Uploaded!</div>
+															</template>
+															<template if:true={showMotherSignatureValidation}>
+																<div class="slds-text-color_error">Document required!</div>
+															</template>
+														</template>
+													</div>
+												</div>
+											</div>
+										</template>
+									</div>
+								</div>
+
+							</lightning-accordion-section>
+
+							<lightning-accordion-section class="accordian" name="formPages"
+								label="Kindly click on the forms to proceed further.">
+								<div class="section">
+									<!-- Form C1 -->
+									<div class="checkbox-line" if:true={showFormC1}>
+										<span class="required">*</span>
+										<input type="checkbox" id="formC1" name="formC1" checked={isFormC1Agreed} disabled/>
+										<label for="formC1" onclick={showFormC1Modal}>{formC1Name}</label>
+										<template if:true={showFormC1Validation}>
+											<div class="slds-text-color_error">&nbsp;- Mandatory.</div>
+										</template>
+									</div>
+
+									<!-- Form C -->
+									<div class="checkbox-line" if:true={showFormC}>
+										<span class="required">*</span>
+										<input type="checkbox" id="formC" name="formC" checked={isFormCAgreed} disabled/>
+										<label for="formC" onclick={showFormCModal}>{formCName}</label>
+										<template if:true={showFormCValidation}>
+											<div class="slds-text-color_error">&nbsp;- Mandatory.</div>
+										</template>
+									</div>
+
+									<!-- Form D -->
+									<div class="checkbox-line" if:true={showFormD}>
+										<span class="required">*</span>
+										<input type="checkbox" id="formD" name="formD" checked={isFormDAgreed} disabled/>
+										<label for="formD" onclick={showFormDModal}>{formDName}</label>
+										<template if:true={showFormDValidation}>
+											<div class="slds-text-color_error">&nbsp;- Mandatory.</div>
+										</template>
+									</div>
+
+									<!-- Form E1 -->
+									<div class="checkbox-line" if:true={showFormE1}>
+										<span class="required">*</span>
+										<input type="checkbox" id="formE1" name="formE1" checked={isFormE1Agreed} disabled/>
+										<label for="formE1" onclick={showFormE1Modal}>{formE1Name}</label>
+										<template if:true={showFormE1Validation}>
+											<div class="slds-text-color_error">&nbsp;- Mandatory.</div>
+										</template>
+									</div>
+
+									<!-- Form E2 -->
+									<div class="checkbox-line" if:true={showFormE2}>
+										<span class="required">*</span>
+										<input type="checkbox" id="formE2" name="formE2" checked={isFormE2Agreed} disabled/>
+										<label for="formE2" onclick={showFormE2Modal}>{formE2Name}</label>
+										<template if:true={showFormE2Validation}>
+											<div class="slds-text-color_error">&nbsp;- Mandatory.</div>
+										</template>
+									</div>
+								</div>
+							</lightning-accordion-section>
+
+
+						</lightning-accordion>
+					</template>
+				</div>
+
+			</lightning-layout-item>
+			<template if:false={isMobile}>
+				<lightning-layout-item size="1"></lightning-layout-item>
+			</template>
+		</lightning-layout>
+		<div slot="footer">
+			<div class="slds-align_absolute-center" style="display:flex">
+				<lightning-button variant="neutral" label="Previous" onclick={navigateToPrev}></lightning-button>
+				<lightning-button variant="brand" label="Save And Next" class="slds-m-left_xx-small custom-button"
+					onclick={saveDetails}>
+				</lightning-button>
+			</div>
+		</div>
+	</lightning-card>
+</template>

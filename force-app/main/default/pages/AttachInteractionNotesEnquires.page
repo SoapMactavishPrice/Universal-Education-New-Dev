@@ -1,0 +1,2 @@
+<apex:page standardController="Enquiry__c" extensions="AbsentAttachRejectedInteCtrl" action="{!goToPageTwo}">
+</apex:page>

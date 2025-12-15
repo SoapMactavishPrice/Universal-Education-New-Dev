@@ -1,0 +1,35 @@
+<apex:page standardController="Lead" extensions="ReAssignSchool" lightningStylesheets="true" standardStylesheets="true" sidebar="true" showHeader="true">
+    <style>
+        /* Center the toast message */
+        .centered-message {
+            text-align: center;
+            margin-top: 50px; /* Adjust this value to vertically center the message */
+        }
+        .success-bar {
+            background-color: #4CAF50; /* Green */
+            color: white;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            width: 95%;
+            display: inline-block;
+        }
+    </style>
+
+    <div class="centered-message">
+        <div class="success-bar">
+            <strong>Lead has been Transferred Successfully!</strong>
+            <!--<apex:form >
+                <apex:commandButton value="View All Leads" action="{!redirectToLeadList}" style="margin-left: 10px; margin-top:1em" />
+            </apex:form>-->
+        </div>
+    </div>
+
+    <script>
+
+        window.setTimeout(function() {
+            var toastContainer = document.querySelector('.centered-message');
+            toastContainer.style.display = 'none';
+        }, 12000);
+    </script>
+</apex:page>

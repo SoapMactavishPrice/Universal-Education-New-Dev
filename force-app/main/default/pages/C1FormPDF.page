@@ -1,0 +1,57 @@
+<apex:page standardController="Admission_Granted__c" renderAs="pdf" extensions="C1FormPDFController">
+    <center>
+        <h1>
+            Form C1
+        </h1>
+        <br/>
+        <h2>
+            <b>
+                DECLARATION BY PARENTS/GUARDIANS
+            </b>
+        </h2>
+    </center>
+    <br/>
+    To,
+    <br/>{!ag.School_Institution__r.Name}
+    <br/>We
+    <b>{!parentNamesToShowFormC}</b> parents/guardians of
+    <b> {!ag.Student_s_Name__c} </b>
+    <apex:outputText value="{!doc.Terms__c}" escape="false" />
+    <table style="border: 1px solid #D3D3D3; border-collapse: collapse;"  width="100%">
+
+        <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+        <tr>
+            <td style="padding-left: 60px"><b><apex:outputText value="Signature"/></b></td>
+            <td style="padding-left: 200px"><b><apex:outputText value="Signature"/></b></td>
+        </tr>
+        <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+        <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+        <tr>
+            <td style="padding-left: 60px"><apex:outputText value="\s1\" style="color:white;"/></td>
+            <td style="padding-left: 200px"><apex:outputText value="\s2\" style="color:white;"/></td>
+        </tr>
+        <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+        <tr>
+            
+            <td>
+                <apex:outputPanel rendered="{!hasFatherDetails}">
+                    <b><apex:outputText value="Father Name : {!ag.Father_First_Name__c} {!ag.Father_Last_Name__c}"/></b>
+                    <!--</apex:outputText><apex:outputText value="\n1\" style="color:white;"/>-->
+                </apex:outputPanel>
+            </td>
+            <td style="text-align:right">
+                <apex:outputPanel rendered="{!hasMotherDetails}">
+                    <b><apex:outputText value="Mother Name : {!ag.mother_First_Name__c} {!ag.mother_Last_Name__c}"/></b>
+                    <!--<apex:outputText value="\n2\" style="color:white;"/>-->
+                </apex:outputPanel>
+            </td>
+            
+        </tr>
+        <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+        <tr>
+            <td><b><apex:outputText value="Place: {!ag.City__c}"/></b></td>
+            <td>&nbsp;&nbsp;<b><apex:outputText value="Date: {!TODAY()}"/></b><!--<apex:outputText value="\d1\" style="color:white;"/>--></td>
+            <td><b><apex:outputText value="Time: {!strTodayTime}"/></b><!--<apex:outputText value="\d1\" style="color:white;"/>--></td>
+        </tr>
+    </table>    
+</apex:page>

@@ -1,0 +1,89 @@
+<apex:page controller="vf_AdmissionGrantedSyncHandler">
+    <script src="/soap/ajax/30.0/connection.js" type="text/javascript"></script>
+    <script src="/soap/ajax/15.0/apex.js" type="text/javascript"></script>
+
+    <style>
+        /* Style for the spinner */
+        .spinner {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        #spinner {
+            display: none;
+        }
+    </style>
+
+    <script type="text/javascript">
+        const AgId = '{!Id}';  // Record ID from Salesforce
+        const SyncwithApplane = '{!Sync_With_Ether}';  // Sync status
+
+        // Trigger the sync function on page load
+        window.onload = function() {
+            console.log('AgId-->',AgId);
+            console.log('SyncwithApplane-->',SyncwithApplane);
+            syncWithEther();
+        };
+
+        function syncWithEther() {
+            // If the record is already synced, show an alert and redirect
+            if (SyncwithApplane === 'true') {
+                alert("This record is already synced.");
+                window.location.href = '/' + AgId;  // Redirect to the record page
+                return;  // Stop further execution
+            }
+
+            // Show the spinner while sync is in progress
+            document.getElementById('spinner').style.display = 'block';
+
+            // Set timeout to hide the spinner and redirect after TIMEOUT_DURATION
+            const timeout = setTimeout(function() {
+                document.getElementById('spinner').style.display = 'none';
+                window.location.href = '/' + AgId;  // Redirect after timeout
+                alert("Request timed out. Redirecting back to the record page.");
+            }, 30000);  // Timeout duration is 30 seconds
+
+            // Call the Apex method to perform the sync using Visualforce.remoting
+            Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.vf_AdmissionGrantedSyncHandler.Ether_SyncAdmissionGrantedv2}', // Apex method to invoke
+                AgId,  // Parameters to pass (Record ID)
+                function(result, event) {
+                    console.log('result--',result)
+                    // Clear timeout once operation completes
+                    clearTimeout(timeout);
+
+                    if (event.status) {
+                        if (result === 'Student record sync successful.') {
+                            alert("Student record sync successful.!");
+                            window.location.href = '/' + AgId; ;  // Redirect after success
+                        } else {
+                            alert("Sync failed: " + result);
+                        }
+                    } else {
+                        alert("Error: " + event.message);
+                    }
+
+                    // Hide the spinner after operation completes
+                    document.getElementById('spinner').style.display = 'none';
+                }
+            );
+        }
+    </script>
+
+    <!-- Spinner element -->
+    <div id="spinner" class="spinner"></div>
+
+</apex:page>

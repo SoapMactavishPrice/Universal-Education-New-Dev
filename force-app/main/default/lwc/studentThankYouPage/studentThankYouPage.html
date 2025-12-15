@@ -1,0 +1,15 @@
+<template>
+    <div class="confirmation-box">
+        <h2 class="heading">Application Form submitted successfully</h2>
+
+        <p class="label">Your Enquiry No.</p>
+        <p class="value bold">{enquiryName}</p>
+
+        <p class="label">Your Application No.</p>
+        <p class="value bold">{applicationFormName}</p>
+
+        <p style="padding-top: 10px; padding-bottom: 3px;"><lightning-button variant="neutral" label="Download application form" onclick={redirectToVfPage}></lightning-button></p>
+
+        <p class="info bold">Admission Team will get in touch with you shortly.</p>
+    </div>
+</template>

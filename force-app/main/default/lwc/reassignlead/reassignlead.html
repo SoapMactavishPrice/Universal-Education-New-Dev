@@ -1,0 +1,48 @@
+<template>
+    
+    <template if:true={showCard}>
+        <!-- Quick Action Panel -->
+        
+        <lightning-quick-action-panel header="Reassign School/Institution" >
+            <!-- Layout for Center Alignment -->
+            
+            <lightning-layout multiple-rows>
+                <!-- School Selection -->
+                <lightning-layout-item size="12" large-device-size="12" class="slds-align_absolute-center slds-m-top_small">
+                    <lightning-combobox
+                        style="width: 50%; Margin-bottom: 50px;"
+                        value={selectedAccountId}
+                        options={schoolOptions}
+                        onchange={handleSchoolChange}
+                        placeholder="Select School/Institution">
+                    </lightning-combobox>
+                </lightning-layout-item>
+
+                <!-- Spacer for proper alignment -->
+                <lightning-layout-item size="12" large-device-size="12" class="slds-m-top_medium"></lightning-layout-item>
+
+                <!-- Full-Width Footer with Action Buttons -->
+                <lightning-layout-item size="12" large-device-size="12">
+                    <div class="slds-modal__footer slds-grid slds-grid_align-center slds-p-horizontal_large">
+                        <!-- Centered Action Buttons -->
+                        <lightning-button 
+                            label="Update" 
+                            onclick={handleSave} 
+                            variant="brand" 
+                            class="slds-m-right_medium">
+                        </lightning-button>
+                        <lightning-button 
+                            label="Cancel" 
+                            onclick={handleCancel} 
+                            variant="neutral">
+                        </lightning-button>
+                    </div>
+                </lightning-layout-item>
+                
+            </lightning-layout>
+            
+        </lightning-quick-action-panel>
+        
+    </template>
+    
+</template>

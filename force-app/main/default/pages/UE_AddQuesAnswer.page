@@ -1,0 +1,39 @@
+<apex:page standardController="Q_A__c" extensions="UE_CtrAddQuesAnswer" lightningStylesheets="true" recordSetVar="qa">
+
+    <apex:form >
+
+        <apex:variable value="{!1}" var="count" />
+
+     <apex:pageBlock title="Add Your Question and Answer"  > 
+
+        <apex:pageBlockTable value="{!listopp}" var="c">
+            <apex:column headerValue="Question" style="width:50%;">
+                    <apex:inputField value="{!c.Questions__c}" style="width:100%;"/>
+            </apex:column>
+            
+            <apex:column headerValue="Answer" style="width:50%;">
+                    <apex:inputField value="{!c.Answer__c}" style="width:100%;"/>
+            </apex:column>
+
+            <apex:column >
+                    <apex:commandButton value="Add Question" action="{!addrow}" styleClass="buttonStyle" style="background:lightgreen;"/>
+            </apex:column>   
+
+            <apex:column >
+                    <apex:commandButton value="Delete" action="{!delrow}" styleClass="buttonStyle" style="background:Pink;"/>
+            </apex:column>   
+
+     </apex:pageBlockTable>
+
+              <apex:pageBlockButtons location="bottom">
+
+                  <apex:commandButton value="Save" action="{!save}" style="background:lightgreen"/>
+                  <apex:commandButton value="Cancel" action="{!cancel}" style="background:pink"/>
+
+               </apex:pageBlockButtons>  
+
+           </apex:pageBlock>
+
+     </apex:form>               
+
+</apex:page>

@@ -1,0 +1,3 @@
+<apex:page standardcontroller="Application_Form__c" tabStyle="Application_Form__c"  >
+    <apex:enhancedList rowsPerPage="100" height="500" type="Application_Form__c"/> 
+</apex:page>

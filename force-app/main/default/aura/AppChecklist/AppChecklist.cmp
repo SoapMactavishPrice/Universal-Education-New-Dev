@@ -1,0 +1,63 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" controller="AppChecklistController">
+    <aura:attribute name="parentId" type="Id" default=""/>
+    <aura:attribute name="checklistWrapper" type="List"/>
+    <aura:attribute name="isModalOpen" type="boolean" default="false"/>
+    <aura:attribute name="isFormC" type="boolean" default="false"/>
+    <aura:attribute name="popupHeading" type="String" default=""/>
+    <aura:attribute name="parentNamesToShowFormC" type="String" />
+    <aura:attribute name="studentNameToShow" type="String" />
+    <aura:attribute name="popupBody" type="String"/>
+    <aura:attribute name="data" type="Object"  />
+    <aura:attribute name="currentIndex" type="Integer"/>
+    <aura:attribute name="enquiryObj" type="Object" />
+	<aura:attribute name="pictureSrcURL" type="String" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <aura:iteration items="{!v.checklistWrapper}" var="item"  indexVar="key">
+        <div class="slds-grid slds-wrap slds-p-top_x-small">
+            <div class="slds-col slds-size_1-of-12" >
+                <span name="{!key}" class="slds-float_right">
+                    <lightning:input  onchange="{!c.populateFormCheckbox}"  checked="{!item.checked}"  type="checkbox" label="" required="true" messageWhenValueMissing=" "/>
+                </span>
+            </div>
+            <div class="slds-col slds-size_5-of-12 ">
+                <span>
+                    <a name="{!key}" onclick="{!c.handleClick}">{!item.Description__c}</a>
+                </span>
+            </div>
+        </div>
+    </aura:iteration>
+    <!--Use aura:if tag to display/hide popup based on isModalOpen value-->
+    <aura:if isTrue="{!v.isModalOpen}">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <div class="slds-modal__header" style="height:120px !important">
+                    <aura:if isTrue="{!v.pictureSrcURL}">
+                        <img src="{!v.pictureSrcURL}" style="height:70%;margin-top:0.5em" />
+                    <aura:set attribute="else">
+                     <div style="display:none;text-align:center;margin:0px; padding:0px;Color:red;">
+                    	
+                	</div>
+                    </aura:set>
+                  </aura:if> 
+                </div>
+                <!--Modal/Popup Box Body Starts here-->
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate"><b>{!v.popupHeading}</b></h2>
+                    <br/>
+                    <!-- <aura:if isTrue="{!v.isFormC}">
+                        <h2><center>Declaration by Parents/Guardians</center></h2>
+                        We <b> {!v.parentNamesToShowFormC} </b>  parents/guardians of <b> {!v.studentNameToShow} </b>
+                    </aura:if> -->
+                    <lightning:formattedRichText value="{!v.popupBody}"/>
+                </div>
+                <!--Modal/Popup Box Footer Starts here-->
+                <footer class="slds-modal__footer">
+					<lightning:button class="slds-button slds-button_destructive" variant="brand"  label="Cancel" title="Cancel" onclick="{!c.agreeCancel}"/>
+                    <lightning:button variant="brand" name="{!v.popupHeading}" label="I Agree" title="Agree" onclick="{!c.agreeTerms}"/>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+</aura:component>

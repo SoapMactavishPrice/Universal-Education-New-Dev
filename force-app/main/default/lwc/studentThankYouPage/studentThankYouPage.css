@@ -1,0 +1,33 @@
+.confirmation-box {
+    background-color: #d3d3d3; /* light grey */
+    text-align: center;
+    padding: 2rem;
+    border-radius: 8px;
+    max-width: 600px;
+    margin: 2rem auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.heading {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.label {
+    margin: 0.5rem 0 0;
+    font-size: 1rem;
+}
+
+.value {
+    font-size: 1.2rem;
+    margin: 0;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.info {
+    margin-top: 1rem;
+    font-size: 1rem;
+}

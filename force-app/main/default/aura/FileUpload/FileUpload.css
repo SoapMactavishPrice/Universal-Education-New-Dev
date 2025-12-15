@@ -1,0 +1,23 @@
+.THIS  .slds-file-selector__text{
+    display: none;
+}
+
+.THIS .slds-file-selector__dropzone {
+    /* display: none; */
+        /* margin-left: 9px; */
+}
+
+.THIS .slds-file-selector__dropzone .slds-file-selector__button{
+    /* width:200px; */
+    font-size: 0;
+}
+
+.THIS .slds-file-selector__dropzone .slds-file-selector__button:after{
+    content: 'Select Photo';
+    font-size: 0.6000rem;
+    color: rgba(27, 82, 151, 1.0);
+}
+
+.THIS .custWidth {
+        width: 117px;
+}

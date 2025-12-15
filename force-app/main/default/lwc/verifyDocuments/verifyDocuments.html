@@ -1,0 +1,65 @@
+<template>
+    <lightning-card title="Verify Documents" icon-name="custom:custom63">
+        <div class="slds-m-around_medium">
+            <template if:true={documentList}>
+                <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_striped">
+                    <thead>
+                        <tr class="slds-line-height_reset">
+                            <th scope="col">Sr No.</th>
+                            <th scope="col">Document Name</th>
+                            <th scope="col">Mandatory</th>
+                            <th scope="col">Submission Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template for:each={documentList} for:item="doc">
+                            <tr key={doc.documentId}>
+                                <td>{doc.serialNumber}</td>
+                                <td>{doc.documentName}</td>
+                                <td>
+                                    <template if:true={doc.isMandatory}>
+                                        <lightning-icon icon-name="utility:check" size="x-small" class="yes-icon"></lightning-icon>
+                                    </template>
+                                    <template if:false={doc.isMandatory}>
+                                        <lightning-icon icon-name="utility:close" size="x-small" class="no-icon"></lightning-icon>
+                                    </template>
+                                </td>
+                                <td>
+                                    <lightning-combobox
+                                        value={doc.submissionStatus}
+                                        data-id={doc.documentId}
+                                        options={statusOptions}
+                                        onchange={handleStatusChange}
+                                        placeholder="Select status">
+                                    </lightning-combobox>
+                                </td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+
+                <div class="slds-m-top_medium slds-text-align_center">
+                    <lightning-button 
+                        style="padding-right: 5px;"
+                        variant="neutral"
+                        label="Cancel"
+                        onclick={goBackToRecord}>
+                    </lightning-button>
+
+                    <lightning-button 
+                        variant="brand"
+                        label="Save and Proceed"
+                        onclick={handleSaveAndProceed}
+                        disabled={isLoading}>
+                    </lightning-button>
+                </div>
+            </template>
+
+            <template if:true={error}>
+                <div class="slds-text-color_error slds-m-top_medium">
+                    {errorMessage}
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>

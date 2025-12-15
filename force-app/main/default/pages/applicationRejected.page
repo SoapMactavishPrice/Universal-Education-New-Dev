@@ -1,0 +1,14 @@
+<apex:page standardController="Application_Form__c" extensions="applicationAccepted" action="{!applicationRejected}" sidebar="True" lightningStylesheets="true" standardStylesheets="true" >
+    <apex:form >
+        <apex:slds /> 
+        <apex:outputPanel id="resultPanel" rendered="{!msg}">
+            <apex:pageMessages >
+            </apex:pageMessages>
+            
+            <br />
+         
+			<center><b><apex:commandButton value="Back" action="{!goBack}"  styleClass="slds-button slds-button_neutral"/></b></center>
+
+       </apex:outputPanel>
+    </apex:form>
+</apex:page>

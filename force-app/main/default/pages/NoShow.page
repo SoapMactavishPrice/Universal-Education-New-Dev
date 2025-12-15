@@ -1,0 +1,19 @@
+<apex:page standardController="Enquiry__c" extensions="CalledForInteractionController" action="{!NoShow}">
+<apex:outputpanel >
+        <apex:form >
+            <apex:slds />
+            <apex:pageBlock >
+                <apex:pageMessages ></apex:pageMessages>
+                
+                <apex:pageBlockSection rendered="{!back}">
+                    <center>
+                        <b>
+                            <apex:commandButton action="{!cancel}" value="Back"  styleClass="slds-button slds-button_neutral"/> 
+                        </b>
+                        
+                    </center> </apex:pageBlockSection> 
+            </apex:pageBlock>
+            
+        </apex:form>
+    </apex:outputpanel>
+</apex:page>

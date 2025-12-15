@@ -1,0 +1,576 @@
+<apex:page standardController="Enquiry__c" extensions="NormalCuriosityFormExtension" showHeader="false" standardStylesheets="false"
+  sidebar="false" applyHtmlTag="false" applyBodyTag="false" docType="html-5.0" lightningStylesheets="true">
+
+  <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" lang="en">
+
+      
+      <apex:outputpanel rendered="{!showMYExpirelink}">
+            <p>
+               <center><b>Link has been expired </b></center>
+            </p>
+        </apex:outputpanel>
+      
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>Curiosity Form</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Import the Design System style sheet -->
+    <apex:slds />
+    <style>
+      body {
+        margin-left: 5%;
+        margin-right: 5%;
+      }
+
+      .msgIcon {
+        display: none!important;
+      }
+
+      .customMessage * {
+        color: #fff!important;
+        font-weight: 450!important;
+      }
+
+      .customMessage {
+        margin: 5px 0!important;
+        max-width: 1280px;
+        opacity: 1!important;
+        width: 100%;
+        font-size: 12px;
+        border: 0px;
+        padding-left: 10px;
+      }
+
+      .message {
+        opacity: 1
+      }
+
+      .messageCell {
+        text-align: center !important;
+      }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        overridePageMessages();
+      });
+      function overridePageMessages() {
+        var textureEffect = '';
+        //Uncomment below line for texture effect on page messages
+        textureEffect = 'slds-theme--alert-texture';
+
+        $('.warningM2').addClass('slds-notify slds-notify--toast slds-theme--warning customMessage ' + textureEffect);
+        $('.warningM3').addClass('slds-notify slds-notify--toast slds-theme--warning customMessage ' + textureEffect);
+        $('.confirmM3').addClass('slds-notify slds-notify--alert slds-theme--success  customMessage ' + textureEffect);
+        $('.errorM3').addClass('slds-notify slds-notify--alert slds-theme--error customMessage ' + textureEffect);
+        $('.infoM3').addClass('slds-notify slds-notify--toast customMessage ' + textureEffect);
+
+        $('.errorM3').removeClass('errorM3');
+        $('.confirmM3').removeClass('confirmM3');
+        $('.infoM3').removeClass('infoM3');
+        $('.warningM3').removeClass('warningM3');
+        $('.warningM2').removeClass('warningM3');
+      }
+      /* $(document).ready(function () {
+        $(".bPageBlock").css("background-color", "white");
+        $(".bPageBlock").css("border-color", "antiquewhite");
+        $(".bPageBlockSection").css("background-color", "red");
+      }); */
+    </script>
+    <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></apex:includeScript>
+    <span id="hideMyParent"></span>
+    <script type="text/javascript"> 
+      $(document).ready(function () {
+        var startYear = 1930;
+        var endYear = (new Date()).getFullYear();
+        var optionsString = '';
+        if (startYear < endYear) {
+          for (i = startYear; i < endYear + 1; i++) {
+            optionsString += "<option value=\"" + i + "\">" + i + "</option>";
+          }
+          $('#calYearPicker').html(optionsString);
+        } $('#sidebarDiv #hideMyParent').parent().parent().hide();
+
+        overridePageMessages();
+      });
+
+      function overridePageMessages() {
+        var textureEffect = '';
+        //Uncomment below line for texture effect on page messages
+        //textureEffect = 'slds-theme--alert-texture';
+
+        $('.warningM3').addClass('slds-notify slds-notify--toast slds-theme--warning customMessage ' + textureEffect);
+        $('.confirmM3').addClass('slds-notify slds-notify--alert slds-theme--success customMessage ' + textureEffect);
+        $('.errorM3').addClass('slds-notify slds-notify--alert slds-theme--error customMessage ' + textureEffect);
+        $('.infoM3').addClass('slds-notify slds-notify--toast customMessage ' + textureEffect);
+
+        $('.errorM3').removeClass('errorM3');
+        $('.confirmM3').removeClass('confirmM3');
+        $('.infoM3').removeClass('infoM3');
+        $('.warningM3').removeClass('warningM3');
+      }
+    </script>
+    <!--Removed the date default todays date -->
+    <style type="text/css">
+      .dateFormat {
+        visibility: hidden;
+      }
+
+      .anotherchildsectionitem fieldset {
+        display: inline-block;
+      }
+
+      .msgIcon {
+        display: none!important
+      }
+
+      .customMessage * {
+        color: #fff!important
+      }
+
+      .customMessage {
+        margin: 5px 0!important;
+        max-width: 1280px;
+        opacity: 1!important;
+        width: 100%;
+        font-size: 12px;
+        border: 0px;
+        padding-left: 10px;
+      }
+
+      .message {
+        opacity: .1
+      }
+    </style>
+    <!--Removed the date default todays date -->
+
+  </head>
+
+  <body>
+      <div  style="display:{!IF(ExpiredDaysCuriosity > 89,'block','none')}">
+            <center><b>Your link has been Expired. Please contact to Administration.</b></center>
+            </div>
+        <div  style="display:{!IF(ExpiredDaysCuriosity < 90,'block','none')}"> 
+     <apex:outputpanel rendered="{!showMYPage}"> 
+    <apex:form >
+      <!-- REQUIRED SLDS WRAPPER -->
+      <div class="slds-scope">
+        <!-- Heading -->
+        <div>
+          <br/>
+          <p>
+            <font size="4">
+              <center><img src="{!$Resource.stellarlogo}" width="10%"/>
+              </center>
+            </font>
+          </p>
+        </div>
+        <div>
+          <br/>
+          <p>
+            <font size="4">
+              <center>
+                <b> Curiosity Form {!academicYear} </b>
+              </center>
+            </font>
+          </p>
+        </div>
+        <br/>
+        <!-- Warnig Box -->
+        <div>
+          
+        </div>
+        <apex:pageMessages ></apex:pageMessages>
+
+        <!-- <apex:pageMessage summary="Please fill correct information to save Data." severity="warning" strength="3" />
+        </apex:pageMessages> -->
+
+        <!-- Form -->
+        <div style="padding:2%;">
+
+          <!-- Details -->
+          <div>
+            <!-- Row 1 -->
+            <div class="slds-form" role="list">
+              <div class="slds-form__row">
+                <!-- Academic Year -->
+                <div class="slds-form__item" role="listitem">
+                   <div>
+                          <!-- Row 1 -->
+                          <!-- Row 3 -->
+                          
+                          <!-- Row 4 -->
+                          Dear Mrs and Mr {!lname},<br/><br/>
+
+                          Thank you for taking the first step towards helping {!childName} become life literate. Being a learner-centric school, we are always curious to know more about our student .
+                          Therefore,  we call this step,  a “Curiosity Project”. The information submitted here is only to learn more about {!childName} and will not be used for any other purpose.
+                      </div>
+                </div>
+                
+              </div>
+              
+          <!-- Row 5 -->    
+              
+             
+         </div>   
+            
+            
+            
+      
+      <!-- Currently Studying -->
+          <div>
+            <br/>
+            <!-- Heading -->
+            <div class="slds-page-header" style="border:none; border-radius:0px; background-color:#f3f2f2;">
+              <div class="slds-page-header__name-title">
+                <h1>
+                  <span style="font-size:1.1em; font-weight:400;">About {!childName} </span>
+                </h1>
+              </div>
+
+            </div>
+            <br/>
+            <!-- Currently Studing Row 1 -->
+            <div class="slds-form__row">
+              <!-- describe -->
+              <div class="slds-form__item" role="listitem">
+                <div class="slds-form-element slds-form-element_horizontal slds-is-editing">
+                  <label class="slds-form-element__label" for="describe">1. How would you describe {!childName}? 50 words<span style="color:red;">*</span></label>
+                  <div class="slds-form-element__control">
+                     <apex:inputField id="describe" value="{!enq.Describe__c}" required="true" styleClass="slds-input" />
+                  </div>
+                </div>
+              </div>
+              <!-- enjoy -->
+              <div class="slds-form__item" role="listitem">
+                <div class="slds-form-element slds-form-element_horizontal slds-is-editing">
+                  <label class="slds-form-element__label" for="enjoy">2. What did {!childName} enjoy the most during  the last holiday?<span style="color:red;">*</span></label>
+                  <div class="slds-form-element__control">
+                    <apex:inputField id="enjoy" required="true" value="{!enq.Enjoy__c}" styleClass="slds-input"/>
+                  </div>
+                </div>
+              </div>
+            </div>
+              
+                          <div class="slds-form__row">
+            <!-- siblings -->
+            <div class="slds-form__item" role="listitem">
+            <div class="slds-form-element slds-form-element_horizontal slds-is-editing">
+            <label class="slds-form-element__label" for="schoolenq">3. In which school is {!childName} currently studying?<span style="color:red;">*</span></label>
+            <div class="slds-form-element__control">
+            <apex:inputField id="schoolenq" value="{!enq.Enq_School_Institute__c}" styleClass="slds-input" required="true" />
+            </div>
+            </div>
+            
+            </div>
+            <!-- grade-->
+            <div class="slds-form__item" role="listitem">
+            <div class="slds-form-element slds-form-element_horizontal slds-is-editing">
+            <label class="slds-form-element__label" for="grade">4. In which grade, is {!childName} currently studying?<span style="color:red;">*</span></label>
+            <div class="slds-form-element__control">
+            <apex:inputField id="grade" value="{!enq.Stellar_Grade__c}" styleClass="slds-input" required="true"/>
+            </div>
+            </div>
+            </div>
+            </div>
+                         <div class="slds-form__row">
+            <!-- schoolenq -->
+           <div class="slds-form__item" role="listitem">
+            <div class="slds-form-element slds-form-element_horizontal slds-is-editing">
+            <label class="slds-form-element__label" for="siblings">5. Does {!childName} have any siblings? What do they have in common?<span style="color:red;">*</span></label>
+            <div class="slds-form-element__control">
+            <apex:inputField id="siblings" value="{!enq.Siblings__c}" styleClass="slds-input" required="true" />
+            </div>
+            </div>
+            </div>
+            <!-- otherinfo-->
+            <div class="slds-form__item" role="listitem">
+            <div class="slds-form-element slds-form-element_horizontal slds-is-editing">
+            <label class="slds-form-element__label" for="otherinfo">6. Would you like to share any more  information about {!childName} ?</label>
+            <div class="slds-form-element__control">
+            <apex:inputField id="otherinfo" value="{!enq.Child_Other_Info__c}" styleClass="slds-input" required="false"/>
+            </div>
+            </div>
+            </div>
+            </div>
+              
+              
+              
+      </div>
+            
+            
+             
+            
+
+          <!-- Parent Information -->
+          <div>
+            <br/>
+            <!-- Heading -->
+            <div class="slds-page-header" style="border:none; border-radius:0px; background-color:#f3f2f2;">
+              <div class="slds-page-header__name-title">
+                <h1>
+                  <span style="font-size:1.1em; font-weight:400;">About Parents</span>
+                </h1>
+              </div>
+
+            </div>
+            <br/>
+          
+         <div class="slds-form__row">
+              <!-- First Name -->
+              <div class="slds-form__item" role="listitem">
+                <div class="slds-form-element slds-form-element_horizontal slds-is-editing">
+                  <label class="slds-form-element__label" for="parent-fname">
+                   1.   What is your idea of learning at school?<span style="color:red;">*</span></label>
+                  <div class="slds-form-element__control">
+                    <apex:inputField id="parent-fname" value="{!enq.Parents_learning__c}" required="true" html-placeholder="" styleClass="slds-input"
+                    />
+                  </div>
+                </div>
+              </div>
+              <!-- Parent Last Name -->
+              <div class="slds-form__item" role="listitem">
+                <div class="slds-form-element slds-form-element_horizontal slds-is-editing">
+                  <label class="slds-form-element__label" for="parent-lname">
+                    2.  What are your expectations for {!childName} from a school?<span style="color:red;">*</span></label>
+                  <div class="slds-form-element__control">
+                    <apex:inputField id="parent-lname" value="{!enq.Parents_help__c}" required="true" html-placeholder="" styleClass="slds-input"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+              
+            <!-- Parent Row 2 -->
+            <div class="slds-form__row">
+              <!-- Mobile -->
+              <div class="slds-form__item" role="listitem">
+                <div class="slds-form-element slds-form-element_horizontal slds-is-editing">
+                  <label class="slds-form-element__label" for="parent-mobile">
+                    3.  Where was your last holiday, and what did you, as a family enjoy doing together?*<span style="color:red;">*</span></label>
+                  <div class="slds-form-element__control">
+                    <apex:inputField id="mobile" value="{!enq.Parents_holiday__c}" required="true" html-placeholder="" styleClass="slds-input"
+                    />
+                  </div>
+                </div>
+              </div>
+              <!-- Email -->
+              <div class="slds-form__item" role="listitem">
+                <div class="slds-form-element slds-form-element_horizontal slds-is-editing">
+                  <label class="slds-form-element__label" for="parent-email">
+                    4.  What do you enjoy doing the most? We would like to know about your  hobbies.</label>
+                  <div class="slds-form-element__control">
+                    <apex:inputField id="parent-email" value="{!enq.Parents_hobbies__c}" required="false" html-placeholder="" styleClass="slds-input"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Parent -->
+            <div>
+              <fieldset class="slds-form-element slds-form-element_compound slds-form-element_address">
+                <legend class="slds-form-element__legend slds-form-element__label"></legend>
+                <!-- Residential Address -->
+                <div class="slds-form-element__control">
+           <!---       <div class="slds-form-element__row">
+                    <div class="slds-size_1-of-1">
+                      <div class="slds-form-element">
+                        <label class="slds-form-element__label" for="parent-address">
+                          5.    Where do you stay:</label>
+                        <div class="slds-form-element__control">
+                          <apex:inputField id="parent-address" value="{!enq.Address__c}" required="true" html-placeholder="Address" styleClass="slds-textarea">
+                            <i>
+                              <b>Note: Special character (#,') not allowed</b>
+                            </i>
+                          </apex:inputField>
+                        </div>
+                      </div>
+                    </div>
+                  </div>   --->
+                    <i>
+                              <b>Note: Special character (#,') not allowed</b>
+                    </i>
+                    
+               <!-- Flat No/House No. -->    
+                
+               <div class="slds-form-element__row">
+                    
+                   <div class="slds-col slds-size_6-of-12">
+                      <div class="slds-form-element">
+                        <label class="slds-form-element__label" for="parent-flat"> 
+                         Flat No/House No <span style="color:red;">*</span></label>
+                        <div class="slds-form-element__control">
+                          <apex:inputField id="parent-flat" value="{!enq.Flat_No_House_No__c}" required="true" html-placeholder="Flat No/House No" styleClass="slds-input"/>
+                        </div>
+                      </div>
+                    </div>
+             
+                    <!-- Building /Apt Name -->
+                    <div class="slds-col slds-size_6-of-12">
+                      <div class="slds-form-element">
+                        <label class="slds-form-element__label" for="parent-Building"> 
+                         Building /Apt Name <span style="color:red;">*</span></label>
+                        <div class="slds-form-element__control">
+                          <apex:inputField id="parent-Building" value="{!enq.Building_Apt_Name__c}" required="true" html-placeholder="Building /Apt Name" styleClass="slds-input"/>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                        
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                  <div class="slds-form-element__row">
+                    <!-- Street -->
+                   <div class="slds-col slds-size_6-of-12">
+                  <div class="slds-form-element">
+                    <label class="slds-form-element__label" for="parent-Street"> 
+                         Street<span style="color:red;">*</span></label>
+                  <div class="slds-form-element__control">
+                <apex:inputField id="parent-Street" value="{!enq.Street__c}" required="true" html-placeholder="Street" styleClass="slds-input" />
+                         
+                  </div>
+                </div>
+              </div>
+                    <!-- Landmark -->
+                    <div class="slds-col slds-size_6-of-12">
+                      <div class="slds-form-element">
+                        <label class="slds-form-element__label" for="parent-Landmark"> 
+                         Landmark <span style="color:red;">*</span></label>
+                        <div class="slds-form-element__control">
+                          <apex:inputField id="parent-Landmark" value="{!enq.Landmark__c}" required="true" html-placeholder="Landmark" styleClass="slds-input"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                        
+                    
+                    
+                    
+              
+         <div class="slds-form-element__row"> 
+          <!-- Area -->   
+             <div class="slds-col slds-size_6-of-12">
+                  <div class="slds-form-element">
+                    <label class="slds-form-element__label" for="parent-Area"> 
+                         Area <span style="color:red;">*</span></label>
+                  <div class="slds-form-element__control">
+                <apex:inputField id="parent-Area" value="{!enq.Area__c}" required="true" html-placeholder="Area" styleClass="slds-input" />
+                         
+              </div>
+             </div>
+           </div>
+            <!-- City -->
+                  <div class="slds-col slds-size_6-of-12">
+                      <div class="slds-form-element">
+                        <label class="slds-form-element__label" for="parent-city"> 
+                          City<span style="color:red;">*</span></label>
+                        <div class="slds-form-element__control">
+                          <apex:inputField id="parent-city" value="{!enq.City__c}" required="true" html-placeholder="City" styleClass="slds-input"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                 </div>
+                    
+              <div class="slds-form-element__row">
+                    <!-- State/Province -->
+                    <div class="slds-col slds-size_6-of-12">
+                      <div class="slds-form-element">
+                        <label class="slds-form-element__label" for="parent-state"> 
+                          State/Province<span style="color:red;">*</span></label>
+                        <div class="slds-form-element__control">
+                          <apex:inputField id="parent-state" value="{!enq.State__c}" required="true" html-placeholder="State" styleClass="slds-input"
+                          />
+                        </div>
+                      </div>
+                    </div>
+         <!-- Zip/Postal Code -->
+              <div class="slds-col slds-size_6-of-12">
+                      <div class="slds-form-element">
+                        <label class="slds-form-element__label" for="patent-pincode"> 
+                          Zip/Postal Code<span style="color:red;">*</span></label>
+                        <div class="slds-form-element__control">
+                          <apex:inputField id="patent-pincode" value="{!enq.Pin_Code__c}" required="true" html-placeholder="Zip/Postal Code" styleClass="slds-input"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  
+                    
+                  </div>
+                    
+                    
+                    
+                    
+     <!-- patent-pincode -->
+                  
+          
+                    <!-- parent-country -->
+                    <div class="slds-form-element__row">
+                    <div class="slds-col slds-size_6-of-12">
+                      <div class="slds-form-element">
+                        <label class="slds-form-element__label" for="parent-country"> 
+                          Country<span style="color:red;">*</span></label>
+                        <div class="slds-form-element__control">
+                          <apex:inputField id="parent-country" value="{!enq.Country__c}" required="true" html-placeholder="Country" styleClass="slds-input"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+
+          </div>
+
+          
+
+            <!-- Button -->
+            <br/>
+            <br/>
+            <center>
+              <apex:commandButton styleClass="slds-button slds-button_brand" value="Share" action="{!save}" />
+              <!-- style="background-color:#0d47a1 :#CC0000;; color:white;" -->
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <apex:commandButton styleClass="slds-button slds-button_destructive" value="Reset" action="{!reset}" />
+              <!-- <script> function redirect() { window.location = '{!urlfor($Page.ShowEnquiryNumber)}'; } </script> /-->
+                 </center>
+
+              </div>
+
+           </div> 
+          </div>
+       </apex:form>
+       </apex:outputpanel>
+                 </div>
+     </body>
+ 
+   </html>
+ </apex:page>

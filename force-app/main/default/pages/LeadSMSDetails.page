@@ -1,0 +1,12 @@
+<apex:page id="SMSDetails" standardController="Lead" extensions="LeadSMSDetailsController" lightningStylesheets="true" sidebar="false" showHeader="false">
+        <apex:pageBlock title="Lead SMS" rendered="{!smsgupshups.size > 0}">
+            <apex:pageBlockTable value="{!smsgupshups}" var="sms">
+                <apex:column value="{!sms.Contact_Name_Number__c}"/>
+                <apex:column value="{!sms.Sender_Number__c}"/>
+                <apex:column value="{!sms.Message__c}"/>
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+        <apex:pageBlock title="Lead SMS"  rendered="{!smsgupshups.size == 0}">
+            <b>There is no Lead SMS available.</b>
+        </apex:pageBlock>
+</apex:page>

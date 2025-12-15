@@ -1,0 +1,27 @@
+<apex:page standardController="Admission_Form__c">
+    <script src="/soap/ajax/30.0/connection.js" type="text/javascript"></script>
+    <script src="/soap/ajax/30.0/apex.js" type="text/javascript"></script>
+
+    <script type="text/javascript">
+        window.onload = function() {
+            // Get the current record's status and ID from the Admission_Form__c object
+            var status = "{!Admission_Form__c.Status__c}";
+            var recordIdArray = "{!Admission_Form__c.Id}";
+
+            console.log('The record Ids are: ' + recordIdArray);
+
+            // Check if the status is 'Document Incomplete'
+            if (status == 'Document Incomplete') {
+                alert('Status is already Document Incomplete');
+            } else {
+                // Call Apex to update the status if it's not 'Document Incomplete'
+                var retStr = sforce.apex.execute("AdmissionFormObservation", "UpdateEnquiryDocumentInComplete", {
+                    admissionFormId: recordIdArray
+                });
+
+                // Show a success message
+                alert('Status Changed successfully');
+            }
+        };
+    </script>
+</apex:page>

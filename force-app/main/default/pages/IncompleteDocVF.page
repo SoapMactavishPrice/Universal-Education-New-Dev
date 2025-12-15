@@ -1,0 +1,5 @@
+<apex:page controller="ApplicationFormInCompleteDocLightning" action="{!callUpdateDocument}">
+    <apex:form >
+        <apex:pageMessages />
+    </apex:form>
+</apex:page>

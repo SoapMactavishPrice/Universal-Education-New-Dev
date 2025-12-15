@@ -1,0 +1,104 @@
+<apex:page docType="html-5.0"  title="Admission Enquiry System" standardController="Enquiry__c" extensions="UE_CtrEnquiryForm" lightningStylesheets="true" sidebar="false" showHeader="false" standardStylesheets="true">
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+        $(".bPageBlock").css("background-color","white");
+        $(".bPageBlock").css("border-color","antiquewhite");
+        $(".bPageBlockSection").css("background-color","red");
+    });
+    </script>
+    <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></apex:includeScript>
+    <span id="hideMyParent"></span>
+    <script type="text/javascript"> $(document).ready(function() { 
+    var startYear=1930; 
+    var endYear=(new Date()).getFullYear();
+    var optionsString=''; 
+    if(startYear<endYear){
+        for(i=startYear;i<endYear+1;i++){ 
+            optionsString += "<option value=\""+i+"\">"+i+"</option>"; 
+        }
+        $('#calYearPicker').html(optionsString); } $('#sidebarDiv #hideMyParent').parent().parent().hide(); });
+    </script>
+    
+    <apex:form >
+        <apex:slds />
+        <br/><br/><br/>
+        <Head>
+            
+           <p>
+                <font size="6">  <center><b> Enquiry Process 2020-2021 </b></center> </font>
+            </p>
+            
+     </Head> 
+        
+        <div style="width:1200px;margin: 0px auto 10px auto;background-color:white;border: 5px solid black;"> 
+            
+            <apex:pageMessage summary="Please fill correct information to save Data." severity="warning"  />
+            <apex:pageMessages /> 
+            
+            <apex:pageblock > 
+                <b><apex:pageBlockSection title="Admission Enquiry" collapsible="false" columns="1" >
+                    <apex:outputField label="Academic Year" value="{!enq.Academic_Year__c}" styleClass="slds-input" style="width:250px;height:30px;margin: 10px auto 10px border: 2px solid black;" />
+                    
+                    </apex:pageBlockSection>
+                    <apex:pageBlockSection id="field2" columns="1">
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel for="dep" value="Date of Birth"></apex:outputLabel>
+                            <apex:actionRegion >
+                                <apex:inputField id="dep" value="{!Enquiry__c.Date_of_Birth__c}" required="true" html-placeholder="DOB" styleClass="slds-input" style="width:250px;height:30px;margin: 10px auto 10px border: 2px solid black;" >
+                                    <apex:actionSupport event="onchange" action="{!getSecondaryPickVals}" reRender="field2" />
+                                    <font size="1.5"><b><p style="color:red;position:left;">{!message}</p></b></font>
+                                </apex:inputField>
+                            </apex:actionRegion>
+                        </apex:pageBlockSectionItem>
+                        <apex:selectList style="width:250px;height:30px;margin: 10px auto 10px border: 2px solid black;"  id="field2" value="{!enq.Seeking_Admission_in_Grade__c}" html-placeholder="Seeking Grade" required="{!Enquiry__c.Date_of_Birth__c!=null}" multiselect="false" size="1" label="Seeking Admission in Grade" styleClass="slds-select" >
+                            <apex:selectOptions value="{!secondarySelectList}"  />
+                            
+                        </apex:selectList>
+                    </apex:pageBlockSection>
+                    <apex:pageBlockSection columns="1">
+                        <apex:inputField label="Student's First Name" value="{!enq.FirstName__c}" required="true"  html-placeholder="First Name" styleClass="slds-input" style="width:250px;height:30px;margin: 10px auto 10px border: 2px solid black;" />
+                        <apex:inputField value="{!enq.Last_Name__c}" required="true"  html-placeholder="Last Name" styleClass="slds-input" style="width:250px;height:30px;margin: 10px auto 10px border: 2px solid black;" /> 
+                        <apex:selectRadio label="Gender" value="{!enq.Gender__c}"  style="width:250px;height:30px;" required="true" >
+                            <apex:selectOption itemLabel="Male" itemValue="Male"  ></apex:selectOption>
+                            <apex:selectOption itemLabel="Female" itemValue="Female"  ></apex:selectOption>
+                        </apex:selectRadio>
+                    </apex:pageBlockSection>
+                    
+                    <!--   </div> -->
+                    
+                    <apex:pageBlockSection title="Currently Studying" collapsible="false">
+                        <apex:inputField label="Grade" value="{!enq.Grade__c}" styleClass="slds-input" style="width:250px;height:30px;margin: 10px auto 10px border: 2px solid black;" />
+                        <apex:inputField Label="School/Institute" value="{!enq.Enq_School_Institute__c}" styleClass="slds-input" style="width:250px;height:30px;margin: 10px auto 10px border: 2px solid black;" html-placeholder="School/Institute" />
+                    </apex:pageBlockSection>
+                    
+                    <apex:pageBlockSection title="Parent Information" collapsible="false" columns="2">
+                        <apex:inputField label="First Name" value="{!enq.Parent_First_Name__c}" required="true" html-placeholder="First Name" styleClass="slds-input" style="width:250px;height:30px;margin: 10px auto 10px border: 2px solid black;"/>
+                        <apex:inputField Label="Last Name" value="{!enq.Parent_Last_Name__c}" required="true" html-placeholder="Last Name" styleClass="slds-input" style="width:250px;height:30px;margin: 10px auto 10px border: 2px solid black;"/> 
+                        <apex:inputText id="phone" label="Mobile" value="{!enq.Mobile_No__c}" required="true" html-placeholder="Mobile" styleClass="slds-input" style="width:250px;margin: 10px auto 10px border: 2px solid black;"/><br/>
+                        <apex:inputField id="email" label="Email Address" value="{!enq.Email__c}" required="true" html-placeholder="Email" styleClass="slds-input" style="width:250px;margin: 10px auto 10px border: 2px solid black;" /><br/>
+                        
+                        <apex:inputField label="Address" value="{!enq.Address__c}" required="true" html-placeholder="Address" styleClass="slds-input" style="width:350px;height:75px; margin: 10px auto 10px border: 2px solid black;" ><i><b>Note: Special character (#,') not allowed</b></i></apex:inputField><br/>
+                        <apex:inputField Label="City" value="{!enq.City__c}" required="true" html-placeholder="City" styleClass="slds-input" style="width:250px;height:30px;margin: 10px auto 10px border: 2px solid black;" /><br/>
+                        <apex:inputField label="State" value="{!enq.State__c}" required="true" html-placeholder="State" styleClass="slds-input" style="width:250px;height:30px;margin: 10px auto 10px border: 2px solid black;" /><br/>
+                        <apex:inputField label="Pin Code" value="{!enq.Pin_Code__c}" required="true" html-placeholder="Pincode" styleClass="slds-input" style="width:250px;height:30px;margin: 10px auto 10px border: 2px solid black;" /><br/>
+                        <apex:inputField Label="Country" value="{!enq.Country__c}" required="true" html-placeholder="Country" styleClass="slds-input" style="width:250px;height:30px;margin: 10px auto 10px border: 2px solid black;"/><br/>
+                        
+                    </apex:pageBlockSection>
+                    
+                    <apex:pageBlockSection title="Additional Information" collapsible="false" >
+                        <apex:inputField label="Source of Information" value="{!enq.Source_of_Information__c}" required="true" styleClass="slds-select" style="width:250px;height:30px;margin: 10px auto 10px border: 2px solid black;"  />
+                        <apex:inputField Label="Remark" value="{!enq.Remarks__c}" html-placeholder="Remark" styleClass="slds-input" style="width:250px;height:75px;margin: 10px auto 10px border: 2px solid black;" />
+                        
+                    </apex:pageBlockSection>
+                    <apex:pageBlockButtons location="bottom">
+                        <apex:commandButton value="Submit" action="{!save}"  styleClass="slds-button slds-button_success"/>
+                        <apex:commandButton value="Reset" action="{!reset}" styleClass="slds-button slds-button_destructive"/>
+                    </apex:pageBlockButtons></b>
+             </apex:pageblock>
+        </div> 
+        
+    </apex:form>
+    
+</apex:page>

@@ -1,0 +1,11 @@
+<apex:page standardController="Admission_Granted__c">
+    <script type="text/javascript">
+        window.onload = function() {
+            // Get the current record's ID
+            var recordId = "{!Admission_Granted__c.Id}";
+            
+            // Open the DocuSign PDF page in a new tab
+            window.open('/apex/DocuSignApplicationPDF?id=' + recordId, '_blank');
+        };
+    </script>
+</apex:page>

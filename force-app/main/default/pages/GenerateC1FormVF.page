@@ -1,0 +1,19 @@
+<apex:page standardController="Admission_Granted__c">
+    <script type="text/javascript">
+        window.onload = function() {
+            // Get the current record's ID from the standard controller
+            var recordId = "{!Admission_Granted__c.Id}";
+
+            // Get the Application_FormId__c field from the record
+            var applicationFormId = "{!Admission_Granted__c.Application_Form__c}";
+
+            // Open the ApplicationFormC1PDF page in a new tab with the Application_FormId__c as a parameter
+            if (applicationFormId) {
+                var newWin = window.open("/apex/ApplicationFormC1PDF?id=" + applicationFormId, "_blank");
+                newWin.focus();
+            } else {
+                alert("Application Form ID is missing.");
+            }
+        };
+    </script>
+</apex:page>

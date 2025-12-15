@@ -1,0 +1,33 @@
+<template>
+    <lightning-card title="Lead Stage" icon-name="standard:lead">
+        <template if:true={picklistValues}>
+            <div class="slds-path">
+                <div class="slds-path__track">
+                    <ul class="slds-path__nav" role="listbox">
+                        <template for:each={picklistValues} for:item="item">
+                            <li 
+                                key={item.value}
+                                class={item.className}
+                                role="presentation"
+                                
+                                data-value={item.value}
+                                title={item.label}>
+                                <a role="option" tabindex="0" class="slds-path__link">
+                                    <span class="slds-path__stage">{item.label}</span>
+                                </a>
+                                <!-- onclick={handleStatusClick} -->
+                            </li>
+                        </template>
+                    </ul>
+                </div>
+            </div>
+        </template>
+
+        <template if:true={isUpdating}>
+            <lightning-spinner size="small"></lightning-spinner>
+        </template>
+    </lightning-card>
+
+
+    
+</template>

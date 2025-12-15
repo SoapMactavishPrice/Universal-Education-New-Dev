@@ -1,0 +1,25 @@
+<apex:page sidebar="false" showHeader="false" standardController="Lead" extensions="ReOpenLeadCtrl" standardStylesheets="true">
+    <script>
+    function Closewindow()
+    {
+       window.opener.location.href="/{!IdParamName}";
+       self.close();
+    }
+    </script>
+    <apex:slds />
+    <apex:form id="theForm">
+        
+        <apex:pageBlock title="" id="out" >
+            
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Re Open" action="{!LeadReOpen}" rerender="out,LeadReasonLosts" status="actStatusId" onclick="setTimeout(Closewindow, 2000)" />
+                <apex:actionStatus id="actStatusId">
+                    <apex:facet name="start">
+                        <img src="/img/loading.gif" />
+                    </apex:facet>
+                </apex:actionStatus>
+            </apex:pageBlockButtons>
+            <b>Do You want to reopen Lead?</b>
+        </apex:pageblock>
+    </apex:form>
+</apex:page>

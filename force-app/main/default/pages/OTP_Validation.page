@@ -1,0 +1,132 @@
+<apex:page language="en_GB" action="{!sendOTP}" standardController="Application_Form__c" extensions="UE_ApplicationForm_Site" lightningStylesheets="false" sidebar="false" showHeader="false" cache="false" docType="html-5.0">
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" lang="en">
+        <head>
+            <meta charset="utf-8" />
+            <meta http-equiv="x-ua-compatible" content="ie=edge" />
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <!-- Import the Design System style sheet -->
+            <apex:includeScript value="{!$Resource.BrowserDetails}" />
+            <apex:includeScript value="{!$Resource.DateJQuery}" />
+            <style>
+                .sldinput{ text-transform: capitalize;}
+                .disabled {pointer-events: none;opacity: 0.4;}
+            </style>
+        </head>
+        <apex:includeLightning />
+        <apex:slds />
+        <div class="slds-grid slds-gutters">
+            <div class="slds-col">
+                <span></span>
+            </div>
+            <div class="slds-col slds-container_center">
+                <br/>
+                <br/>
+                <br/>
+                <span>
+                	<div class="slds-p-top_small slds-p-left_xx-large slds-p-right_xx-large slds-p-bottom_x-small">
+                        <apex:form id="frm" styleClass="slds-box slds-box_xx-small" style="border: 4px solid black;">
+                            <p style="background-color:auto; text-align:center; font-size:160%; padding:10px;">We are excited to see you here.</p>
+                            <br/>
+                            <br/>
+                            <p style="background-color:auto; text-align:center; font-size:130%; padding:10px;">To proceed further, a one-time password has been sent to</p>
+                            <p style="background-color:auto; text-align:center; font-size:130%; padding:10px;">Mobile Number : {!RPAD(LEFT(enq.Mobile_No__c,5),12,'*')} and Email Id : {!RPAD(LEFT(enq.contact__r.Email,4),12,'*')}</p>
+                            <br/>
+                            
+                            <p style="background-color:auto; text-align:center; font-size:180%; padding:10px;"><b>Enter OTP</b></p>
+                            <p style="background-color:auto; text-align:center; font-size:180%;"><input type="password" maxlength="4" style="width:3em;" size="4" id="otpNumber" value=""></input></p>
+                    		
+                    		<p style="background-color:auto; text-align:center; font-size:150%; padding:10px;"><input type="button" id="validateButton" style="width:10em;height:2em;background-color:#3333ff;color:white;" value="Validate" onclick="verifyOTP()" class="slds-button slds-button_neutral"/></p>
+                            <apex:actionPoller interval="60" oncomplete="displayLink();" /> 
+                            <p id="displayTimer" style="background-color:auto; text-align:center; font-size:120%; color:red; padding:10px;">
+                            Time left : <span id="timeSpan">00</span>
+                            </p>
+                            <p id="resendOTPLink" style="background-color:auto; text-align:center; font-size:120%; padding:10px;">
+                                <apex:commandLink style="background-color:#3333ff;color:white;" oncomplete="resetCounter()" action="{!sendOTP}" value="Resend Otp" reRender="otpNumber,msg">
+                   					<apex:param assignTo="{!isOTPResent}" name="isOTPResent" value="true"/>
+                                </apex:commandLink>
+                   
+                    		</p>
+                            <p id="resendOTPText" style="background-color:auto; text-align:center; font-size:120%; padding:10px;"><apex:outputText style="background-color:#3333ff;color:white;" value="Resend OTP"/></p>
+                    
+                            <apex:actionFunction name="paraFunction" action="{!verifyOtpSms}" reRender="otpNumber,msg">
+                                <apex:param assignTo="{!strOTP}" name="node" value=""/>
+                            </apex:actionFunction>
+                        </apex:form>
+                <apex:pageMessages id="msg" />
+					</div>
+                </span>
+            </div>
+            <div class="slds-col">
+                
+                <span></span>
+            </div>
+        </div>
+        
+        <script>
+        var timerId;
+        document.getElementById("resendOTPLink").style.display = "none";
+        document.getElementById("resendOTPText").style.display = "block";
+		document.getElementById("otpNumber").focus();
+		resetCounter();
+        function displayLink() {
+            clearInterval(timerId);
+            document.getElementById("resendOTPLink").style.display = "block";
+        	document.getElementById("resendOTPText").style.display = "none";
+            document.getElementById("displayTimer").style.display = "none";
+            document.getElementById("validateButton").disabled = true;
+        }
+
+		function verifyOTP(){
+            var otp1 = document.getElementById("otpNumber").value;
+        	paraFunction(otp1);
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var input = document.getElementById("otpNumber");
+            
+            input.addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    verifyOTP();
+                }
+            });
+        });
+        
+        // create resetCounter() methof to reset counter's value  
+        function resetCounter() {  
+            var min = 1;  
+            var minutes = 60 * min  
+            var display = document.querySelector('#timeSpan');  
+            document.getElementById("resendOTPLink").style.display = "none";
+        	document.getElementById("resendOTPText").style.display = "block";
+            document.getElementById("displayTimer").style.display = "block";
+            document.getElementById("validateButton").disabled = false;
+            // call helper method to reset the counter  
+            startTimer(minutes, display);
+        }  
+          
+        // start timer  
+        function startTimer(period, display) {  
+            var data = period, min, sec;  
+              
+            // use setInterval function  
+            timerId = setInterval(function () {  
+                // calculate minutes and seconds  
+                min = parseInt(data / 60, 10);  
+                sec = parseInt(data % 60, 10);  
+                  
+                // use the ternary operator to get minutes and seconds  
+                min = min < 10 ? "0" + min : min;  
+                sec = sec < 10 ? "0" + sec : sec;  
+                
+                if (--data < 0) {  
+                    data = period;  
+                }
+                
+                // set time details to the span  
+                display.textContent = sec;
+            }, 1000);
+        }
+    </script>  
+    </html>
+</apex:page>

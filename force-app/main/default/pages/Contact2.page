@@ -1,0 +1,4 @@
+<apex:page standardcontroller="Contact" tabStyle="Contact" lightningStylesheets="true">
+<apex:slds />
+<apex:enhancedList rowsPerPage="100" height="500" type="Contact"/>
+</apex:page>

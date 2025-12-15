@@ -1,0 +1,41 @@
+<apex:page standardController="Application_Form__c" extensions="UE_showApplicationNumber" lightningStylesheets="true" sidebar="false" showHeader="false" standardStylesheets="true">
+
+    <apex:form >
+        <apex:slds />
+        <center>
+            <apex:pageBlock >
+                <div style="width:1000px;height:500px;background-color:lightgrey;border: 2px solid black;margin-top: 8%">
+                    <Head>
+                        <p>
+                            <center>
+                                <apex:image id="theImg" value="{!logoUrl}" style="margin-top:2%" width="400" height="400" alt="Successfully Application Form submitted"/><br/><br/>
+                                <apex:image id="theImage" value="{!$Resource.CheckIcon}" width="80" height="80" alt="Successfully Enquiry submitted"/><br/><br/>
+                                <font size="5">Application Form submitted successfully 
+                                  <!--  <apex:outputPanel rendered="{!PaymentStatus}">
+                                    	but the payment has failed. You will receive the link by Email or SMS to complete the payment
+                                	</apex:outputPanel>-->
+									</font> 
+                                
+                               <br/><br/>
+                                Your Enquiry No.<br/>
+
+                                <font size="3"> <b><apex:outputText value="{!appForm.Enquiry_Number__c}" ></apex:outputText></b> </font><br/><br/>
+                                <!--   <apex:outputText label="Enquiry Number" value="{!enq1[0].Name}" styleClass="slds-output" style="width:300px;height:35px;margin-left:15em;margin-top:em;font-size:16px;"/><br/><br/> -->
+
+                                Your Application No.<br/>
+
+                                <font size="3"> <b><apex:outputText value="{!appForm.Name}" ></apex:outputText></b> </font><br/><br/>
+
+                               <b>  <font size="2">Admission Team will get in touch with you shortly.</font><br/></b> 
+
+                            </center>
+                        </p>
+                    </Head>
+                </div>
+            </apex:pageBlock>
+            <center>    <b>  <apex:commandButton action="{!downloadForm_A}" value="Download Forms" style="width:250px;height:40px;margin-bottom:3em;font-size:16px" styleClass="slds-button slds-button_brand" />
+              <!-- <apex:commandButton action="{!downloadForm_B_C_D_D}" value="Download Form B/C/D/E" style="width:250px;height:40px;margin-bottom:3em;font-size:16px" styleClass="slds-button slds-button_brand"/>   -->
+            </b> </center>
+        </center>
+    </apex:form>
+</apex:page>

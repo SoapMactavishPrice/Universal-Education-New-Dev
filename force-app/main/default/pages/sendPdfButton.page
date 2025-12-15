@@ -1,0 +1,2 @@
+<apex:page controller="UE_SendApplicationFormPDF" action="{!Send}">
+</apex:page>

@@ -1,0 +1,29 @@
+<apex:page standardController="Admission_Form__c" extensions="UE_DocumentDetail" lightningStylesheets="true">
+    
+    <apex:form >
+        <apex:slds />
+        <apex:pageMessages ></apex:pageMessages>
+      
+        
+        <apex:pageblock id="valid" rendered="{!msg}" >
+            <apex:pageBlockTable value="{!listDoc}" var="e1" styleClass="slds-table slds-table--bordered slds-table--striped">
+                <apex:column value="{!e1.Name}"/>
+                <apex:column value="{!e1.isOptional__c}"/>
+                
+                <apex:column headerValue="Submitted">
+                    <apex:actionRegion >
+                        <apex:inputField value="{!e1.isSubmitted__c}" >
+                            <apex:actionSupport event="onchange" rerender="val"/>
+                        </apex:inputField>
+                    </apex:actionRegion>
+                    
+                </apex:column>
+                <apex:column headerValue="Submission Date" id="val" >
+                    <apex:inputField value="{!e1.Submission_Date__c}" required="{!e1.isSubmitted__c}" style="width:200px;" styleClass="slds-input" />  <!-- required="{!e1.isSubmitted__c}" -->
+                </apex:column>
+            </apex:pageBlockTable>
+            <center><apex:commandButton value="Save" action="{!saveDocument}" style=" margin-top:2em;width:200px;height:35px;;background-color:lightblue;font-size:16px" styleClass="slds-button slds-button_success" /></center> <br/><br/>
+        </apex:pageblock>
+      
+    </apex:form>
+</apex:page>

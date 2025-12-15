@@ -1,0 +1,28 @@
+<apex:page controller="DocumentReceivedController">
+    <script>
+        window.onload = function() {
+            // Get the record ID from the URL
+            var recordId = '{!$CurrentPage.parameters.id}';
+            
+            // Define the action to invoke the updateDocumentReceived method
+            var action = '{!$RemoteAction.DocumentReceivedController.updateDocumentReceived}';
+
+            // Call the updateDocumentReceived method using JavaScript Remoting
+            Visualforce.remoting.Manager.invokeAction(
+                action,
+                recordId, 
+                function(result, event) {
+                    if (event.status) {
+                        // Redirect to the record page if the document was successfully marked as received
+                        if (result) {
+                            window.location.href = "/{!$CurrentPage.parameters.id}";
+                        }
+                    } else {
+                        // If there's an error, you can handle it silently or log it for debugging
+                        console.log('Error: ' + event.message);
+                    }
+                }
+            );
+        };
+    </script>
+</apex:page>

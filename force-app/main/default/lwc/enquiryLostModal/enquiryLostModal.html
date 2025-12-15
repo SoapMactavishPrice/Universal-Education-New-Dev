@@ -1,0 +1,53 @@
+<template>
+    <lightning-modal-header label="Mark Enquiry as Lost"></lightning-modal-header>
+    <lightning-modal-body>
+        <template if:true={showSpinner}>
+            <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+        </template>
+        <div class="slds-p-around_medium">
+            <lightning-combobox
+                name="lostReason"
+                label="Lost Reason"
+                value={lostReasons}
+                placeholder="Select a Reason"
+                options={lostReasonOptions}
+                onchange={handleLostReasonChange}>
+            </lightning-combobox>
+
+            <lightning-textarea
+                label="Lost Comment"
+                value={lostComment}
+                onchange={handleCommentChange}>
+            </lightning-textarea>
+            <p style="font-size: 12px; color: #888;">* Comment must be at least 200 characters.</p>
+        </div>
+    </lightning-modal-body>
+
+    <lightning-modal-footer>
+    <div class="slds-grid slds-grid_align-spread slds-grid_vertical-align-center slds-p-around_x-small">
+
+        <!-- Left side: Message -->
+        <div class="slds-col">
+            <template if:true={Message}>
+                <span style="color: red;">{Message}</span>
+            </template>
+        </div>
+
+        <!-- Right side: Buttons -->
+        <div class="slds-col slds-grid slds-grid_align-right slds-gutter_small">
+            <lightning-button
+                class="slds-m-right_small"
+                variant="neutral"
+                label="Cancel"
+                onclick={handleCancel}>
+            </lightning-button>
+            <lightning-button
+                variant="brand"
+                label="Save"
+                onclick={handleSave}>
+            </lightning-button>
+        </div>
+    </div>
+</lightning-modal-footer>
+
+</template>

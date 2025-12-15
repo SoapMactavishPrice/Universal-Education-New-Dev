@@ -1,0 +1,3 @@
+<apex:page standardController="Enquiry__c">
+     <c:ST_StatusProgressBarController objectAPIName="Enquiry__c"  fieldAPIName="Stages__c"/> 
+</apex:page>

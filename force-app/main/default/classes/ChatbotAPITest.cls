@@ -1,0 +1,175 @@
+@isTest
+private class ChatbotAPITest {
+    
+    @testSetup
+    static void setup() {
+        Id qualifiedRecordTypeId = Schema.SObjectType.Lead.getRecordTypeInfosByDeveloperName().get('Qualified').getRecordTypeId();
+        
+        Lead testLead = new Lead();
+        testLead.FirstName = 'Test';
+        testLead.LastName = 'Lead';
+        testLead.MobilePhone = '1234567890';
+        testLead.Company = 'Chatbot Lead';
+        // testLead.School_Short_Code__c = 'STELRA';
+        testLead.RecordTypeId = qualifiedRecordTypeId;
+        insert testLead;
+    }
+    
+    @isTest
+    static void testGetLeadAPI_Success() {
+        Lead testLead = [SELECT Id FROM Lead LIMIT 1];
+        
+        RestRequest req = new RestRequest();
+        RestResponse res = new RestResponse();
+        req.requestURI = '/services/apexrest/chatbot/get/lead';
+        req.httpMethod = 'GET';
+        req.addParameter('mobileNumber', '1234567890');
+        
+        RestContext.request = req;
+        RestContext.response = res;
+        
+        Test.startTest();
+        ChatbotGetLeadAPI.getLeadDetail();
+        ChatbotGetLeadAPI.dummyMethod();
+        Test.stopTest();
+    }
+    
+    @isTest
+    static void testGetLeadAPI_NewLead() {
+        RestRequest req = new RestRequest();
+        RestResponse res = new RestResponse();
+        req.requestURI = '/services/apexrest/chatbot/get/lead';
+        req.httpMethod = 'GET';
+        req.addParameter('mobileNumber', '9999999999');
+        
+        RestContext.request = req;
+        RestContext.response = res;
+        
+        Test.startTest();
+        ChatbotGetLeadAPI.getLeadDetail();
+        Test.stopTest();
+    }
+    
+    @isTest
+    static void testGetLeadAPI_MissingParam() {
+        RestRequest req = new RestRequest();
+        RestResponse res = new RestResponse();
+        req.requestURI = '/services/apexrest/chatbot/get/lead';
+        req.httpMethod = 'GET';
+        
+        RestContext.request = req;
+        RestContext.response = res;
+        
+        Test.startTest();
+        ChatbotGetLeadAPI.getLeadDetail();
+        Test.stopTest();
+    }
+    
+    @isTest
+    static void testCreateLeadAPI_Success() {
+        RestRequest req = new RestRequest();
+        RestResponse res = new RestResponse();
+        req.requestURI = '/services/apexrest/chatbot/create/lead';
+        req.httpMethod = 'POST';
+        req.requestBody = Blob.valueOf('{"MobileNumber":"9876543210"}');
+        
+        RestContext.request = req;
+        RestContext.response = res;
+        
+        Test.startTest();
+        ChatbotCreateLeadAPI.createLead();
+        Test.stopTest();
+    }
+    
+    @isTest
+    static void testCreateLeadAPI_MissingMobile() {
+        RestRequest req = new RestRequest();
+        RestResponse res = new RestResponse();
+        req.requestURI = '/services/apexrest/chatbot/create/lead';
+        req.httpMethod = 'POST';
+        req.requestBody = Blob.valueOf('{}');
+        
+        RestContext.request = req;
+        RestContext.response = res;
+        
+        Test.startTest();
+        ChatbotCreateLeadAPI.createLead();
+        Test.stopTest();
+    }
+    
+    @isTest
+    static void testUpdateLeadAPI_Success() {
+        Lead testLead = [SELECT Id FROM Lead LIMIT 1];
+        
+        String requestBody = '{"leadId":"' + testLead.Id + '","schoolShortCode":"TEST","grade":"10","firstName":"John","lastName":"Doe","childFirstName":"Child","academicYear":"2024"}';
+        
+        RestRequest req = new RestRequest();
+        RestResponse res = new RestResponse();
+        req.requestURI = '/services/apexrest/chatbot/update/lead';
+        req.httpMethod = 'PUT';
+        req.requestBody = Blob.valueOf(requestBody);
+        
+        RestContext.request = req;
+        RestContext.response = res;
+        
+        Test.startTest();
+        ChatbotUpdateLeadAPI.updateLead();
+        Test.stopTest();
+    }
+    
+    @isTest
+    static void testUpdateLeadAPI_MissingLeadId() {
+        String requestBody = '{"schoolShortCode":"TEST"}';
+        
+        RestRequest req = new RestRequest();
+        RestResponse res = new RestResponse();
+        req.requestURI = '/services/apexrest/chatbot/update/lead';
+        req.httpMethod = 'PUT';
+        req.requestBody = Blob.valueOf(requestBody);
+        
+        RestContext.request = req;
+        RestContext.response = res;
+        
+        Test.startTest();
+        ChatbotUpdateLeadAPI.updateLead();
+        Test.stopTest();
+    }
+    
+    @isTest
+    static void testUpdateLeadAPI_LeadNotFound() {
+        String requestBody = '{"leadId":"00Q000000000000AAA"}';
+        
+        RestRequest req = new RestRequest();
+        RestResponse res = new RestResponse();
+        req.requestURI = '/services/apexrest/chatbot/update/lead';
+        req.httpMethod = 'PUT';
+        req.requestBody = Blob.valueOf(requestBody);
+        
+        RestContext.request = req;
+        RestContext.response = res;
+        
+        Test.startTest();
+        ChatbotUpdateLeadAPI.updateLead();
+        Test.stopTest();
+    }
+    
+    @isTest
+    static void testUpdateLeadAPI_PartialUpdate() {
+        Lead testLead = [SELECT Id FROM Lead LIMIT 1];
+        
+        String requestBody = '{"leadId":"' + testLead.Id + '","firstName":"Jane"}';
+        
+        RestRequest req = new RestRequest();
+        RestResponse res = new RestResponse();
+        req.requestURI = '/services/apexrest/chatbot/update/lead';
+        req.httpMethod = 'PUT';
+        req.requestBody = Blob.valueOf(requestBody);
+        
+        RestContext.request = req;
+        RestContext.response = res;
+        
+        Test.startTest();
+        ChatbotUpdateLeadAPI.updateLead();
+        Test.stopTest();
+    }
+}

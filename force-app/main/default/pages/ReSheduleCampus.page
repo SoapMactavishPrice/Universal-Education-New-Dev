@@ -1,0 +1,32 @@
+<apex:page standardController="Contact" extensions="SheduleCampusController" action="{!scheduleFirsttoReschedule}" lightningStylesheets="true" standardStylesheets="true" sidebar="true" showHeader="true">
+    <apex:form >
+    <apex:slds />
+    <apex:pageBlock title="Shedule Campus Visit">
+
+    <apex:pageMessages />
+    <apex:pageBlockSection title="Re-Scheduled" id="eventInformation" collapsible="false" columns="2" rendered="{!error}">
+        
+        <apex:inputfield value="{!ev.Subject}"/>
+        <apex:outputField value="{!con.Name}"/>
+        <apex:inputField value="{!ev.StartDateTime}" showDatePicker="true" required="true"/> 
+        <apex:inputfield value="{!ev.EndDateTime}" showDatePicker="true" required="true"/>
+       
+        <apex:outputfield value="{!con.school_Name__c}" label="Location"/>
+        <apex:inputField value="{!ev.OwnerId}"/>
+        <apex:inputfield value="{!ev.Description}"/>
+        
+       <apex:pageBlockSection >
+            <apex:commandButton action="{!schoolTourRescheduled}" value="Submit"  style="width:180px;height:40px;margin-top:3em;margin-bottom:3em;margin-left:-20%;background-color:lightblue;font-size:16px" />
+       </apex:pageBlockSection>
+    </apex:pageBlockSection>
+<apex:pageBlockSection rendered="{!back}"  >
+        <center>
+            <b>
+             <apex:commandButton action="{!cancel}" value="Back"  styleClass="slds-button slds-button_neutral"/> 
+            </b>
+        
+    </center> </apex:pageBlockSection> 
+ 
+</apex:pageBlock>
+</apex:form>
+</apex:page>
