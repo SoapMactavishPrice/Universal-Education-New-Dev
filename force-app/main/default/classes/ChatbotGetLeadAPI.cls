@@ -26,14 +26,19 @@ global with sharing class ChatbotGetLeadAPI {
                 createApiLog('ChatbotGetLeadAPI', reqBody, respBody, respCode, 'Missing mobileNumber parameter', null);
                 return;
             }
-            
+
+            String cleanedMobile = mobileNumber.replaceAll('[^0-9]', '');
+            String likePattern = '%' + cleanedMobile + '%';
+
             List<Lead> existingLeads = [
-                SELECT Id 
-                FROM Lead 
-                WHERE MobilePhone = :mobileNumber 
-                AND Company = 'Chatbot Lead'
+                SELECT Id
+                FROM Lead
+                WHERE MobilePhone LIKE :likePattern
+                AND LeadSource = 'Chatbot'
                 LIMIT 1
             ];
+
+
             
             Map<String, String> response = new Map<String, String>();
             

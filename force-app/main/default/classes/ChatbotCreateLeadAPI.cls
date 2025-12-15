@@ -36,6 +36,7 @@ global with sharing class ChatbotCreateLeadAPI {
             newLead.LastName = mobileNumber;
             newLead.MobilePhone = mobileNumber;
             newLead.Company = 'Chatbot Lead';
+            newLead.LeadSource = 'Chatbot';
             newLead.School_Short_Code__c = 'STELRA';
             newLead.RecordTypeId = qualifiedRecordTypeId;
             
