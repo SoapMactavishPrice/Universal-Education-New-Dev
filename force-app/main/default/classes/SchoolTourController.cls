@@ -427,6 +427,7 @@ public class SchoolTourController {
 					ld.Meet_Done_On_Time__c = System.now().format('hh:mm a');
                     ld.Meet_Done_On_Date__c = System.now().format('dd-MM-yyyy');
                     ld.Meet_Done_By__c = UserInfo.getName();
+                    ld.OwnerId = UserInfo.getUserId();
 					lstleads.add(ld);
 					}
 				system.debug('lstleads -- ' + lstleads);
