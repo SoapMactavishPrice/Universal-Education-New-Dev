@@ -87,4 +87,37 @@ public class AcitivityTaskCountTriggerTest {
         
         
     }
+
+    @isTest
+    static void testCTITaskLeadOwnerUpdate() {
+
+        User u = [SELECT Id FROM User WHERE IsActive = true LIMIT 1];
+
+        Lead ld = new Lead(
+            LastName = 'CTI Lead',
+            Company  = 'CTI Co',
+            Stage__c = 'New'
+        );
+        insert ld;
+
+        Task ctiTask = new Task(
+            Subject = 'CTI - Outbound Call',
+            Status = 'Completed',
+            Priority = 'Normal',
+            WhoId = ld.Id,
+            OwnerId = u.Id,
+            ActivityDate = Date.today()
+        );
+
+        Test.startTest();
+        insert ctiTask;
+        Test.stopTest();
+
+        Lead updatedLead = [
+            SELECT Id, OwnerId
+            FROM Lead
+            WHERE Id = :ld.Id
+        ];
+    }
+
 }

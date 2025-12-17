@@ -12,6 +12,7 @@ global with sharing class UniApplyLeadGen {
         public String StellarSeekingAdmissionInGrade;
         public String School;
         public String ProspectID;
+        public String AcademicYear;
     }
 
     public class ProspectResult {
@@ -106,6 +107,9 @@ global with sharing class UniApplyLeadGen {
                 }
                 if (!String.isBlank(lw.ProspectID)) {
                     ld.put('UniApply_Prospect_ID__c', lw.ProspectID);
+                }
+                if (!String.isBlank(lw.AcademicYear)) {
+                    ld.put('Acadmic_Year__c', lw.AcademicYear);
                 }
 
                 System.debug('Lead ==>'+ ld);

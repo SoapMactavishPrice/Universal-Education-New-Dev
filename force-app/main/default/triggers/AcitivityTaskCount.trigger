@@ -57,5 +57,30 @@ trigger AcitivityTaskCount on Task (after insert, after update) {
         System.debug('Trigger fired. Number of tasks: ' + Trigger.new.size());
         ActivityTasksCountHandler.handleChatterPostOnTask(Trigger.new);
     }
+
+    if (Trigger.isAfter && Trigger.isInsert) {
+
+        Map<Id, Id> leadOwnerUpdates = new Map<Id, Id>();
+
+        for (Task t : Trigger.new) {
+            if (t.Subject != null && t.Subject.startsWith('CTI') && t.WhoId != null) {
+                if (t.WhoId.getSObjectType() == Lead.SObjectType) {
+                    leadOwnerUpdates.put(t.WhoId, t.OwnerId);
+                }
+            }
+        }
+
+        if (!leadOwnerUpdates.isEmpty()) {
+            List<Lead> leadsToUpdate = new List<Lead>();
+            for (Id leadId : leadOwnerUpdates.keySet()) {
+                leadsToUpdate.add(new Lead(
+                    Id = leadId,
+                    OwnerId = leadOwnerUpdates.get(leadId)
+                ));
+            }
+            update leadsToUpdate;
+        }
+    }
+
     
 }
