@@ -1,7 +1,5 @@
-trigger AssignLeadOwner on Lead (after insert) {
-    try {
-        // List to store leads for update
-        List<Lead> leadsToUpdate = new List<Lead>();
+trigger AssignLeadOwner on Lead (before insert) {
+    // try {
 
         // Collect School Short Codes from newly inserted leads
         Set<String> schoolCodes = new Set<String>();
@@ -47,12 +45,9 @@ trigger AssignLeadOwner on Lead (after insert) {
                 String leadUserName = schoolCodeToLeadUserMap.get(lead.School_Short_Code__c);
                 if (leadUserName != null) {
                     Id newOwnerId = userNameToUserIdMap.get(leadUserName);
-                    if (newOwnerId != null) {
+                    if (newOwnerId != null && lead.Company != 'Ozonetel Lead') {
                         //  Cannot modify lead directly, so add to update list
-                        leadsToUpdate.add(new Lead(
-                            Id = lead.Id,
-                            OwnerId = newOwnerId
-                        ));
+                        lead.OwnerId = newOwnerId;
                         System.debug('Lead ' + lead.Id + ' assigned to user: ' + leadUserName);
                     } else {
                         System.debug('No matching User found for LeadUser__c.Name: ' + leadUserName);
@@ -61,20 +56,9 @@ trigger AssignLeadOwner on Lead (after insert) {
             }
         }
 
-        //  Update the leads in bulk
-        if (!leadsToUpdate.isEmpty()) {
-            try {
-                update leadsToUpdate;
-                System.debug('Successfully updated ' + leadsToUpdate.size() + ' leads with new OwnerId.');
-            } catch (DmlException e) {
-                System.debug('Error updating Lead records: ' + e.getMessage());
-            }
-        } else {
-            System.debug('No leads to update with new OwnerId.');
-        }
-    } catch (Exception ex) {
-        System.debug('Unexpected error in AssignLeadOwner trigger: ' + ex.getMessage());
-    }
+    // } catch (Exception ex) {
+    //     System.debug('Unexpected error in AssignLeadOwner trigger: ' + ex.getMessage());
+    // }
 }
 
 /*trigger AssignLeadOwner on Lead (after insert) {

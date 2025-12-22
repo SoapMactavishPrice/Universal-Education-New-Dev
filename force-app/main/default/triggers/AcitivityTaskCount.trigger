@@ -1,10 +1,10 @@
 trigger AcitivityTaskCount on Task (after insert, after update) {
+
     if(trigger.isInsert || Trigger.isUpdate ) {
         Trigger_Switch__mdt Trigger_Switch = Trigger_Switch__mdt.getInstance('AcitivityTaskCountSwitch');
-		system.debug(Trigger_Switch.IsActive__c);
+        system.debug(Trigger_Switch.IsActive__c);
         if (Trigger_Switch.IsActive__c == true) {
-			system.debug('Inside Handler>>');
-            //AcitivityTaskCountHandler.checkobject(Trigger.New);  
+            system.debug('Inside Handler>>');
             ActivityTasksCountHandler.checkobject(Trigger.New,Trigger.oldMap);   
         }
     }
@@ -45,21 +45,17 @@ trigger AcitivityTaskCount on Task (after insert, after update) {
         }
     }
     
-    
     if (Trigger.isInsert || Trigger.isUpdate) {
         System.debug('Checking for First Activity Date/Time update...');
-      
         ActivityTasksCountHandler.setFirstActivityDateTimeOnLead(Trigger.new);
     }
     
-     // Only proceed if there are records to process
     if (Trigger.isInsert || Trigger.isUpdate) {
         System.debug('Trigger fired. Number of tasks: ' + Trigger.new.size());
         ActivityTasksCountHandler.handleChatterPostOnTask(Trigger.new);
     }
 
     if (Trigger.isAfter && Trigger.isInsert) {
-
         Map<Id, Id> leadOwnerUpdates = new Map<Id, Id>();
 
         for (Task t : Trigger.new) {
@@ -70,17 +66,25 @@ trigger AcitivityTaskCount on Task (after insert, after update) {
             }
         }
 
+        System.debug('leadOwnerUpdates ==>' + leadOwnerUpdates.size());
+
         if (!leadOwnerUpdates.isEmpty()) {
             List<Lead> leadsToUpdate = new List<Lead>();
             for (Id leadId : leadOwnerUpdates.keySet()) {
                 leadsToUpdate.add(new Lead(
-                    Id = leadId,
-                    OwnerId = leadOwnerUpdates.get(leadId)
+                    Id = leadId
                 ));
             }
+            System.debug('leadsToUpdate ==>' + leadsToUpdate.size());
             update leadsToUpdate;
         }
     }
 
-    
+    // Enqueue queueable job for each CTI task related to leads
+    for (Task t : Trigger.new) {
+        if (t.Subject != null && t.Subject.startsWith('CTI') && t.WhoId != null && String.valueOf(t.WhoId).startsWith('00Q')) {
+            System.enqueueJob(new UpdateLeadOwnerQueueable(t));
+        }
+    }
+
 }
