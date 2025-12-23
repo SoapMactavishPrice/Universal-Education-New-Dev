@@ -119,6 +119,7 @@ public without sharing class StudentApplicationFormController {
         applicationForm.Student_Street__c = (String)studentData.get('street');
         applicationForm.Student_Landmark__c = (String)studentData.get('landmark');
         applicationForm.Residential_Address__c = applicationForm.Student_Flat_No_House_No__c + ', ' + applicationForm.Student_Building_Apartment_Name__c + ', ' + applicationForm.Student_Street__c + ', ' + applicationForm.Student_Landmark__c;
+        applicationForm.Address__c = applicationForm.Student_Flat_No_House_No__c + ', ' + applicationForm.Student_Building_Apartment_Name__c + ', ' + applicationForm.Student_Street__c + ', ' + applicationForm.Student_Landmark__c;
         applicationForm.Student_Area__c = (String)studentData.get('area');
         applicationForm.City__c = (String)studentData.get('city');
         applicationForm.State__c = (String)studentData.get('state');

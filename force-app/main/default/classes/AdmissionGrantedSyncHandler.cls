@@ -315,7 +315,7 @@ Global class AdmissionGrantedSyncHandler {
                                    Office_Contact_No_FF__c,Synced_With_Ether_On_Date__c,Synced_With_Ether_On_Time__c,
                                    Mental_Problem_Please_Specify__c,Please_specify_any_medication__c,Share_the_Allergies__c,Concessions_Remark__c,Practitioner_Mobile__c,
                                    Practitioner_Name__c,Practitioner_Clinic_Phone__c,Practitioner_Address__c,
-Guardian_Designation__c,Guardian_office_name__c,Guardian_Qualification_FF__c,Mother_Annual_Income_FF__c,Father_Annual_Income_FF__c,
+        Guardian_Designation__c,Guardian_office_name__c,Guardian_Qualification_FF__c,Mother_Annual_Income_FF__c,Father_Annual_Income_FF__c,
                                    Office_Address_FF__c,
                                    Annual_Income_FF__c,
                                    Guardian_Aadhaar_Card_No_FF__c,
@@ -607,7 +607,7 @@ Guardian_Designation__c,Guardian_office_name__c,Guardian_Qualification_FF__c,Mot
                     req.setHeader('Content-Type', 'application/json');
                     HttpResponse res = httpreq.send(req);
                     reqresponse = res.getBody();
- system.debug('REQUES::::'+req);
+        system.debug('REQUES::::'+req);
                     system.debug('bodyContent::::'+bodyContent);
                     system.debug('REQUEST_RESPONSE::::'+reqresponse);
                     String json=reqresponse;
@@ -711,7 +711,7 @@ Guardian_Designation__c,Guardian_office_name__c,Guardian_Qualification_FF__c,Mot
                 reqresponse='Authentication settings is missing';
                 System.debug('Authentication settings is missing');    
             }
-system.debug('reqresponse '+reqresponse);
+        system.debug('reqresponse '+reqresponse);
             return reqresponse;
         /*}catch (Exception ex){
             System.debug('Error while sync ::'+ex.getMessage());
