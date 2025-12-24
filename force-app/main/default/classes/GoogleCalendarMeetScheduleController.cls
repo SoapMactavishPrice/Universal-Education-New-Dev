@@ -244,87 +244,87 @@ System.debug('=-=-=-=-'+enq.OpenActivities);
     }
     @future(Callout = true)
     public static void doCreateNewCalendar(String eventId , String method, Boolean toMakeStellarCallout, String htmlBody  ){
-        HttpResponse HttpRes = GoogleCalendarMeetScheduleController.doCreateNewCalendarEvent(eventId,htmlBody);
-         System.debug('HttpRes evts: @'+           HttpRes);
-        String Ssortcode = '';
-        if(HttpRes != null && String.isNotBlank(HttpRes.getBody()) && HttpRes.getStatusCode() == 200 && (toMakeStellarCallout || System.Test.isRunningTest())){
-            String meetLink = '';
-            String theBody = HttpRes.getBody();
-            if(String.isNotBlank(theBody)){
-                Map<String, Object> responseBodyMap =  (Map<String, Object>) JSON.deserializeUntyped(theBody);
-                Object meetLinkObj = responseBodyMap.get('hangoutLink');
-                meetLink = meetLinkObj != null ? String.valueOf(meetLinkObj) : '';
-            }
-            List<Event> evts = [SELECT Id, What.Name, StartDateTime,Enquiry_Email__c, EndDateTime,Contact__r.Name,Contact__r.Email,School_Institution__c, School_Institution__r.Name, School_Institution__r.For_Mapping_Email__c, School_Institution__r.School_Short_Code__c,  Description,Subject FROM Event WHERE Id = :eventId];
-            Event evt;
-            System.debug('gmeet evts: '+evts);
-            Enquiry__c enq;
-            Boolean isAdmissionForm = false;
-            String email = '', firstName = '', lastName = '', name = '', appEnqNo = '';
-            if(evts != null && !evts.isEmpty()){
-                evt = evts[0];
-                Id theWhatId = evt.WhatId;
-                if(theWhatId != null && theWhatId.getSObjectType().getDescribe().getName().containsIgnoreCase('Admission_Form__c')){
-                    isAdmissionForm = true;
-                    Admission_Form__c adf = [Select id,Name, Email_Address__c, First_Name__c, Last_Name__c, Student_Name__c, Application_No__c,Application_Form__c,Document_Received__c,Academic__c,Status__c,Called_for_Observation__c,Observation_Re_scheduled__c,School_Short_Code__c from Admission_Form__c where id=: theWhatId];
-                    email = adf.Email_Address__c;
-                    firstName = adf.First_Name__c;
-                    lastName = adf.Last_Name__c;
-                    name = adf.Student_Name__c;
-                    appEnqNo = adf.Application_No__c;
-                }else{
-                    enq = [SELECT Id, Name, Stages__c, Log_Status__c, Email__c, FirstName__c, Last_Name__c, Student_Full_Name__c FROM Enquiry__c WHERE Id = :theWhatId];
-                    email = enq.Email__c;
-                    firstName = enq.FirstName__c;
-                    lastName = enq.Last_Name__c;
-                    name = enq.Student_Full_Name__c;
-                    appEnqNo = enq.Name;
-                }
-            }else{
-                System.debug('Some Error: evt '+evt);
-                System.debug('Some Error: enq '+enq);
-            }
-            /*
-API: https://admission.stellarworldschool.com/meet
-Method: POST
-Payload:
-{
-email: "test@gmail.com",
-firstName: "",
-lastName: "",
-name: "",
-enquiryNo: ""
-}
+//         HttpResponse HttpRes = GoogleCalendarMeetScheduleController.doCreateNewCalendarEvent(eventId,htmlBody);
+//          System.debug('HttpRes evts: @'+           HttpRes);
+//         String Ssortcode = '';
+//         if(HttpRes != null && String.isNotBlank(HttpRes.getBody()) && HttpRes.getStatusCode() == 200 && (toMakeStellarCallout || System.Test.isRunningTest())){
+//             String meetLink = '';
+//             String theBody = HttpRes.getBody();
+//             if(String.isNotBlank(theBody)){
+//                 Map<String, Object> responseBodyMap =  (Map<String, Object>) JSON.deserializeUntyped(theBody);
+//                 Object meetLinkObj = responseBodyMap.get('hangoutLink');
+//                 meetLink = meetLinkObj != null ? String.valueOf(meetLinkObj) : '';
+//             }
+//             List<Event> evts = [SELECT Id, What.Name, StartDateTime,Enquiry_Email__c, EndDateTime,Contact__r.Name,Contact__r.Email,School_Institution__c, School_Institution__r.Name, School_Institution__r.For_Mapping_Email__c, School_Institution__r.School_Short_Code__c,  Description,Subject FROM Event WHERE Id = :eventId];
+//             Event evt;
+//             System.debug('gmeet evts: '+evts);
+//             Enquiry__c enq;
+//             Boolean isAdmissionForm = false;
+//             String email = '', firstName = '', lastName = '', name = '', appEnqNo = '';
+//             if(evts != null && !evts.isEmpty()){
+//                 evt = evts[0];
+//                 Id theWhatId = evt.WhatId;
+//                 if(theWhatId != null && theWhatId.getSObjectType().getDescribe().getName().containsIgnoreCase('Admission_Form__c')){
+//                     isAdmissionForm = true;
+//                     Admission_Form__c adf = [Select id,Name, Email_Address__c, First_Name__c, Last_Name__c, Student_Name__c, Application_No__c,Application_Form__c,Document_Received__c,Academic__c,Status__c,Called_for_Observation__c,Observation_Re_scheduled__c,School_Short_Code__c from Admission_Form__c where id=: theWhatId];
+//                     email = adf.Email_Address__c;
+//                     firstName = adf.First_Name__c;
+//                     lastName = adf.Last_Name__c;
+//                     name = adf.Student_Name__c;
+//                     appEnqNo = adf.Application_No__c;
+//                 }else{
+//                     enq = [SELECT Id, Name, Stages__c, Log_Status__c, Email__c, FirstName__c, Last_Name__c, Student_Full_Name__c FROM Enquiry__c WHERE Id = :theWhatId];
+//                     email = enq.Email__c;
+//                     firstName = enq.FirstName__c;
+//                     lastName = enq.Last_Name__c;
+//                     name = enq.Student_Full_Name__c;
+//                     appEnqNo = enq.Name;
+//                 }
+//             }else{
+//                 System.debug('Some Error: evt '+evt);
+//                 System.debug('Some Error: enq '+enq);
+//             }
+//             /*
+// API: https://admission.stellarworldschool.com/meet
+// Method: POST
+// Payload:
+// {
+// email: "test@gmail.com",
+// firstName: "",
+// lastName: "",
+// name: "",
+// enquiryNo: ""
+// }
 
-*/
-            String appEnqNoKey = isAdmissionForm ? 'applicationNo' : 'enquiryNo';
-            List<String> keyList = new List<String>{
-                // 'startDateTime', 'endDateTime', 'subject', 'description', 'Email', 'studentEmail', 'meetLink'
-                'email', 'firstName', 'lastName', 'name', appEnqNoKey, 'meetLink'
-                    };
-                        List<Object> valueList = new List<Object>{
-                            // evt.StartDateTime, evt.EndDateTime, evt.Subject, evt.Description, evt.Enquiry_Email__c, evt.Contact__r.Email, meetLink
-                            email, firstName, lastName, name, appEnqNo, meetLink
-                                };
-                                    /* Map<String, Object> meetingDetailsMap = StellarAPICallouts.createBody( keyList, valueList );
+// */
+//             String appEnqNoKey = isAdmissionForm ? 'applicationNo' : 'enquiryNo';
+//             List<String> keyList = new List<String>{
+//                 // 'startDateTime', 'endDateTime', 'subject', 'description', 'Email', 'studentEmail', 'meetLink'
+//                 'email', 'firstName', 'lastName', 'name', appEnqNoKey, 'meetLink'
+//                     };
+//                         List<Object> valueList = new List<Object>{
+//                             // evt.StartDateTime, evt.EndDateTime, evt.Subject, evt.Description, evt.Enquiry_Email__c, evt.Contact__r.Email, meetLink
+//                             email, firstName, lastName, name, appEnqNo, meetLink
+//                                 };
+//                                     /* Map<String, Object> meetingDetailsMap = StellarAPICallouts.createBody( keyList, valueList );
 
-Map<String, Object> dataMap = StellarAPICallouts.createBody(
-new List<String>{'enquiryNo', 'meetingDetails'},
-new List<Object>{evt.What.Name, meetingDetailsMap}
-); */
+// Map<String, Object> dataMap = StellarAPICallouts.createBody(
+// new List<String>{'enquiryNo', 'meetingDetails'},
+// new List<Object>{evt.What.Name, meetingDetailsMap}
+// ); */
                                     
-                                    Map<String, Object> requestBody = StellarAPICallouts.createBody(
-                                        keyList, valueList
-                                        /* new List<String>{
-'stage', 'status', 'email', 'data'
-},
-new List<Object>{
-enq.Stages__c, enq.Log_Status__c, enq.Email__c, dataMap
-} */
-                                    );
-            StellarAPICallouts.makeCallout('https://admission.stellarworldschool.com/meet', method, requestBody);
-        }
-        //  List<School_List__mdt> CalendarEmailMdt = new list<School_List__mdt>)();
+//                                     Map<String, Object> requestBody = StellarAPICallouts.createBody(
+//                                         keyList, valueList
+//                                         /* new List<String>{
+// 'stage', 'status', 'email', 'data'
+// },
+// new List<Object>{
+// enq.Stages__c, enq.Log_Status__c, enq.Email__c, dataMap
+// } */
+//                                     );
+//             StellarAPICallouts.makeCallout('https://admission.stellarworldschool.com/meet', method, requestBody);
+//         }
+//         //  List<School_List__mdt> CalendarEmailMdt = new list<School_List__mdt>)();
     }
     
     public static HttpResponse doCreateNewCalendarEvent(String eventId,String htmlBody){
