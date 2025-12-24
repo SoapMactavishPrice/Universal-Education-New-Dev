@@ -22,10 +22,10 @@ global with sharing  class UPdatePaymentApi {
         boolean isSucesss = false;
         Admission_Granted__c ld = null;
         
-        if (lead_id != null && lead_id != '') {
-            ld = [SELECT id,Lead_ID__c,Fees_Status__c, Payment_Received__c,Payment_Confirmed__c,Lead__c,Payment_Confirmed_On_Date__c,Payment_Confirmed_On_Time__c FROM Admission_Granted__c  WHERE Lead_Id__c=:lead_id LIMIT 1];
-        } else if (emailid != null && emailid != '') {
+        if (emailid != null && emailid != '') {
             ld = [SELECT id,Lead_ID__c,Fees_Status__c, Payment_Received__c,Payment_Confirmed__c,Lead__c,Payment_Confirmed_On_Date__c,Payment_Confirmed_On_Time__c FROM Admission_Granted__c  WHERE Email_Address__c =:emailid LIMIT 1];
+        } else if (lead_id != null && lead_id != '') {
+            ld = [SELECT id,Lead_ID__c,Fees_Status__c, Payment_Received__c,Payment_Confirmed__c,Lead__c,Payment_Confirmed_On_Date__c,Payment_Confirmed_On_Time__c FROM Admission_Granted__c  WHERE Lead_Id__c=:lead_id LIMIT 1];
         }
         system.debug(ld);
         if(ld!=null){
