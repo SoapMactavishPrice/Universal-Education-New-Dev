@@ -118,8 +118,30 @@ public without sharing class StudentApplicationFormController {
         applicationForm.Student_Building_Apartment_Name__c = (String)studentData.get('buildingName');
         applicationForm.Student_Street__c = (String)studentData.get('street');
         applicationForm.Student_Landmark__c = (String)studentData.get('landmark');
-        applicationForm.Residential_Address__c = applicationForm.Student_Flat_No_House_No__c + ', ' + applicationForm.Student_Building_Apartment_Name__c + ', ' + applicationForm.Student_Street__c + ', ' + applicationForm.Student_Landmark__c;
-        applicationForm.Address__c = applicationForm.Student_Flat_No_House_No__c + ', ' + applicationForm.Student_Building_Apartment_Name__c + ', ' + applicationForm.Student_Street__c + ', ' + applicationForm.Student_Landmark__c;
+        applicationForm.Address__c =
+            (String.isNotBlank(applicationForm.Student_Flat_No_House_No__c)
+                ? applicationForm.Student_Flat_No_House_No__c + ', '
+                : '') +
+            (String.isNotBlank(applicationForm.Student_Building_Apartment_Name__c)
+                ? applicationForm.Student_Building_Apartment_Name__c + ', '
+                : '') +
+            (String.isNotBlank(applicationForm.Student_Street__c)
+                ? applicationForm.Student_Street__c + ', '
+                : '') +
+            (String.isNotBlank(applicationForm.Student_Landmark__c)
+                ? applicationForm.Student_Landmark__c + ', '
+                : '') +
+            (String.isNotBlank(applicationForm.City__c)
+                ? applicationForm.City__c
+                : '') +
+            (String.isNotBlank(applicationForm.Pincode__c)
+                ? ' - ' + applicationForm.Pincode__c
+                : '') +
+            (String.isNotBlank(applicationForm.State__c)
+                ? ', ' + applicationForm.State__c
+                : '');
+
+        applicationForm.Residential_Address__c = applicationForm.Address__c;
         applicationForm.Student_Area__c = (String)studentData.get('area');
         applicationForm.City__c = (String)studentData.get('city');
         applicationForm.State__c = (String)studentData.get('state');
