@@ -29,8 +29,8 @@ global with sharing class ChatbotUpdateLeadAPI {
             }
             
             List<Lead> leads = [
-                SELECT Id, School_Short_Code__c, Stellar_Seeking_Admission_in_Grade__c, 
-                       FirstName, LastName, Your_First_Name__c, Acadmic_Year__c
+                SELECT Id, School_Institution__c, Stellar_Seeking_Admission_in_Grade__c, 
+                       FirstName, LastName, Your_First_Name__c, Acadmic_Year__c, Email
                 FROM Lead 
                 WHERE Id = :requestData.leadId 
                 LIMIT 1
@@ -54,7 +54,26 @@ global with sharing class ChatbotUpdateLeadAPI {
             List<String> updatedFields = new List<String>();
             
             if (String.isNotBlank(requestData.schoolShortCode)) {
-                leadToUpdate.School_Short_Code__c = requestData.schoolShortCode;
+                List<Account> accounts = [
+                    SELECT Id 
+                    FROM Account 
+                    WHERE School_Short_Code__c = :requestData.schoolShortCode 
+                    LIMIT 1
+                ];
+                
+                if (accounts.isEmpty()) {
+                    respCode = '400';
+                    UpdateLeadResponse errorResp = new UpdateLeadResponse();
+                    errorResp.Status = 'Failed';
+                    errorResp.Error = 'Account not found with the provided schoolShortCode';
+                    respBody = JSON.serialize(errorResp);
+                    res.statusCode = 400;
+                    res.responseBody = Blob.valueOf(respBody);
+                    createApiLog('ChatbotUpdateLeadAPI', reqBody, respBody, respCode, 'Account not found', null);
+                    return;
+                }
+                
+                leadToUpdate.School_Institution__c = accounts[0].Id;
                 updatedFields.add('schoolShortCode');
             }
             
@@ -81,6 +100,27 @@ global with sharing class ChatbotUpdateLeadAPI {
             if (String.isNotBlank(requestData.academicYear)) {
                 leadToUpdate.Acadmic_Year__c = requestData.academicYear;
                 updatedFields.add('academicYear');
+            }
+            
+            if (String.isNotBlank(requestData.email)) {
+                String emailRegex = '^[a-zA-Z0-9._|\\\\%#~`=?&/$^*!}{+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$';
+                Pattern emailPattern = Pattern.compile(emailRegex);
+                Matcher emailMatcher = emailPattern.matcher(requestData.email);
+                
+                if (!emailMatcher.matches()) {
+                    respCode = '400';
+                    UpdateLeadResponse errorResp = new UpdateLeadResponse();
+                    errorResp.Status = 'Failed';
+                    errorResp.Error = 'Invalid email format';
+                    respBody = JSON.serialize(errorResp);
+                    res.statusCode = 400;
+                    res.responseBody = Blob.valueOf(respBody);
+                    createApiLog('ChatbotUpdateLeadAPI', reqBody, respBody, respCode, 'Invalid email format', null);
+                    return;
+                }
+                
+                leadToUpdate.Email = requestData.email;
+                updatedFields.add('email');
             }
             
             if (!updatedFields.isEmpty()) {
@@ -143,6 +183,7 @@ global with sharing class ChatbotUpdateLeadAPI {
         public String childFirstName;
         public String academicYear;
         public String leadId;
+        public String email;
     }
     
     global class UpdateLeadResponse {

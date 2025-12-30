@@ -5,12 +5,17 @@ private class ChatbotAPITest {
     static void setup() {
         Id qualifiedRecordTypeId = Schema.SObjectType.Lead.getRecordTypeInfosByDeveloperName().get('Qualified').getRecordTypeId();
         
+        // Create Account with School_Short_Code__c
+        Account testAccount = new Account();
+        testAccount.Name = 'Test School';
+        testAccount.School_Short_Code__c = 'STELRA';
+        insert testAccount;
+        
         Lead testLead = new Lead();
         testLead.FirstName = 'Test';
         testLead.LastName = 'Lead';
         testLead.MobilePhone = '1234567890';
         testLead.Company = 'Chatbot Lead';
-        // testLead.School_Short_Code__c = 'STELRA';
         testLead.RecordTypeId = qualifiedRecordTypeId;
         insert testLead;
     }
@@ -158,6 +163,86 @@ private class ChatbotAPITest {
         Lead testLead = [SELECT Id FROM Lead LIMIT 1];
         
         String requestBody = '{"leadId":"' + testLead.Id + '","firstName":"Jane"}';
+        
+        RestRequest req = new RestRequest();
+        RestResponse res = new RestResponse();
+        req.requestURI = '/services/apexrest/chatbot/update/lead';
+        req.httpMethod = 'PUT';
+        req.requestBody = Blob.valueOf(requestBody);
+        
+        RestContext.request = req;
+        RestContext.response = res;
+        
+        Test.startTest();
+        ChatbotUpdateLeadAPI.updateLead();
+        Test.stopTest();
+    }
+    
+    @isTest
+    static void testUpdateLeadAPI_AccountLookupSuccess() {
+        Lead testLead = [SELECT Id FROM Lead LIMIT 1];
+        
+        String requestBody = '{"leadId":"' + testLead.Id + '","schoolShortCode":"STELRA"}';
+        
+        RestRequest req = new RestRequest();
+        RestResponse res = new RestResponse();
+        req.requestURI = '/services/apexrest/chatbot/update/lead';
+        req.httpMethod = 'PUT';
+        req.requestBody = Blob.valueOf(requestBody);
+        
+        RestContext.request = req;
+        RestContext.response = res;
+        
+        Test.startTest();
+        ChatbotUpdateLeadAPI.updateLead();
+        Test.stopTest();
+    }
+    
+    @isTest
+    static void testUpdateLeadAPI_AccountNotFound() {
+        Lead testLead = [SELECT Id FROM Lead LIMIT 1];
+        
+        String requestBody = '{"leadId":"' + testLead.Id + '","schoolShortCode":"INVALID"}';
+        
+        RestRequest req = new RestRequest();
+        RestResponse res = new RestResponse();
+        req.requestURI = '/services/apexrest/chatbot/update/lead';
+        req.httpMethod = 'PUT';
+        req.requestBody = Blob.valueOf(requestBody);
+        
+        RestContext.request = req;
+        RestContext.response = res;
+        
+        Test.startTest();
+        ChatbotUpdateLeadAPI.updateLead();
+        Test.stopTest();
+    }
+    
+    @isTest
+    static void testUpdateLeadAPI_ValidEmail() {
+        Lead testLead = [SELECT Id FROM Lead LIMIT 1];
+        
+        String requestBody = '{"leadId":"' + testLead.Id + '","email":"test@example.com"}';
+        
+        RestRequest req = new RestRequest();
+        RestResponse res = new RestResponse();
+        req.requestURI = '/services/apexrest/chatbot/update/lead';
+        req.httpMethod = 'PUT';
+        req.requestBody = Blob.valueOf(requestBody);
+        
+        RestContext.request = req;
+        RestContext.response = res;
+        
+        Test.startTest();
+        ChatbotUpdateLeadAPI.updateLead();
+        Test.stopTest();
+    }
+    
+    @isTest
+    static void testUpdateLeadAPI_InvalidEmail() {
+        Lead testLead = [SELECT Id FROM Lead LIMIT 1];
+        
+        String requestBody = '{"leadId":"' + testLead.Id + '","email":"invalidemail"}';
         
         RestRequest req = new RestRequest();
         RestResponse res = new RestResponse();
