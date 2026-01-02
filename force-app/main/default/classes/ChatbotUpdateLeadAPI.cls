@@ -30,7 +30,8 @@ global with sharing class ChatbotUpdateLeadAPI {
             
             List<Lead> leads = [
                 SELECT Id, School_Institution__c, Stellar_Seeking_Admission_in_Grade__c, 
-                       FirstName, LastName, Your_First_Name__c, Acadmic_Year__c, Email
+                       FirstName, LastName, Your_First_Name__c, Acadmic_Year__c, Email,
+                       School_Short_Code__c, OwnerId
                 FROM Lead 
                 WHERE Id = :requestData.leadId 
                 LIMIT 1
@@ -52,10 +53,12 @@ global with sharing class ChatbotUpdateLeadAPI {
             
             Lead leadToUpdate = leads[0];
             List<String> updatedFields = new List<String>();
+            String schoolShortCode = leadToUpdate.School_Short_Code__c;
+            Boolean shouldUpdateOwner = false;
             
             if (String.isNotBlank(requestData.schoolShortCode)) {
                 List<Account> accounts = [
-                    SELECT Id 
+                    SELECT Id, School_Short_Code__c
                     FROM Account 
                     WHERE School_Short_Code__c = :requestData.schoolShortCode 
                     LIMIT 1
@@ -74,7 +77,12 @@ global with sharing class ChatbotUpdateLeadAPI {
                 }
                 
                 leadToUpdate.School_Institution__c = accounts[0].Id;
+                schoolShortCode = accounts[0].School_Short_Code__c;
                 updatedFields.add('schoolShortCode');
+                
+                if (requestData.schoolShortCode != leadToUpdate.School_Short_Code__c) {
+                    shouldUpdateOwner = true;
+                }
             }
             
             if (String.isNotBlank(requestData.grade)) {
@@ -123,6 +131,45 @@ global with sharing class ChatbotUpdateLeadAPI {
                 updatedFields.add('email');
             }
             
+            if (shouldUpdateOwner && String.isNotBlank(schoolShortCode)) {
+                Set<String> schoolCodes = new Set<String>();
+                schoolCodes.add(schoolShortCode);
+                
+                Map<String, String> schoolCodeToLeadUserMap = new Map<String, String>();
+                for (LeadUser__c leadUser : [
+                    SELECT Name, SchoolCode__c 
+                    FROM LeadUser__c 
+                    WHERE SchoolCode__c IN :schoolCodes
+                ]) {
+                    schoolCodeToLeadUserMap.put(leadUser.SchoolCode__c, leadUser.Name);
+                    System.debug('Matching LeadUser__c found: ' + leadUser.Name + ' for SchoolCode__c: ' + leadUser.SchoolCode__c);
+                }
+                
+                Map<String, Id> userNameToUserIdMap = new Map<String, Id>();
+                if (!schoolCodeToLeadUserMap.isEmpty()) {
+                    for (User u : [
+                        SELECT Id, Name 
+                        FROM User 
+                        WHERE Name IN :schoolCodeToLeadUserMap.values()
+                    ]) {
+                        userNameToUserIdMap.put(u.Name, u.Id);
+                        System.debug('User found: ' + u.Name + ' with Id: ' + u.Id);
+                    }
+                }
+                
+                String leadUserName = schoolCodeToLeadUserMap.get(schoolShortCode);
+                if (leadUserName != null) {
+                    Id newOwnerId = userNameToUserIdMap.get(leadUserName);
+                    if (newOwnerId != null) {
+                        leadToUpdate.OwnerId = newOwnerId;
+                        updatedFields.add('ownerId');
+                        System.debug('Lead ' + leadToUpdate.Id + ' assigned to user: ' + leadUserName);
+                    } else {
+                        System.debug('No matching User found for LeadUser__c.Name: ' + leadUserName);
+                    }
+                }
+            }
+            
             if (!updatedFields.isEmpty()) {
                 update leadToUpdate;
             }
@@ -131,6 +178,7 @@ global with sharing class ChatbotUpdateLeadAPI {
             response.Status = 'Success';
             response.updatedFields = updatedFields;
             response.leadId = leadToUpdate.Id;
+            response.schoolShortCode = schoolShortCode;
             
             respCode = '200';
             message = 'Lead updated successfully';
@@ -151,6 +199,32 @@ global with sharing class ChatbotUpdateLeadAPI {
         } finally {
             createApiLog('ChatbotUpdateLeadAPI', reqBody, respBody, respCode, message, exceptionObj);
         }
+    }
+    
+    private static LeadUserInfo getLeadUserBySchoolCode(String schoolCode) {
+        LeadUserInfo info = new LeadUserInfo();
+        
+        if (String.isBlank(schoolCode)) {
+            return info;
+        }
+        
+        try {
+            Set<String> schoolCodes = new Set<String>();
+            schoolCodes.add(schoolCode);
+            
+            for (LeadUser__c leadUser : [
+                SELECT Name, SchoolCode__c 
+                FROM LeadUser__c 
+                WHERE SchoolCode__c IN :schoolCodes
+            ]) {
+                info.leadUserName = leadUser.Name;
+                info.schoolCode = leadUser.SchoolCode__c;
+            }
+        } catch (Exception ex) {
+            System.debug('Error fetching LeadUser: ' + ex.getMessage());
+        }
+        
+        return info;
     }
     
     private static void createApiLog(String className, String reqBody, String respBody, String respCode, String message, Exception ex) {
@@ -190,6 +264,13 @@ global with sharing class ChatbotUpdateLeadAPI {
         public String Status;
         public List<String> updatedFields;
         public String leadId;
+        public String schoolShortCode;
+        public LeadUserInfo leadUser;
         public String Error;
+    }
+    
+    global class LeadUserInfo {
+        public String leadUserName;
+        public String schoolCode;
     }
 }

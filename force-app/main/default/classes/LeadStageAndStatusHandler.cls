@@ -1,18 +1,16 @@
 public class LeadStageAndStatusHandler {
 
-    // Static flags to prevent recursive execution
     private static Boolean isExecutingUpdateLeadStages = false;
     private static Boolean isExecutingUpdateLeadStatusAfter = false;
     private static Boolean isExecutingUpdateLeadStatusFromRelatedRecords = false;
 
     public static void updateLeadStatusAfter(List<Lead> newLeads, Map<Id, Lead> oldLeadMap) {
-        // Check if this method is already executing
+        
         if (isExecutingUpdateLeadStatusAfter) {
             System.debug('updateLeadStatusAfter already executing - preventing recursion');
             return;
         }
 
-        // Set flag to prevent recursion
         isExecutingUpdateLeadStatusAfter = true;
 
         try {
@@ -60,13 +58,12 @@ public class LeadStageAndStatusHandler {
 
     
     public static void updateLeadStages(List<Lead> leads) {
-        // Check if this method is already executing
+        
         if (isExecutingUpdateLeadStages) {
             System.debug('updateLeadStages already executing - preventing recursion');
             return;
         }
-
-        // Set flag to prevent recursion
+        
         isExecutingUpdateLeadStages = true;
 
         try {
@@ -204,20 +201,16 @@ public class LeadStageAndStatusHandler {
                     }
                 }
             }
-        } finally {
-            // Reset flag after execution completes (success or error)
-            // isExecutingUpdateLeadStages = false;
-        }
+        } finally {}
     }
 
     public static void updateLeadStatusFromRelatedRecords(List<Lead> leads) {
-        // Check if this method is already executing
+        
         if (isExecutingUpdateLeadStatusFromRelatedRecords) {
             System.debug('updateLeadStatusFromRelatedRecords already executing - preventing recursion');
             return;
         }
 
-        // Set flag to prevent recursion
         isExecutingUpdateLeadStatusFromRelatedRecords = true;
 
         try {
@@ -311,10 +304,7 @@ public class LeadStageAndStatusHandler {
 
                 System.debug('Processing complete for Lead ' + l.Id + ' final Status: ' + l.Lead_Status__c);
             }
-        } finally {
-            // Reset flag after execution completes (success or error)
-            // isExecutingUpdateLeadStatusFromRelatedRecords = false;
-        }
+        } finally {}
     }
 
 }

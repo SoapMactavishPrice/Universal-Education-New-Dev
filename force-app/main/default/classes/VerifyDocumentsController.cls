@@ -8,7 +8,6 @@ public with sharing class VerifyDocumentsController {
             WHERE Application_Form__c = :applicationFormId
         ];
 
-        // define fixed order of document names
         List<String> docOrder = new List<String>{
             'Father\'s signature',
             'Mother\'s signature',
@@ -32,7 +31,6 @@ public with sharing class VerifyDocumentsController {
             'Student\'s Passport'
         };
 
-        // map for quick lookup
         Map<String, Document_Detail__c> nameToDocMap = new Map<String, Document_Detail__c>();
         for (Document_Detail__c d : docList) {
             nameToDocMap.put(d.Name, d);
@@ -41,7 +39,6 @@ public with sharing class VerifyDocumentsController {
         List<DocumentDetailWrapper> wrapperList = new List<DocumentDetailWrapper>();
         Integer srNo = 1;
 
-        // build wrapper in fixed order
         for (String docName : docOrder) {
             if (nameToDocMap.containsKey(docName)) {
                 Document_Detail__c dd = nameToDocMap.get(docName);
@@ -85,13 +82,14 @@ public with sharing class VerifyDocumentsController {
         }
 
         if (allAcceptedOrBlank) {
-            Application_Form__c applicationForm = new Application_Form__c(Id = applicationFormId);
-            applicationForm.Document_Verified__c = true;
-            UPDATE applicationForm;
             sendPositiveEmail();
         } else {
             sendNegativeEmail(applicationFormId);
         }
+
+        Application_Form__c applicationForm = new Application_Form__c(Id = applicationFormId);
+        applicationForm.Document_Verified__c = true;
+        UPDATE applicationForm;
 
         if (Test.isRunningTest()) {
             sendNegativeEmail(applicationFormId);

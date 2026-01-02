@@ -729,8 +729,9 @@ public without sharing class StudentApplicationFormController {
 
         List<Application_Form__c> applicationForms = [SELECT Id, Application_Form_Received_On_Date__c, Application_Form_Received_On_Time__c FROM Application_Form__c WHERE Enquiry__c = :enquiryId];
 
+        Application_Form__c applicationForm = null;
         if (!applicationForms.isEmpty()) {
-            Application_Form__c applicationForm = applicationForms[0];
+            applicationForm = applicationForms[0];
             applicationForm.Application_Form_Received_On_Date__c = System.now().format('dd-MM-yyyy', 'Asia/Kolkata');
             applicationForm.Application_Form_Received_On_Time__c = DateTime.now().format('hh:mm a', 'Asia/Kolkata');
             applicationForm.Print_Copy_Submitted__c = true;
@@ -752,8 +753,8 @@ public without sharing class StudentApplicationFormController {
         string emailtemp;
         boolean notem = true;
         List < SchoolEmail__mdt > se = new list < SchoolEmail__mdt > ();
-        se = [select CCAddress__c, DisplayName__c, TempName__c, Active__c, Event__c, Object__c, SchoolShortcode__c from SchoolEmail__mdt where SchoolShortcode__c =: enq.Org_code__c and Event__c = 'Application Submitted'];
- 
+        se = [SELECT CCAddress__c, DisplayName__c, TempName__c, Active__c, Event__c, Object__c, SchoolShortcode__c FROM SchoolEmail__mdt WHERE SchoolShortcode__c =: enq.Org_code__c AND Event__c = 'Application Submitted'];
+        
         if (se != null && se.size() > 0) {
             isEmailactive = se[0].Active__c;
             emailtemp = se[0].TempName__c;
@@ -763,6 +764,245 @@ public without sharing class StudentApplicationFormController {
         if (isEmailactive) {
             SendEmail.SendEmailTemplateWithTemplate(emailtemp, enq.Contact__c, true, enq.id, se[0], null);
         }
+        List<List_of_Document__c> listDoc = [SELECT Id, name, isOptional__c, isSubmitted__c, Submission_Date__c FROM List_of_Document__c];
+
+        List<Document_Detail__c> docDetails = new List<Document_Detail__c>();
+
+        DocumentValidationWrapper documentValidationObject = getDocumentValidations(applicationForm.Id);
+
+        for(List_of_Document__c lod:listDoc) {
+            Document_Detail__c dd = new Document_Detail__c();
+            dd.Name = lod.Name;
+            dd.Application_Form__c = applicationForm.Id;
+            if (lod.Name == 'Student\'s photo') {
+                dd.Mandatory__c = true;
+
+                Boolean isPresent = [
+                    SELECT COUNT()
+                    FROM ContentDocumentLink
+                    WHERE LinkedEntityId = :applicationForm.Id
+                    AND ContentDocument.Title LIKE 'StudentPhoto%'
+                ] > 0;
+
+                if (isPresent) {
+                    dd.Submission_Status__c = 'Accepted';
+                }
+            }
+
+            if (lod.Name == 'Student\'s Birth Certificate') {
+                dd.Mandatory__c = true;
+
+                Boolean isPresent = [
+                    SELECT COUNT()
+                    FROM ContentDocumentLink
+                    WHERE LinkedEntityId = :applicationForm.Id
+                    AND ContentDocument.Title LIKE 'birthCertificate'
+                ] > 0;
+
+                if (isPresent) {
+                    dd.Submission_Status__c = 'Accepted';
+                }
+            }
+
+            if (lod.Name == 'Father\'s photo') {
+                if (!documentValidationObject.isGuardian || documentValidationObject.isSingleParentFather) {
+                    dd.Mandatory__c = false;
+                } else {
+                    dd.Mandatory__c = true;
+                }
+
+                Boolean isPresent = [
+                    SELECT COUNT()
+                    FROM ContentDocumentLink
+                    WHERE LinkedEntityId = :applicationForm.Id
+                    AND ContentDocument.Title LIKE 'FatherPhoto%'
+                ] > 0;
+
+                if (isPresent) {
+                    dd.Submission_Status__c = 'Accepted';
+                }
+            }
+
+            if (lod.Name == 'Father\'s signature') {
+                if (!documentValidationObject.isGuardian || documentValidationObject.isSingleParentMother) {
+                    dd.Mandatory__c = false;
+                } else {
+                    dd.Mandatory__c = true;
+                }
+
+                Boolean isPresent = [
+                    SELECT COUNT()
+                    FROM ContentDocumentLink
+                    WHERE LinkedEntityId = :applicationForm.Id
+                    AND ContentDocument.Title LIKE 'FatherSignaturePhoto%'
+                ] > 0;
+
+                if (isPresent) {
+                    dd.Submission_Status__c = 'Accepted';
+                }
+            }
+
+            if (lod.Name == 'Mother\'s photo') {
+                if (!documentValidationObject.isGuardian || documentValidationObject.isSingleParentFather) {
+                    dd.Mandatory__c = false;
+                } else {
+                    dd.Mandatory__c = true;
+                }
+
+                Boolean isPresent = [
+                    SELECT COUNT()
+                    FROM ContentDocumentLink
+                    WHERE LinkedEntityId = :applicationForm.Id
+                    AND ContentDocument.Title LIKE 'MotherPhoto%'
+                ] > 0;
+
+                if (isPresent) {
+                    dd.Submission_Status__c = 'Accepted';
+                }
+            }
+
+            if (lod.Name == 'Mother\'s signature') {
+                if (!documentValidationObject.isGuardian || documentValidationObject.isSingleParentFather) {
+                    dd.Mandatory__c = false;
+                } else {
+                    dd.Mandatory__c = true;
+                }
+
+                Boolean isPresent = [
+                    SELECT COUNT()
+                    FROM ContentDocumentLink
+                    WHERE LinkedEntityId = :applicationForm.Id
+                    AND ContentDocument.Title LIKE 'MotherSignaturePhoto%'
+                ] > 0;
+
+                if (isPresent) {
+                    dd.Submission_Status__c = 'Accepted';
+                }
+            }
+
+            if (lod.Name == 'Father\'s identity proof') {
+                System.debug('documentValidationObject ==>' + documentValidationObject);
+                if (documentValidationObject.isFatherIndianCitizen && !documentValidationObject.isSingleParentMother) {
+                    dd.Mandatory__c = true;
+                }
+
+                Boolean isPresent = [
+                    SELECT COUNT()
+                    FROM ContentDocumentLink
+                    WHERE LinkedEntityId = :applicationForm.Id
+                    AND ContentDocument.Title LIKE 'fatherAadharCard'
+                ] > 0;
+
+                if (isPresent) {
+                    dd.Submission_Status__c = 'Accepted';
+                }
+            }
+
+            if (lod.Name == 'Mother\'s identity proof') {
+                if (documentValidationObject.isMotherIndianCitizen && !documentValidationObject.isSingleParentFather) {
+                    dd.Mandatory__c = true;
+                }
+
+                Boolean isPresent = [
+                    SELECT COUNT()
+                    FROM ContentDocumentLink
+                    WHERE LinkedEntityId = :applicationForm.Id
+                    AND ContentDocument.Title LIKE 'motherAadharCard'
+                ] > 0;
+
+                if (isPresent) {
+                    dd.Submission_Status__c = 'Accepted';
+                }
+            }
+
+            if (lod.Name == 'Guardian affidavit') {
+                if (documentValidationObject.isGuardian) {
+                    dd.Mandatory__c = true;
+                }
+
+                Boolean isPresent = [
+                    SELECT COUNT()
+                    FROM ContentDocumentLink
+                    WHERE LinkedEntityId = :applicationForm.Id
+                    AND ContentDocument.Title LIKE 'affidavitForLegalGuardian'
+                ] > 0;
+
+                if (isPresent) {
+                    dd.Submission_Status__c = 'Accepted';
+                }
+            }
+
+            if (lod.Name == 'Single parent custody') {
+                if (!documentValidationObject.isForeign && documentValidationObject.isSingleParent) {
+                    dd.Mandatory__c = true;
+                }
+
+                Boolean isPresent = [
+                    SELECT COUNT()
+                    FROM ContentDocumentLink
+                    WHERE LinkedEntityId = :applicationForm.Id
+                    AND ContentDocument.Title LIKE 'evidenceOrAffidavitForLegalGuardianship'
+                ] > 0;
+
+                if (isPresent) {
+                    dd.Submission_Status__c = 'Accepted';
+                }
+            }
+
+            if (lod.Name == 'Student\'s Caste Certificate') {
+                if (!documentValidationObject.isForeign && !documentValidationObject.isCasteGen) {
+                    dd.Mandatory__c = true;
+                }
+
+                Boolean isPresent = [
+                    SELECT COUNT()
+                    FROM ContentDocumentLink
+                    WHERE LinkedEntityId = :applicationForm.Id
+                    AND ContentDocument.Title LIKE 'casteCertificate'
+                ] > 0;
+
+                if (isPresent) {
+                    dd.Submission_Status__c = 'Accepted';
+                }
+            }
+
+            if (lod.Name == 'OCI/Visa') {
+                if (documentValidationObject.isForeign && documentValidationObject.isOciVisaAvailable) {
+                    dd.Mandatory__c = true;
+                }
+
+                Boolean isPresent = [
+                    SELECT COUNT()
+                    FROM ContentDocumentLink
+                    WHERE LinkedEntityId = :applicationForm.Id
+                    AND ContentDocument.Title LIKE 'ociVisa'
+                ] > 0;
+
+                if (isPresent) {
+                    dd.Submission_Status__c = 'Accepted';
+                }
+            }
+
+            if (lod.Name == 'Student\'s Passport') {
+                if (documentValidationObject.isForeign) {
+                    dd.Mandatory__c = true;
+                }
+
+                Boolean isPresent = [
+                    SELECT COUNT()
+                    FROM ContentDocumentLink
+                    WHERE LinkedEntityId = :applicationForm.Id
+                    AND ContentDocument.Title LIKE 'passport'
+                ] > 0;
+
+                if (isPresent) {
+                    dd.Submission_Status__c = 'Accepted';
+                }
+            }
+
+            docDetails.add(dd);
+        }
+        insert docDetails;
     }
     
     public class ApplicationFormPage2Wrapper {
