@@ -1,22 +1,21 @@
 trigger AssignLeadOwner on Lead (before insert) {
     // try {
-
         // Collect School Short Codes from newly inserted leads
         Set<String> schoolCodes = new Set<String>();
-
+        
         for (Lead lead : Trigger.new) {
             if (lead.School_Short_Code__c == 'PRIMUS' && lead.School_Short_Code__c != null) {
                 schoolCodes.add(lead.School_Short_Code__c);
                 System.debug('Lead considered for ownership change: ' + lead.Id);
             }
         }
-
+        
         // Exit if no relevant leads exist
         if (schoolCodes.isEmpty()) {
             System.debug('No leads found with School_Short_Code__c = PRIMUS');
             return;
         }
-
+        
         // Query LeadUser__c records where SchoolCode__c matches
         Map<String, String> schoolCodeToLeadUserMap = new Map<String, String>();
         for (LeadUser__c leadUser : [
@@ -27,7 +26,7 @@ trigger AssignLeadOwner on Lead (before insert) {
             schoolCodeToLeadUserMap.put(leadUser.SchoolCode__c, leadUser.Name);
             System.debug('Matching LeadUser__c found: ' + leadUser.Name + ' for SchoolCode__c: ' + leadUser.SchoolCode__c);
         }
-
+        
         // Map to store User Ids based on Name
         Map<String, Id> userNameToUserIdMap = new Map<String, Id>();
         for (User u : [
@@ -38,7 +37,7 @@ trigger AssignLeadOwner on Lead (before insert) {
             userNameToUserIdMap.put(u.Name, u.Id);
             System.debug('User found: ' + u.Name + ' with Id: ' + u.Id);
         }
-
+        
         // Assign OwnerId based on mapped SchoolCode and User Name
         for (Lead lead : Trigger.new) {
             if (lead.School_Short_Code__c == 'PRIMUS' && lead.School_Short_Code__c != null) {
@@ -55,9 +54,9 @@ trigger AssignLeadOwner on Lead (before insert) {
                 }
             }
         }
-
+        
     // } catch (Exception ex) {
-    //     System.debug('Unexpected error in AssignLeadOwner trigger: ' + ex.getMessage());
+        //     System.debug('Unexpected error in AssignLeadOwner trigger: ' + ex.getMessage());
     // }
 }
 
@@ -65,7 +64,7 @@ trigger AssignLeadOwner on Lead (before insert) {
     try {
         // List to store leads for update
         List<Lead> leadsToUpdate = new List<Lead>();
-
+        
         // Collect School Short Codes from newly inserted leads
         Set<String> schoolCodes = new Set<String>();
         
@@ -81,7 +80,7 @@ trigger AssignLeadOwner on Lead (before insert) {
             System.debug('No leads found with School_Short_Code__c = PRIMUS');
             return;
         }
-
+        
         // Query LeadUser__c records where SchoolCode__c matches
         Map<String, String> schoolCodeToLeadUserMap = new Map<String, String>();
         try {
@@ -97,7 +96,7 @@ trigger AssignLeadOwner on Lead (before insert) {
             System.debug('Error querying LeadUser__c records: ' + e.getMessage());
             return;
         }
-
+        
         // Map to store User Ids based on Name
         Map<String, Id> userNameToUserIdMap = new Map<String, Id>();
         try {
@@ -114,7 +113,7 @@ trigger AssignLeadOwner on Lead (before insert) {
             System.debug('Error querying User records: ' + e.getMessage());
             return;
         }
-
+        
         // Assign OwnerId based on mapped SchoolCode and User Name
         for (Lead lead : Trigger.new) {
             if (lead.School_Short_Code__c == 'PRIMUS' && lead.School_Short_Code__c != null) {
@@ -131,7 +130,7 @@ trigger AssignLeadOwner on Lead (before insert) {
                 }
             }
         }
-
+        
         // Update the leads in bulk
         if (!leadsToUpdate.isEmpty()) {
             try {

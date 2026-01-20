@@ -57,8 +57,12 @@ global class OzonetelCreateLead_API {
             if (accList.size()>0) {
                 newLead.School_Institution__c = accList[0].Id;
             }
-            
-            insert newLead;
+
+            Database.DMLOptions dmlOpts = new Database.DMLOptions();
+            dmlOpts.DuplicateRuleHeader.allowSave = true;
+            dmlOpts.DuplicateRuleHeader.runAsCurrentUser = false;
+
+            Database.insert(newLead, dmlOpts);
             
             responseDataMap.put('status', 'success');
             responseDataMap.put('message', 'Lead Created');

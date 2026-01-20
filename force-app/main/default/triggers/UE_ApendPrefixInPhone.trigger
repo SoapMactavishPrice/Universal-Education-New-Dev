@@ -1,5 +1,5 @@
 trigger UE_ApendPrefixInPhone on Contact (before insert,before Update) 
-{
+{   
     for(Contact l:trigger.new){
        if(l.MobilePhone!=null)
        {   

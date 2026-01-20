@@ -59,8 +59,6 @@ global without sharing class saveLeadForm {
                 }
             }
             
-            //System.debug('mapsucesslineIds' + mapsucesslineIds);
-            
             List<Account> accList = new List<Account>();
             accList = [SELECT Id , School_Short_Code__c FROM Account where School_Short_Code__c IN : schoolList];
             
@@ -82,12 +80,6 @@ global without sharing class saveLeadForm {
             
             
             system.debug('existing lead size '+ldList.size());
-            /*if(ldList.size() == 0){
-ldList = [select Id,OwnerId,Your_First_Name__c,Acadmic_Year__c,School_Short_Code__c,DupMobileNumber__c,email
-from Lead where  DupMobileNumber__c  IN : mobileList and  School_Short_Code__c IN : schoolList
-and Acadmic_Year__c IN : acedemicYearList];
-}*/
-            
             
             map<string,lead> LeadMap = new map<string,lead>();
             
@@ -100,30 +92,31 @@ and Acadmic_Year__c IN : acedemicYearList];
             List<Task> taskList = new  List<Task>();
             
             system.debug('LeadMap'+LeadMap);
-            List<Lead> leadList_Update = new  List<Lead>();
+            
+            // Separate lists for insert and update
+            List<Lead> leadList_Insert = new List<Lead>();
+            List<Lead> leadList_Update = new List<Lead>();
+            
             Map<String,List<cls_leadJS2Apex>> sourceKeyChecker =  new Map<String,List<cls_leadJS2Apex>>();
             for(cls_leadJS2Apex lds : leadList) {
                 if(accMap.containskey(lds.schoolCode)){
                     string key = (lds.Mobile).right(10)+'-'+lds.schoolCode+'-'+lds.acedemicYear;
                     sourceKeyChecker.put((key).toLowerCase(),new List<cls_leadJS2Apex>{lds});
                     system.debug('key'+key);
+                    
+                    // Check if lead exists
                     if(LeadMap.containskey((key).toLowerCase())){
+                        // EXISTING LEAD - UPDATE
                         system.debug('from inside 2 key '+key);
                         Lead ld = new Lead();
                         ld.Id =  LeadMap.get((key).toLowerCase()).Id;
+                        
                         Lead_Source__c ldsrc = new Lead_Source__c();
                         ldsrc.Name = lds.LeadSource;
                         ldsrc.Lead__c = LeadMap.get((key).toLowerCase()).Id;
-                        //ldsrc.Id =  LeadMap.get((key).toLowerCase()).Id;
-                        ldsrc.Lead_Dashboard_Id__c	 = lds.LeadDashBoardId;
-                        
-                        
-                        
-                        //ldsrc.Gender__c = lds.Gender;
-                        
-                        
-                        
+                        ldsrc.Lead_Dashboard_Id__c = lds.LeadDashBoardId;
                         ldsrc.School_Institution__c = accMap.get(lds.schoolCode); 
+                        
                         if(string.isNotBlank(lds.Salutation))
                             ldsrc.Salutation__c =lds.Salutation; 
                         if(string.isNotBlank(lds.Your_first_name))
@@ -195,7 +188,6 @@ and Acadmic_Year__c IN : acedemicYearList];
                         if(string.isNotBlank(lds.utmDevice))
                             ldsrc.utm_device__c =lds.utmDevice;
                         
-                        
                         if(string.isNotBlank(lds.utmMatchtype))
                             ldsrc.utm_matchtype__c =lds.utmMatchtype;
                         if(string.isNotBlank(lds.utmMedium))
@@ -232,67 +224,63 @@ and Acadmic_Year__c IN : acedemicYearList];
                         leadList_Update.add(ld);
                     }
                     else{
+                        // NEW LEAD - INSERT
                         system.debug('from inside 2 key else');
                         Lead ld = new Lead();
                         ld.School_Institution__c	 = accMap.get(lds.schoolCode); 
                         ld.LeadSource = lds.LeadSource;
                         ld.Lead_Dashboard_Id__c	 = lds.LeadDashBoardId; 
                         
-                        
                         if(string.isNotBlank(lds.pinCode))
-                        ld.Pin_code__c = lds.pinCode;
-                         //iflds.Are_you_a_single_parent))
-                         
+                            ld.Pin_code__c = lds.pinCode;
+                        
                         ld.Are_you_a_single_parent__c = lds.Are_you_a_single_parent;
                         
-                         if(string.isNotBlank(lds.Father_s_First_Name))
-                        ld.Father_s_First_Name__c = lds.Father_s_First_Name;
-                         if(string.isNotBlank(lds.Mother_s_First_Name))
-                        ld.Mother_s_First_Name__c = lds.Mother_s_First_Name;
+                        if(string.isNotBlank(lds.Father_s_First_Name))
+                            ld.Father_s_First_Name__c = lds.Father_s_First_Name;
+                        if(string.isNotBlank(lds.Mother_s_First_Name))
+                            ld.Mother_s_First_Name__c = lds.Mother_s_First_Name;
                         
-                         if(string.isNotBlank(lds.Father_s_Last_Name))
-                        ld.Father_s_Last_Name__c = lds.Father_s_Last_Name;
-                         if(string.isNotBlank(lds.Mother_s_Last_Name))
-                         ld.Mother_s_Last_Name__c = lds.Mother_s_Last_Name;
+                        if(string.isNotBlank(lds.Father_s_Last_Name))
+                            ld.Father_s_Last_Name__c = lds.Father_s_Last_Name;
+                        if(string.isNotBlank(lds.Mother_s_Last_Name))
+                            ld.Mother_s_Last_Name__c = lds.Mother_s_Last_Name;
                         
-                         if(string.isNotBlank(lds.Father_s_Linkedin_profile))
-                        ld.Father_s_Linkedin_profile__c = lds.Father_s_Linkedin_profile;
+                        if(string.isNotBlank(lds.Father_s_Linkedin_profile))
+                            ld.Father_s_Linkedin_profile__c = lds.Father_s_Linkedin_profile;
                         
-                         if(string.isNotBlank(lds.Mother_s_Linkedin_profile))
-                         ld.Mother_s_Linkedin_profile__c = lds.Mother_s_Linkedin_profile;
+                        if(string.isNotBlank(lds.Mother_s_Linkedin_profile))
+                            ld.Mother_s_Linkedin_profile__c = lds.Mother_s_Linkedin_profile;
                         
                         if(string.isNotBlank(lds.Name_of_the_organisation_father))
-                        ld.Name_of_the_organisation_father__c  = lds.Name_of_the_organisation_father;
-                         if(string.isNotBlank(lds.Name_of_the_organisation_Mother))
-                         ld.Name_of_the_organisation_Mother__c = lds.Name_of_the_organisation_Mother;
+                            ld.Name_of_the_organisation_father__c  = lds.Name_of_the_organisation_father;
+                        if(string.isNotBlank(lds.Name_of_the_organisation_Mother))
+                            ld.Name_of_the_organisation_Mother__c = lds.Name_of_the_organisation_Mother;
                         
-                         if(string.isNotBlank(lds.Father_s_Mobile_number))
-                        ld.Father_s_Mobile_number__c  = lds.Father_s_Mobile_number;
-                         if(string.isNotBlank(lds.Mother_s_Mobile_number))
-                         ld.Mother_s_Mobile_number__c = lds.Mother_s_Mobile_number;
+                        if(string.isNotBlank(lds.Father_s_Mobile_number))
+                            ld.Father_s_Mobile_number__c  = lds.Father_s_Mobile_number;
+                        if(string.isNotBlank(lds.Mother_s_Mobile_number))
+                            ld.Mother_s_Mobile_number__c = lds.Mother_s_Mobile_number;
                         
-                         if(string.isNotBlank(lds.Father_s_Designation))
-                        ld.Father_s_Designation__c = lds.Father_s_Designation;
-                         if(string.isNotBlank(lds.Mother_s_Designation))
-                         ld.Mother_s_Designation__c = lds.Mother_s_Designation;
+                        if(string.isNotBlank(lds.Father_s_Designation))
+                            ld.Father_s_Designation__c = lds.Father_s_Designation;
+                        if(string.isNotBlank(lds.Mother_s_Designation))
+                            ld.Mother_s_Designation__c = lds.Mother_s_Designation;
                         
-                         if(string.isNotBlank(lds.Father_s_Email_ID))
-                        ld.Father_s_Email_ID__c = lds.Father_s_Email_ID;
+                        if(string.isNotBlank(lds.Father_s_Email_ID))
+                            ld.Father_s_Email_ID__c = lds.Father_s_Email_ID;
                         
-                         if(string.isNotBlank(lds.Mother_s_Email_ID))
-                         ld.Mother_s_Email_ID__c = lds.Mother_s_Email_ID;
-                        
-                        //Mother_s_Profession,Fathers_s_Profession,
+                        if(string.isNotBlank(lds.Mother_s_Email_ID))
+                            ld.Mother_s_Email_ID__c = lds.Mother_s_Email_ID;
                         
                         if(string.isNotBlank(lds.Mother_s_Profession))
-                        ld.Mother_s_Profession__c	 = lds.Mother_s_Profession;
+                            ld.Mother_s_Profession__c	 = lds.Mother_s_Profession;
                         
-                         if(string.isNotBlank(lds.Fathers_s_Profession))
-                         ld.Fathers_s_Profession__c	 = lds.Fathers_s_Profession;
+                        if(string.isNotBlank(lds.Fathers_s_Profession))
+                            ld.Fathers_s_Profession__c	 = lds.Fathers_s_Profession;
                         
                         if(string.isNotBlank(lds.Parent_Questions_Or_Info))
-                         ld.Parent_Questions_Or_Info__c	 = lds.Parent_Questions_Or_Info;
-                        
+                            ld.Parent_Questions_Or_Info__c	 = lds.Parent_Questions_Or_Info;
                         
                         if(string.isNotBlank(lds.Salutation))
                             ld.Salutation =lds.Salutation;
@@ -304,16 +292,14 @@ and Acadmic_Year__c IN : acedemicYearList];
                         if(string.isNotBlank(lds.mobile))
                             ld.MobilePhone = lds.mobile;
                         
-                        
                         if(string.isNotBlank(lds.studentMobile)){
-                            ld.phone = lds.studentMobile; // for landig page 2 
+                            ld.phone = lds.studentMobile;
                         }
                         
                         if(string.isNotBlank(lds.acedemicYear))
                             ld.Acadmic_Year__c = lds.acedemicYear;
                         if(string.isNotBlank(lds.DOB))
                             ld.Date_of_Birth__c = date.parse(lds.DOB);
-                        
                         
                         if(string.isNotBlank(lds.schoolCode))
                             ld.School_Short_Code__c = lds.schoolCode;
@@ -390,7 +376,7 @@ and Acadmic_Year__c IN : acedemicYearList];
                         if(string.isNotBlank(lds.currentschool))
                             ld.Current_school__c =lds.currentschool;
                         
-                        leadList_Update.add(ld);
+                        leadList_Insert.add(ld);
                     }
                 }else{
                     map<string,string> row = new map<string,string> ();
@@ -398,58 +384,78 @@ and Acadmic_Year__c IN : acedemicYearList];
                     row.put('Lead Dashbaord Id', lds.LeadDashBoardId);
                     row.put('Message','School Not Found ');
                     resultList.add(row); 
-                    
                 }
             }
-            Schema.DescribeFieldResult dfr = Schema.sObjectType.Lead.fields.Id;
-            Schema.sObjectField T = dfr.getSObjectField();
-            Database.UpsertResult[] dtList = Database.upsert(leadList_Update, T, false);
             
-            //System.debug('dtList' + dtList);
+            Database.DMLOptions dmlOpts = new Database.DMLOptions();
+            dmlOpts.DuplicateRuleHeader.allowSave = true;
+            dmlOpts.DuplicateRuleHeader.runAsCurrentUser = false;
+
+            Database.SaveResult[] insertResults = new Database.SaveResult[]{};
+            if(leadList_Insert.size() > 0){
+                insertResults = Database.insert(leadList_Insert, dmlOpts);
+                system.debug('Insert Results Size: ' + insertResults.size());
+            }
             
-            map<Id,Id>leadId = new map<Id,Id>();
-            for (Integer i = 0; i < dtList.size();i++) {
-                map<string,string> row = new map<string,string> ();
+            // Perform UPDATE operation
+            Database.SaveResult[] updateResults = new Database.SaveResult[]{};
+            if(leadList_Update.size() > 0){
+                updateResults = Database.update(leadList_Update, false);
+                system.debug('Update Results Size: ' + updateResults.size());
+            }
+            
+            // Process INSERT results
+            map<Id,Id> leadId = new map<Id,Id>();
+            for (Integer i = 0; i < insertResults.size(); i++) {
+                map<string,string> row = new map<string,string>();
                 if(mapsucesslineIds.containskey(leadList[i].Email)){
-                    if (dtList[i].isSuccess()) {
-                        successLeadId.add(dtList[i].getId());
-                        leadId.put(dtList[i].getId(),dtList[i].getId());
-                    }else{
-                        for(Database.Error err : dtList[i].getErrors()) {
+                    if (insertResults[i].isSuccess()) {
+                        successLeadId.add(insertResults[i].getId());
+                        leadId.put(insertResults[i].getId(), insertResults[i].getId());
+                    } else {
+                        for(Database.Error err : insertResults[i].getErrors()) {
                             row.put('Message', err.getMessage());
                             row.put('Status', string.valueOf(err.getStatusCode())+'-'+mapsucesslineIds.get(leadList[i].Email).substringBefore('-'));
-                            //row.put('SF Lead Id',mapsucesslineIds.get(leadList[i].Email).substringBefore('-'));
                             row.put('SF Lead Id','Failed');
-                            row.put('Lead Dashboard Id',mapsucesslineIds.get(leadList[i].Email).substringAfter('-'));
+                            row.put('Lead Dashboard Id', mapsucesslineIds.get(leadList[i].Email).substringAfter('-'));
                             resultList.add(row); 
                         }
-                        
                     }
-                    
                 }
-                
-                
             }
             
-            //system.debug('from result Story'+JSON.serialize(resultList));
+            // Process UPDATE results
+            Integer updateStartIndex = leadList_Insert.size();
+            for (Integer i = 0; i < updateResults.size(); i++) {
+                map<string,string> row = new map<string,string>();
+                Integer originalIndex = updateStartIndex + i;
+                if(originalIndex < leadList.size() && mapsucesslineIds.containskey(leadList[originalIndex].Email)){
+                    if (updateResults[i].isSuccess()) {
+                        successLeadId.add(updateResults[i].getId());
+                        leadId.put(updateResults[i].getId(), updateResults[i].getId());
+                    } else {
+                        for(Database.Error err : updateResults[i].getErrors()) {
+                            row.put('Message', err.getMessage());
+                            row.put('Status', string.valueOf(err.getStatusCode())+'-'+mapsucesslineIds.get(leadList[originalIndex].Email).substringBefore('-'));
+                            row.put('SF Lead Id','Failed');
+                            row.put('Lead Dashboard Id', mapsucesslineIds.get(leadList[originalIndex].Email).substringAfter('-'));
+                            resultList.add(row); 
+                        }
+                    }
+                }
+            }
             
-            
-            List<Lead> ldListTOUpdateSource = [select Id,OwnerId,Your_First_Name__c,Acadmic_Year__c,lead_Id__c , Lead_Dashboard_Id__c , School_Short_Code__c,DupMobileNumber__c,email
+            // Query successful leads
+            List<Lead> ldListTOUpdateSource = [select Id,OwnerId,Your_First_Name__c,Acadmic_Year__c,lead_Id__c, Lead_Dashboard_Id__c, School_Short_Code__c,DupMobileNumber__c,email
                                                from Lead where ID IN: successLeadId];
             
-            /*  List<Lead_Source__c> s_leadSourceList = [Select Id, Lead__c ,Name from Lead_Source__c where Lead__c IN: successLeadId and Name IN : LeadSource];
-Map<string,Id> m_leadSource= new Map<string,Id> ();
-for(Lead_Source__c ls : s_leadSourceList){
-m_leadSource.put(ls.Name,ls.Name);
-}
-*/
             system.debug('from lead source '+ldListTOUpdateSource.size());
             
             for(Lead l : ldListTOUpdateSource){
                 string key = l.DupMobileNumber__c+'-'+l.School_Short_Code__c+'-'+l.Acadmic_Year__c;
                 key = key.toLowerCase();
                 if(sourceKeyChecker.containskey(key)){ 
-                    map<string,string> row = new map<string,string> ();
+                    map<string,string> row = new map<string,string>();
                     row.put('Message', 'Lead Saved Successfully.!!!');
                     row.put('Status', 'Success');
                     row.put('SF Lead Id',l.lead_Id__c);
@@ -457,7 +463,6 @@ m_leadSource.put(ls.Name,ls.Name);
                     row.put('Lead Dashboard Id',l.Lead_Dashboard_Id__c);
                     resultList.add(row);
                 }
-                
             }
             
             system.debug('from  new source 1'+leadSourceList.size() +' task '+taskList.size());  
@@ -478,11 +483,9 @@ m_leadSource.put(ls.Name,ls.Name);
                 response.responseBody = Blob.valueOf(JSON.serialize(resultList));
             }
             
-            
             response.statusCode = 200;
             response.addHeader('Content-Type', 'application/json');
             
-            //}
         }
         catch(exception e){
             system.debug('error'+e);
@@ -509,16 +512,15 @@ m_leadSource.put(ls.Name,ls.Name);
     }
     
     public class cls_leadJS2Apex{
-       //public string pinCode; 
         public boolean Are_you_a_single_parent;
-        public string Father_s_First_Name ;
+        public string Father_s_First_Name;
         public string Mother_s_First_Name;
-        public string Father_s_Last_Name ;
-        public string  Mother_s_Last_Name; 
-        public string  Father_s_Linkedin_profile ;
-        public string  Mother_s_Linkedin_profile ;
-        public string Father_s_Mobile_number ;
-        public string Mother_s_Email_ID ;
+        public string Father_s_Last_Name;
+        public string Mother_s_Last_Name; 
+        public string Father_s_Linkedin_profile;
+        public string Mother_s_Linkedin_profile;
+        public string Father_s_Mobile_number;
+        public string Mother_s_Email_ID;
         public string Mother_s_Designation;
         public string Father_s_Email_ID;
         public string Father_s_Designation;
@@ -528,7 +530,6 @@ m_leadSource.put(ls.Name,ls.Name);
         public string Fathers_s_Profession;
         public string Parent_Questions_Or_Info;
         public string Mother_s_Profession;
-        
         
         public string Id;
         public string Salutation;
@@ -574,7 +575,6 @@ m_leadSource.put(ls.Name,ls.Name);
         public string utmAdgroup;
         public string stellarSeekingAdmissionInGrade;
         public string currentschool;
-        
     }
     
     public static JSON2Apex parse(string js){

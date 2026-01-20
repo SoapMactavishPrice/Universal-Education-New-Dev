@@ -19,20 +19,5 @@ trigger AdmissionGrantedBefore on Admission_Granted__c (After update, after inse
         }
     }
 
-    if (Trigger.isAfter) {
-        List<Id> leadIds = new List<Id>();
-        for (Admission_Granted__c e : Trigger.new) {
-            leadIds.add(e.Lead__c);
-        }
-
-        List<Lead> leads = new List<Lead>();
-
-        for (Id leadId : leadIds) {
-            leads.add(new Lead(Id = leadId));
-        }
-
-        UPDATE leads;
-    }
-
     
 }

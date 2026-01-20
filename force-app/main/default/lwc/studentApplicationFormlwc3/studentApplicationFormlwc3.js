@@ -430,7 +430,7 @@ export default class StudentApplicationFormlwc extends LightningElement {
             }
         }
 
-        if (this.isFormCModalOpen) {
+        if (this.isFormC1ModalOpen) {
             const scrollEl = this.template.querySelector('.formC1High');
             if (scrollEl && scrollEl.scrollHeight <= scrollEl.clientHeight) {
                 // No scrollbar → content fits → enable button

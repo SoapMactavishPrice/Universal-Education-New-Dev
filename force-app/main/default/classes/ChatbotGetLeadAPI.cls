@@ -7,18 +7,20 @@ global with sharing class ChatbotGetLeadAPI {
         RestResponse res = RestContext.response;
         
         String mobileNumber = req.params.get('mobileNumber');
-        String reqBody = 'mobileNumber=' + mobileNumber;
+        String schoolCode = req.params.get('schoolCode');
+        String academicYear = req.params.get('academicYear');
+        String reqBody = 'mobileNumber=' + mobileNumber + '&schoolCode=' + schoolCode + '&academicYear=' + academicYear;
         String respBody = '';
         String respCode = '';
         String message = '';
         Exception exceptionObj = null;
         
         try {
-            if (String.isBlank(mobileNumber)) {
+            if (String.isBlank(mobileNumber) || String.isBlank(schoolCode) || String.isBlank(academicYear)) {
                 respCode = '400';
                 Map<String, String> errorResp = new Map<String, String>{
                     'Status' => 'Failed',
-                    'Error' => 'mobileNumber parameter is required'
+                    'Error' => 'mobileNumber, schoolCode and academicYear parameters are required'
                 };
                 respBody = JSON.serialize(errorResp);
                 res.statusCode = 400;
@@ -35,11 +37,11 @@ global with sharing class ChatbotGetLeadAPI {
                 FROM Lead
                 WHERE MobilePhone LIKE :likePattern
                 AND LeadSource = 'Chatbot'
+                AND School_Short_Code__c = :schoolCode
+                AND Acadmic_Year__c = :academicYear
                 LIMIT 1
             ];
 
-
-            
             Map<String, String> response = new Map<String, String>();
             
             if (!existingLeads.isEmpty()) {

@@ -37,10 +37,14 @@ global with sharing class ChatbotCreateLeadAPI {
             newLead.MobilePhone = mobileNumber;
             newLead.Company = 'Chatbot Lead';
             newLead.LeadSource = 'Chatbot';
-            newLead.School_Short_Code__c = 'STELRA';
+            newLead.School_Short_Code__c = 'STELRB';
             newLead.RecordTypeId = qualifiedRecordTypeId;
+
+            Database.DMLOptions dmlOpts = new Database.DMLOptions();
+            dmlOpts.DuplicateRuleHeader.allowSave = true;
+            dmlOpts.DuplicateRuleHeader.runAsCurrentUser = false;
             
-            insert newLead;
+            Database.insert(newLead, dmlOpts);
             
             Map<String, String> response = new Map<String, String>();
             response.put('Status', 'Success');

@@ -1,5 +1,5 @@
 trigger DuplicateEntryOnEnquiry on Enquiry__c (before insert) {
-    
+
     List<Enquiry__c> l =[select id,Name,Mobile_No__c,Enquiry__c,FirstName__c,Last_Name__c,Parent_Last_Name__c,Parent_First_Name__c,
                          Email__c from Enquiry__c ORDER BY CreatedDate DESC limit 25000];
     

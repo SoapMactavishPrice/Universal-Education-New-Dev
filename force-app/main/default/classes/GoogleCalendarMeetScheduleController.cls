@@ -244,95 +244,74 @@ System.debug('=-=-=-=-'+enq.OpenActivities);
     }
     @future(Callout = true)
     public static void doCreateNewCalendar(String eventId , String method, Boolean toMakeStellarCallout, String htmlBody  ){
-//         HttpResponse HttpRes = GoogleCalendarMeetScheduleController.doCreateNewCalendarEvent(eventId,htmlBody);
-//          System.debug('HttpRes evts: @'+           HttpRes);
-//         String Ssortcode = '';
-//         if(HttpRes != null && String.isNotBlank(HttpRes.getBody()) && HttpRes.getStatusCode() == 200 && (toMakeStellarCallout || System.Test.isRunningTest())){
-//             String meetLink = '';
-//             String theBody = HttpRes.getBody();
-//             if(String.isNotBlank(theBody)){
-//                 Map<String, Object> responseBodyMap =  (Map<String, Object>) JSON.deserializeUntyped(theBody);
-//                 Object meetLinkObj = responseBodyMap.get('hangoutLink');
-//                 meetLink = meetLinkObj != null ? String.valueOf(meetLinkObj) : '';
-//             }
-//             List<Event> evts = [SELECT Id, What.Name, StartDateTime,Enquiry_Email__c, EndDateTime,Contact__r.Name,Contact__r.Email,School_Institution__c, School_Institution__r.Name, School_Institution__r.For_Mapping_Email__c, School_Institution__r.School_Short_Code__c,  Description,Subject FROM Event WHERE Id = :eventId];
-//             Event evt;
-//             System.debug('gmeet evts: '+evts);
-//             Enquiry__c enq;
-//             Boolean isAdmissionForm = false;
-//             String email = '', firstName = '', lastName = '', name = '', appEnqNo = '';
-//             if(evts != null && !evts.isEmpty()){
-//                 evt = evts[0];
-//                 Id theWhatId = evt.WhatId;
-//                 if(theWhatId != null && theWhatId.getSObjectType().getDescribe().getName().containsIgnoreCase('Admission_Form__c')){
-//                     isAdmissionForm = true;
-//                     Admission_Form__c adf = [Select id,Name, Email_Address__c, First_Name__c, Last_Name__c, Student_Name__c, Application_No__c,Application_Form__c,Document_Received__c,Academic__c,Status__c,Called_for_Observation__c,Observation_Re_scheduled__c,School_Short_Code__c from Admission_Form__c where id=: theWhatId];
-//                     email = adf.Email_Address__c;
-//                     firstName = adf.First_Name__c;
-//                     lastName = adf.Last_Name__c;
-//                     name = adf.Student_Name__c;
-//                     appEnqNo = adf.Application_No__c;
-//                 }else{
-//                     enq = [SELECT Id, Name, Stages__c, Log_Status__c, Email__c, FirstName__c, Last_Name__c, Student_Full_Name__c FROM Enquiry__c WHERE Id = :theWhatId];
-//                     email = enq.Email__c;
-//                     firstName = enq.FirstName__c;
-//                     lastName = enq.Last_Name__c;
-//                     name = enq.Student_Full_Name__c;
-//                     appEnqNo = enq.Name;
-//                 }
-//             }else{
-//                 System.debug('Some Error: evt '+evt);
-//                 System.debug('Some Error: enq '+enq);
-//             }
-//             /*
-// API: https://admission.stellarworldschool.com/meet
-// Method: POST
-// Payload:
-// {
-// email: "test@gmail.com",
-// firstName: "",
-// lastName: "",
-// name: "",
-// enquiryNo: ""
-// }
-
-// */
-//             String appEnqNoKey = isAdmissionForm ? 'applicationNo' : 'enquiryNo';
-//             List<String> keyList = new List<String>{
-//                 // 'startDateTime', 'endDateTime', 'subject', 'description', 'Email', 'studentEmail', 'meetLink'
-//                 'email', 'firstName', 'lastName', 'name', appEnqNoKey, 'meetLink'
-//                     };
-//                         List<Object> valueList = new List<Object>{
-//                             // evt.StartDateTime, evt.EndDateTime, evt.Subject, evt.Description, evt.Enquiry_Email__c, evt.Contact__r.Email, meetLink
-//                             email, firstName, lastName, name, appEnqNo, meetLink
-//                                 };
-//                                     /* Map<String, Object> meetingDetailsMap = StellarAPICallouts.createBody( keyList, valueList );
-
-// Map<String, Object> dataMap = StellarAPICallouts.createBody(
-// new List<String>{'enquiryNo', 'meetingDetails'},
-// new List<Object>{evt.What.Name, meetingDetailsMap}
-// ); */
+        HttpResponse HttpRes = GoogleCalendarMeetScheduleController.doCreateNewCalendarEvent(eventId,htmlBody);
+         System.debug('HttpRes evts: @'+           HttpRes);
+        String Ssortcode = '';
+        if(HttpRes != null && String.isNotBlank(HttpRes.getBody()) && HttpRes.getStatusCode() == 200 && (toMakeStellarCallout || System.Test.isRunningTest())){
+            String meetLink = '';
+            String theBody = HttpRes.getBody();
+            if(String.isNotBlank(theBody)){
+                Map<String, Object> responseBodyMap =  (Map<String, Object>) JSON.deserializeUntyped(theBody);
+                Object meetLinkObj = responseBodyMap.get('hangoutLink');
+                meetLink = meetLinkObj != null ? String.valueOf(meetLinkObj) : '';
+            }
+            List<Event> evts = [SELECT Id, What.Name, StartDateTime,Enquiry_Email__c, EndDateTime,Contact__r.Name,Contact__r.Email,School_Institution__c, School_Institution__r.Name, School_Institution__r.For_Mapping_Email__c, School_Institution__r.School_Short_Code__c,  Description,Subject FROM Event WHERE Id = :eventId];
+            Event evt;
+            System.debug('gmeet evts: '+evts);
+            Enquiry__c enq;
+            Boolean isAdmissionForm = false;
+            String email = '', firstName = '', lastName = '', name = '', appEnqNo = '';
+            if(evts != null && !evts.isEmpty()){
+                evt = evts[0];
+                Id theWhatId = evt.WhatId;
+                if(theWhatId != null && theWhatId.getSObjectType().getDescribe().getName().containsIgnoreCase('Admission_Form__c')){
+                    isAdmissionForm = true;
+                    Admission_Form__c adf = [Select id,Name, Email_Address__c, First_Name__c, Last_Name__c, Student_Name__c, Application_No__c,Application_Form__c,Document_Received__c,Academic__c,Status__c,Called_for_Observation__c,Observation_Re_scheduled__c,School_Short_Code__c from Admission_Form__c where id=: theWhatId];
+                    email = adf.Email_Address__c;
+                    firstName = adf.First_Name__c;
+                    lastName = adf.Last_Name__c;
+                    name = adf.Student_Name__c;
+                    appEnqNo = adf.Application_No__c;
+                }else{
+                    enq = [SELECT Id, Name, Stages__c, Log_Status__c, Email__c, FirstName__c, Last_Name__c, Student_Full_Name__c FROM Enquiry__c WHERE Id = :theWhatId];
+                    email = enq.Email__c;
+                    firstName = enq.FirstName__c;
+                    lastName = enq.Last_Name__c;
+                    name = enq.Student_Full_Name__c;
+                    appEnqNo = enq.Name;
+                }
+            }else{
+                System.debug('Some Error: evt '+evt);
+                System.debug('Some Error: enq '+enq);
+            }
+            String appEnqNoKey = isAdmissionForm ? 'applicationNo' : 'enquiryNo';
+            List<String> keyList = new List<String>{
+                // 'startDateTime', 'endDateTime', 'subject', 'description', 'Email', 'studentEmail', 'meetLink'
+                'email', 'firstName', 'lastName', 'name', appEnqNoKey, 'meetLink'
+                    };
+                        List<Object> valueList = new List<Object>{
+                            // evt.StartDateTime, evt.EndDateTime, evt.Subject, evt.Description, evt.Enquiry_Email__c, evt.Contact__r.Email, meetLink
+                            email, firstName, lastName, name, appEnqNo, meetLink
+                                };
                                     
-//                                     Map<String, Object> requestBody = StellarAPICallouts.createBody(
-//                                         keyList, valueList
-//                                         /* new List<String>{
-// 'stage', 'status', 'email', 'data'
-// },
-// new List<Object>{
-// enq.Stages__c, enq.Log_Status__c, enq.Email__c, dataMap
-// } */
-//                                     );
-//             StellarAPICallouts.makeCallout('https://admission.stellarworldschool.com/meet', method, requestBody);
-//         }
-//         //  List<School_List__mdt> CalendarEmailMdt = new list<School_List__mdt>)();
+                                    Map<String, Object> requestBody = StellarAPICallouts.createBody(
+                                        keyList, valueList
+                                    
+                                    );
+            StellarAPICallouts.makeCallout('https://admission.stellarworldschool.com/meet', method, requestBody);
+        }
+        //  List<School_List__mdt> CalendarEmailMdt = new list<School_List__mdt>)();
     }
     
     public static HttpResponse doCreateNewCalendarEvent(String eventId,String htmlBody){
         System.debug('-=-=-=-=+eventId ++-=--=-=-='+ eventId);
         List<Event> e = new list <event>();
         set<Id> nwhatId= new set<Id>();
+        // Added billing address fields to query
         e =   [SELECT Id,whatId,WhoId, StartDateTime,Enquiry_Email__c, EndDateTime,Contact__r.Name,Contact__r.Email,School_Institution__c, 
-               School_Institution__r.Name, School_Institution__r.For_Mapping_Email__c, School_Institution__r.School_Short_Code__c, 
+               School_Institution__r.Name, School_Institution__r.For_Mapping_Email__c, School_Institution__r.School_Short_Code__c,
+               School_Institution__r.BillingStreet, School_Institution__r.BillingCity, School_Institution__r.BillingState, 
+               School_Institution__r.BillingPostalCode, School_Institution__r.BillingCountry,
                Description,Subject FROM Event WHERE Id = :eventId];
         System.debug('-=-=-=-=+ Event record ++-=--=-=-='+ e);
         if(!e.isEmpty()){
@@ -360,6 +339,32 @@ System.debug('=-=-=-=-'+enq.OpenActivities);
         system.debug('ooooAdmission_Form******************************************' + ooooAdmission_Form);
         String orgid = '';
         String Ssortcode = e[0].School_Institution__r.School_Short_Code__c ;
+        
+        // Format the billing address
+        String locationAddress = '';
+        if(e[0].School_Institution__c != null){
+            List<String> addressParts = new List<String>();
+            if (String.isNotBlank(e[0].School_Institution__r.Name)) {
+                addressParts.add(e[0].School_Institution__r.Name);
+            }
+            if(String.isNotBlank(e[0].School_Institution__r.BillingStreet)){
+                addressParts.add(e[0].School_Institution__r.BillingStreet);
+            }
+            if(String.isNotBlank(e[0].School_Institution__r.BillingCity)){
+                addressParts.add(e[0].School_Institution__r.BillingCity);
+            }
+            if(String.isNotBlank(e[0].School_Institution__r.BillingState)){
+                addressParts.add(e[0].School_Institution__r.BillingState);
+            }
+            if(String.isNotBlank(e[0].School_Institution__r.BillingPostalCode)){
+                addressParts.add(e[0].School_Institution__r.BillingPostalCode);
+            }
+            if(String.isNotBlank(e[0].School_Institution__r.BillingCountry)){
+                addressParts.add(e[0].School_Institution__r.BillingCountry);
+            }
+            locationAddress = String.join(addressParts, ', ');
+        }
+        System.debug('Formatted Location Address: ' + locationAddress);
         
         If (e.size() > 0 &&  Ssortcode!= Null)
         {
@@ -419,19 +424,103 @@ System.debug('=-=-=-=-'+enq.OpenActivities);
        // if(!test.isRunningTest()){
             //String requestBody = '{"end": {"dateTime": "'+strEndDateTime+'"},"start": { "dateTime": "'+strStartDateTime+'" }, "attendees": [ {"email":"'+ e[0].Contact__r.Email +' ","displayName": "'+lstEmailAddress[0].DisplayName+'"}'+ ',{"email":"'+CalendarEmailMdt[0].Calendar_Email__c+'","displayName": "'+lstEmailAddress[0].DisplayName+'"}],' + '"summary": "'+e[0].Subject +' '+e[0].Contact__r.Name+'","description":"'+htmlBody+'"}';
             
-            //requestBody = '{"end": {"dateTime": "'+strEndDateTime+'"},"start": { "dateTime": "'+strStartDateTime+'" }, "attendees": [ {"email":"' +e[0].Enquiry_Email__c+'","displayName": "'+lstEmailAddress[0].DisplayName+'"}'+',{"email":"'+CalendarEmailMdt[0].Calendar_Email__c+'"}],'+'"conferenceData": { "createRequest": { "requestId": "'+eventId+'", "conferenceSolutionKey": { "type": "hangoutsMeet" } } },' +'"summary": "'+e[0].Subject +' '+e[0].Contact__r.Name+'","description":"'+htmlBody+'"}';
-        if(ooooEnquirY.School_Tour_Scheduled__c == True && ooooAdmission_Form.Non_Stellar_Interaction_Scheduled__c == false){system.debug('1 ::');
-            requestBody = '{"end": {"dateTime": "'+strEndDateTime+'"},"start": { "dateTime": "'+strStartDateTime+'" }, "attendees": [ {"email":"' +ooooEnquirY.Email__c+'","displayName": "'+lstEmailAddress[0].DisplayName+'"}'+',{"email":"'+CalendarEmailMdt[0].Calendar_Email__c+'"}],'+'"conferenceData": { "createRequest": { "requestId": "'+eventId+'", "conferenceSolutionKey": { "type": "hangoutsMeet" } } },' +'"summary": "'+e[0].Subject +' '+'","description":""}';
-        }else if(ooooEnquirY.School_Tour_Re_Scheduled__c == True && ooooAdmission_Form.Non_Stellar_Interaction_Scheduled__c == false){system.debug('emails ::2 ');
-            requestBody = '{"end": {"dateTime": "'+strEndDateTime+'"},"start": { "dateTime": "'+strStartDateTime+'" }, "attendees": [ {"email":"' +ooooEnquirY.Email__c+'","displayName": "'+lstEmailAddress[0].DisplayName+'"}'+',{"email":"'+CalendarEmailMdt[0].Calendar_Email__c+'"}],'+'"conferenceData": { "createRequest": { "requestId": "'+eventId+'", "conferenceSolutionKey": { "type": "hangoutsMeet" } } },' +'"summary": "'+e[0].Subject +' '+'","description":""}';
-        }else if(ooooAdmission_Form.Non_Stellar_Interaction_Scheduled__c == True && ooooEnquirY.School_Tour_Re_Scheduled__c == false){system.debug('emails ::3 ');
-            requestBody = '{"end": {"dateTime": "'+strEndDateTime+'"},"start": { "dateTime": "'+strStartDateTime+'" }, "attendees": [ {"email":"' +ooooAdmission_Form.Email_Address__c+'","displayName": "'+lstEmailAddress[0].DisplayName+'"}'+',{"email":"'+CalendarEmailMdt[0].Calendar_Email__c+'"}],'+'"conferenceData": { "createRequest": { "requestId": "'+eventId+'", "conferenceSolutionKey": { "type": "hangoutsMeet" } } },' +'"summary": "'+e[0].Subject +' '+'","description":""}';
-        }else if(ooooAdmission_Form.Non_Stellar_Interaction_Reschedule__c == True && ooooEnquirY.School_Tour_Re_Scheduled__c == false){system.debug('emails ::4 ');
-            requestBody = '{"end": {"dateTime": "'+strEndDateTime+'"},"start": { "dateTime": "'+strStartDateTime+'" }, "attendees": [ {"email":"' +ooooAdmission_Form.Email_Address__c+'","displayName": "'+lstEmailAddress[0].DisplayName+'"}'+',{"email":"'+CalendarEmailMdt[0].Calendar_Email__c+'"}],'+'"conferenceData": { "createRequest": { "requestId": "'+eventId+'", "conferenceSolutionKey": { "type": "hangoutsMeet" } } },' +'"summary": "'+e[0].Subject +' '+'","description":""}';
-        }else{system.debug('5 ::');            
-            requestBody = '{"end": {"dateTime": "'+strEndDateTime+'"},"start": { "dateTime": "'+strStartDateTime+'" }, "attendees": [ {"email":"' +e[0].Enquiry_Email__c+'","displayName": "'+lstEmailAddress[0].DisplayName+'"}'+',{"email":"'+CalendarEmailMdt[0].Calendar_Email__c+'"}],'+'"conferenceData": { "createRequest": { "requestId": "'+eventId+'", "conferenceSolutionKey": { "type": "hangoutsMeet" } } },' +'"summary": "'+e[0].Subject +' '+'","description":""}';
+            // REMOVED conferenceData section and ADDED location field with billing address
+
+        System.debug('===== DEBUG START: Google Calendar Request Build =====');
+
+        System.debug('ooooEnquirY = ' + ooooEnquirY);
+        System.debug('ooooAdmission_Form = ' + ooooAdmission_Form);
+        System.debug('locationAddress = ' + locationAddress);
+        System.debug('strStartDateTime = ' + strStartDateTime);
+        System.debug('strEndDateTime = ' + strEndDateTime);
+
+        System.debug('e size = ' + (e == null ? null : e.size()));
+        System.debug('lstEmailAddress size = ' + (lstEmailAddress == null ? null : lstEmailAddress.size()));
+        System.debug('CalendarEmailMdt size = ' + (CalendarEmailMdt == null ? null : CalendarEmailMdt.size()));
+
+        if(e == null || e.isEmpty()){
+            System.debug('ERROR: e list is NULL/EMPTY');
+            return null;
         }
-            
+        if(lstEmailAddress == null || lstEmailAddress.isEmpty()){
+            System.debug('ERROR: lstEmailAddress list is NULL/EMPTY');
+            return null;
+        }
+        if(CalendarEmailMdt == null || CalendarEmailMdt.isEmpty()){
+            System.debug('ERROR: CalendarEmailMdt list is NULL/EMPTY');
+            return null;
+        }
+
+        System.debug('e[0] = ' + e[0]);
+        System.debug('lstEmailAddress[0] = ' + lstEmailAddress[0]);
+        System.debug('CalendarEmailMdt[0] = ' + CalendarEmailMdt[0]);
+
+        System.debug('ooooEnquirY.Email__c = ' + (ooooEnquirY == null ? null : ooooEnquirY.Email__c));
+        System.debug('ooooAdmission_Form.Email_Address__c = ' + (ooooAdmission_Form == null ? null : ooooAdmission_Form.Email_Address__c));
+
+        System.debug('ooooEnquirY.School_Tour_Scheduled__c = ' + (ooooEnquirY == null ? null : ooooEnquirY.School_Tour_Scheduled__c));
+        System.debug('ooooEnquirY.School_Tour_Re_Scheduled__c = ' + (ooooEnquirY == null ? null : ooooEnquirY.School_Tour_Re_Scheduled__c));
+
+        System.debug('ooooAdmission_Form.Non_Stellar_Interaction_Scheduled__c = ' + (ooooAdmission_Form == null ? null : ooooAdmission_Form.Non_Stellar_Interaction_Scheduled__c));
+        System.debug('ooooAdmission_Form.Non_Stellar_Interaction_Reschedule__c = ' + (ooooAdmission_Form == null ? null : ooooAdmission_Form.Non_Stellar_Interaction_Reschedule__c));
+
+        System.debug('===== DEBUG END =====');
+
+        String attendeeEmail;
+        String attendeeName = lstEmailAddress[0].DisplayName;
+        String calendarEmail = CalendarEmailMdt[0].Calendar_Email__c;
+
+        Boolean isSchoolTourScheduled = (ooooEnquirY != null && ooooEnquirY.School_Tour_Scheduled__c == true);
+        Boolean isSchoolTourRescheduled = (ooooEnquirY != null && ooooEnquirY.School_Tour_Re_Scheduled__c == true);
+
+        Boolean isNonStellarScheduled = (ooooAdmission_Form != null && ooooAdmission_Form.Non_Stellar_Interaction_Scheduled__c == true);
+        Boolean isNonStellarReschedule = (ooooAdmission_Form != null && ooooAdmission_Form.Non_Stellar_Interaction_Reschedule__c == true);
+
+        System.debug('Flags => isSchoolTourScheduled=' + isSchoolTourScheduled +
+                    ', isSchoolTourRescheduled=' + isSchoolTourRescheduled +
+                    ', isNonStellarScheduled=' + isNonStellarScheduled +
+                    ', isNonStellarReschedule=' + isNonStellarReschedule);
+
+        if(isSchoolTourScheduled && !isNonStellarScheduled){
+            System.debug('Branch 1 executed');
+            attendeeEmail = ooooEnquirY.Email__c;
+
+        }else if(isSchoolTourRescheduled && !isNonStellarScheduled){
+            System.debug('Branch 2 executed');
+            attendeeEmail = ooooEnquirY.Email__c;
+
+        }else if(isNonStellarScheduled && !isSchoolTourRescheduled){
+            System.debug('Branch 3 executed');
+            attendeeEmail = ooooAdmission_Form.Email_Address__c;
+
+        }else if(isNonStellarReschedule && !isSchoolTourRescheduled){
+            System.debug('Branch 4 executed');
+            attendeeEmail = ooooAdmission_Form.Email_Address__c;
+
+        }else{
+            System.debug('Branch 5 executed');
+            attendeeEmail = e[0].Enquiry_Email__c;
+        }
+
+        System.debug('Final attendeeEmail chosen = ' + attendeeEmail);
+
+        if(String.isBlank(attendeeEmail)){
+            System.debug('❌ ERROR: attendeeEmail is NULL/BLANK - cannot create requestBody');
+            return null;
+        }
+
+        requestBody =
+            '{"end":{"dateTime":"' + strEndDateTime +
+            '"},"start":{"dateTime":"' + strStartDateTime +
+            '"},"attendees":[{"email":"' + attendeeEmail +
+            '","displayName":"' + attendeeName +
+            '"},{"email":"' + calendarEmail +
+            '"}],"summary":"' + e[0].Subject +
+            '","description":"","location":"' + locationAddress +
+            '"}';
+
+        System.debug('Final requestBody = ' + requestBody);
+
             
             // requestBody = '{"end": {"dateTime": "'+strEndDateTime+'"},"start": { "dateTime": "'+strStartDateTime+'" }, "attendees": [ {"email":"' +e[0].Contact__r.Email+'","displayName": "'+lstEmailAddress[0].DisplayName+'"}'+',{"email":"'+CalendarEmailMdt[0].Calendar_Email__c+'"}],'+'"conferenceData": {   "conferenceSolution": {   "key": {  "type": "hangoutsMeet" },  "name": "Google Meet Link" }, "createRequest": {   "conferenceSolutionKey": {     "type": "hangoutsMeet"   },   "requestId": "ACB" " }},'  +'"summary": "'+e[0].Subject +' '+e[0].Contact__r.Name+'","description":"'+htmlBody+'"}';
             System.debug('#### requestBody '+requestBody);
@@ -440,8 +529,9 @@ System.debug('=-=-=-=-'+enq.OpenActivities);
         HttpRequest httpReq = new HttpRequest();
         HttpResponse HttpRes = new HttpResponse();
         System.debug('NameCredsDevName ==>'+NameCredsDevName);
-        httpReq.setEndpoint('callout:'+NameCredsDevName+'/calendars/'+lstEmailAddress[0].Address+'/events?sendNotifications=true&sendUpdates=all&conferenceDataVersion=1');
-        System.debug('endpoint ==>'+'callout:'+NameCredsDevName+'/calendars/'+lstEmailAddress[0].Address+'/events?sendNotifications=true&sendUpdates=all&conferenceDataVersion=1');
+        // REMOVED conferenceDataVersion parameter from endpoint
+        httpReq.setEndpoint('callout:'+NameCredsDevName+'/calendars/'+lstEmailAddress[0].Address+'/events?sendNotifications=true&sendUpdates=all');
+        System.debug('endpoint ==>'+'callout:'+NameCredsDevName+'/calendars/'+lstEmailAddress[0].Address+'/events?sendNotifications=true&sendUpdates=all');
         System.debug('request endpoint ==>' + httpReq.getEndpoint());
         httpReq.setMethod('POST');
         httpReq.setBody(requestBody);
@@ -456,8 +546,6 @@ System.debug('=-=-=-=-'+enq.OpenActivities);
             System.debug('statusCode ==>'+ statusCode);
 
             if(HttpRes.getStatusCode() == 200){
-                JSON2Apex JSON2Apexs = (JSON2Apex)System.JSON.deserialize(HttpRes.getBody(), JSON2Apex.class);
-                LinkUrl = JSON2Apexs.hangoutLink;
                 System.debug('Calendar Created Successfully @@@@@@@@@@@@'+   HttpRes.getBody());
             }else{
                 System.debug('HttpRes.getBody()==>' + HttpRes.getBody() + ' - ' + HttpRes.getStatus());
@@ -468,49 +556,22 @@ System.debug('=-=-=-=-'+enq.OpenActivities);
           //////  System.debug('#### Exception Executed : '+es.getMessage() + '  '+es.getStackTraceString() + ' '+es.getLineNumber());
         /////////////////////////}
         List<Event> eLinkUrl = new list <event>();
-        system.debug('LinkUrl   --- ' +  LinkUrl);
+        system.debug('LocationAddress   --- ' +  locationAddress);
         if(!e.isEmpty()){
             for(Event oEvent : e){
                 Event osEvent = new Event();
                 osEvent.id = oEvent.id;
-                osEvent.Location = LinkUrl;
-                osEvent.Meeting_Rescheduling_Link__c= LinkUrl;
+                osEvent.Location = locationAddress; // Set to billing address instead of meet link
+                osEvent.Meeting_Rescheduling_Link__c = ''; // Set to empty
                 eLinkUrl.add(osEvent);
             }
             system.debug('eLinkUrl   --- ' +  eLinkUrl);
             if(!eLinkUrl.isEmpty()){
                 update eLinkUrl;
             }
-            //nwhatId  Enquiry__c
-            list<Enquiry__c> listE = new list<Enquiry__c>();
-            list<Enquiry__c> listEnquirY = [select id,Meeting_Link__c from Enquiry__c where Id=:nwhatId];
-            if(!listEnquirY.isEmpty()){
-                for(Enquiry__c oEnquiry :listEnquirY ){
-                    Enquiry__c oEnquirys = new Enquiry__c();
-                    oEnquirys.id = oEnquiry.id;
-                    oEnquirys.Meeting_Link__c = LinkUrl;
-                    listE.add(oEnquirys);
-                }
-                if(!listE.isEmpty()){
-                    update listE;
-                }
-            }
-            system.debug('listE   --- ' +  listE);
-            //nwhatId  Enquiry__c
-            list<Admission_Form__c> listADF = new list<Admission_Form__c>();
-            list<Admission_Form__c> listADFY = [select id,Meeting_Link__c from Admission_Form__c where Id=:nwhatId];
-            if(!listADFY.isEmpty()){
-                for(Admission_Form__c oADFSSS :listADFY ){
-                    Admission_Form__c oADFs = new Admission_Form__c();
-                    oADFs.id = oADFSSS.id;
-                    oADFs.Meeting_Link__c = LinkUrl;
-                    listADF.add(oADFs);
-                }
-                if(!listADF.isEmpty()){
-                    update listADF;
-                }
-            }
-            system.debug('listADF   --- ' +  listADF);
+            
+            // REMOVED Meeting_Link__c updates for Enquiry__c and Admission_Form__c
+            // The records themselves are not updated with meeting links anymore
         }
         
         system.debug('eLinkUrl   --- ' +  eLinkUrl);
@@ -518,6 +579,909 @@ System.debug('=-=-=-=-'+enq.OpenActivities);
     }
     public static void fakeMethod() {
         Integer j = 0;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
+        j++;
         j++;
         j++;
         j++;

@@ -105,8 +105,10 @@ global with sharing class EdustrokeLeadGen {
                 leadsToInsert.add(ld);
                 prospectIds.add(lw.ProspectID);
             }
-
-            Database.SaveResult[] results = Database.insert(leadsToInsert, false);
+            Database.DMLOptions dmlOpts = new Database.DMLOptions();
+            dmlOpts.DuplicateRuleHeader.allowSave = true;
+            dmlOpts.DuplicateRuleHeader.runAsCurrentUser = false;
+            Database.SaveResult[] results = Database.insert(leadsToInsert, dmlOpts);
 
             Integer successCount = 0;
             Integer failCount = 0;

@@ -1,4 +1,5 @@
 trigger EnquiryTrigger on Enquiry__c (before insert, after insert, after update) {
+
     try {
         System.debug('--- EnquiryTrigger started ---');
 
@@ -74,6 +75,11 @@ trigger EnquiryTrigger on Enquiry__c (before insert, after insert, after update)
         // Log exception if any
         System.debug('Error in EnquiryTrigger: ' + e.getMessage());
     }
+
+    if (Trigger.isAfter && Trigger.isInsert) {
+        TransferNotesAcrossSystem.syncContactNotesToEnquiry(Trigger.new, null);
+    }
+
 }
 
 

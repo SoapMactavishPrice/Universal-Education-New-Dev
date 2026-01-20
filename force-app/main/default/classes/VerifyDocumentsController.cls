@@ -1,4 +1,4 @@
-public with sharing class VerifyDocumentsController {
+public without sharing class VerifyDocumentsController {
 
     @AuraEnabled(cacheable=true)
     public static List<DocumentDetailWrapper> getDocumentDetails(String applicationFormId) {
@@ -81,11 +81,7 @@ public with sharing class VerifyDocumentsController {
             UPDATE updates;
         }
 
-        if (allAcceptedOrBlank) {
-            sendPositiveEmail();
-        } else {
-            sendNegativeEmail(applicationFormId);
-        }
+        sendNegativeEmail(applicationFormId);
 
         Application_Form__c applicationForm = new Application_Form__c(Id = applicationFormId);
         applicationForm.Document_Verified__c = true;
@@ -122,6 +118,11 @@ public with sharing class VerifyDocumentsController {
             ORDER BY Name
         ];
 
+        System.debug('pending docs ==>' + pendingDocs);
+        if (pendingDocs.isEmpty()) {
+            return;
+        }
+
         
         String tableHtml = '<table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse;">';
         // tableHtml += '<tr><th>Sr. No.</th><th>Document Name</th><th>Status</th></tr>';
@@ -141,24 +142,54 @@ public with sharing class VerifyDocumentsController {
             'Thank you for filling out the application for ' + appForm.Student_Name__c + '\'s admission at ' +
             appForm.Enquiry__r.School_Institution__r.Name + '. Please note that the following mandatory documents were not received or require resubmission.<br/><br/>' +
             tableHtml + '<br/><br/>' +
-            'Kindly furnish the above-mentioned documents by replying to this email at ' + appForm.Enquiry__r.Owner.Email + 
+            'Kindly furnish the above documents by replying to this email at ' + appForm.Enquiry__r.Owner.Email + 
             ' within 3 working days to proceed with the admission process.<br/><br/>' +
             'The admission remains provisional until the above documents are received and accepted by the school. ' +
             'If you have any questions, please reach out to your Admission Counsellor at ' +
-            appForm.Enquiry__r.School_Institution__r.Phone + '.';
+            appForm.Enquiry__r.School_Institution__r.Phone + '.<br/><br/>Warm regards,<br/>' +
+            appForm.Enquiry__r.School_Institution__r.Name;
 
             
         Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
         if (!Test.isRunningTest()) {
+            Id oweaId = getOrgWideEmailId(appForm.Enquiry__r.School_Institution__r.Name);
+            if (oweaId != null) {
+                mail.setOrgWideEmailAddressId(oweaId);
+            }
             mail.setToAddresses(new String[] {appForm.Enquiry__r.Email__c});
             mail.setCcAddresses(new String[] {appForm.Enquiry__r.Owner.Email});
             mail.setSubject('Application Form - Documents Pending');
-            mail.setWhatId(applicationFormId);
+            // mail.setWhatId(applicationFormId);
             mail.setHtmlBody(emailBody);
             
             Messaging.sendEmail(new Messaging.SingleEmailMessage[] {mail});
         }
     }
+
+    private static Id getOrgWideEmailId(String schoolName) {
+        if (String.isBlank(schoolName)) return null;
+
+        String lowerName = schoolName.toLowerCase();
+        String email;
+
+        if (lowerName.contains('universal')) {
+            email = 'notification@universal.edu.in';
+        } else if (lowerName.contains('stellar')) {
+            email = 'notification@sws.edu.in';
+        } else {
+            return null;
+        }
+
+        OrgWideEmailAddress owea = [
+            SELECT Id
+            FROM OrgWideEmailAddress
+            WHERE Address = :email
+            LIMIT 1
+        ];
+
+        return owea.Id;
+    }
+
 
 
     public class DocumentDetailWrapper {

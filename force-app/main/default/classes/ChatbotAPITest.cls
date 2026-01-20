@@ -34,6 +34,10 @@ private class ChatbotAPITest {
         leadUser.SchoolCode__c = 'STELRA';
         insert leadUser;
         
+        Database.DMLOptions dmlOpts = new Database.DMLOptions();
+        dmlOpts.DuplicateRuleHeader.allowSave = true;
+        dmlOpts.DuplicateRuleHeader.runAsCurrentUser = false;
+
         Lead testLead = new Lead();
         testLead.FirstName = 'Test';
         testLead.LastName = 'Lead';
@@ -41,7 +45,20 @@ private class ChatbotAPITest {
         testLead.Company = 'Chatbot Lead';
         testLead.RecordTypeId = qualifiedRecordTypeId;
         testLead.School_Short_Code__c = 'STELRB';
+        testLead.Acadmic_Year__c = '2026-2027';
+        testLead.setOptions(dmlOpts);
         insert testLead;
+
+        Lead testLead2 = new Lead();
+        testLead2.FirstName = 'Test';
+        testLead2.LastName = 'Lead';
+        testLead2.MobilePhone = '1234567878';
+        testLead2.Company = 'Chatbot Lead';
+        testLead2.RecordTypeId = qualifiedRecordTypeId;
+        testLead2.School_Short_Code__c = 'STELRA';
+        testLead2.Acadmic_Year__c = '2026-2027';
+        testLead2.setOptions(dmlOpts);
+        insert testLead2;
     }
     
     @isTest
@@ -53,6 +70,8 @@ private class ChatbotAPITest {
         req.requestURI = '/services/apexrest/chatbot/get/lead';
         req.httpMethod = 'GET';
         req.addParameter('mobileNumber', '1234567890');
+        req.addParameter('schoolCode', 'STELRB');
+        req.addParameter('academicYear', '2026-2027');
         
         RestContext.request = req;
         RestContext.response = res;
@@ -70,6 +89,8 @@ private class ChatbotAPITest {
         req.requestURI = '/services/apexrest/chatbot/get/lead';
         req.httpMethod = 'GET';
         req.addParameter('mobileNumber', '9999999999');
+        req.addParameter('schoolCode', 'STELRA');
+        req.addParameter('academicYear', '2026-2027');
         
         RestContext.request = req;
         RestContext.response = res;

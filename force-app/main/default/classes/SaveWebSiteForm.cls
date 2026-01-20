@@ -1,5 +1,5 @@
 @RestResource(urlMapping='/saveWebSiteForm/*')
-global with sharing class SaveWebSiteForm {
+global without sharing class SaveWebSiteForm {
     @httpPost
     global static void doPost(){
         API_log__c api_log = new API_log__c();
@@ -80,7 +80,12 @@ global with sharing class SaveWebSiteForm {
             if(string.isNotBlank(lds.utmTerm)){
                 ld.utm_term__c =lds.utmTerm;
             }
-            insert ld;
+
+            Database.DMLOptions dmlOpts = new Database.DMLOptions();
+            dmlOpts.DuplicateRuleHeader.allowSave = true;
+            dmlOpts.DuplicateRuleHeader.runAsCurrentUser = false;
+            Database.insert(ld, dmlOpts);
+
             
             result.put('Message', 'web site Lead Inserted Successfully.!!!');
             result.put('Status', 'Success');
@@ -103,7 +108,20 @@ global with sharing class SaveWebSiteForm {
             api_log.API_Log_Status__c ='Failure';
             api_log.Exception_Message__c = e.getMessage();
             api_log.Response_Code__c = '400';
-            api_log.Exception_Stack_Trace__c = string.valueOf(e.getStackTraceString());
+            String trace = '';
+            trace += 'StackTrace: ' + e.getStackTraceString() + '\n';
+            trace += 'LineNumber: ' + String.valueOf(e.getLineNumber()) + '\n';
+            trace += 'Message: ' + e.getMessage() + '\n';
+
+            for (Integer i = 0; i < e.getNumDml(); i++) {
+                trace += 'DmlIndex: ' + String.valueOf(e.getDmlIndex(i)) + '\n';
+                trace += 'DmlId: ' + String.valueOf(e.getDmlId(i)) + '\n';
+                trace += 'DmlMessage: ' + String.valueOf(e.getDmlMessage(i)) + '\n';
+                trace += 'DmlType(StatusCode): ' + String.valueOf(e.getDmlType(i)) + '\n';
+                trace += 'DmlFieldNames: ' + String.valueOf(e.getDmlFieldNames(i)) + '\n';
+                trace += 'DmlFields: ' + String.valueOf(e.getDmlFields(i)) + '\n';
+            }
+            api_log.Exception_Stack_Trace__c = trace;
             response.responseBody = Blob.valueOf(JSON.serialize(result));
             response.statusCode = 400;
             response.addHeader('Content-Type', 'application/json');

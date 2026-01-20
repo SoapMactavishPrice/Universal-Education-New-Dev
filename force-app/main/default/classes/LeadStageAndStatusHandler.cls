@@ -1,70 +1,21 @@
 public class LeadStageAndStatusHandler {
-
-    private static Boolean isExecutingUpdateLeadStages = false;
-    private static Boolean isExecutingUpdateLeadStatusAfter = false;
-    private static Boolean isExecutingUpdateLeadStatusFromRelatedRecords = false;
-
-    public static void updateLeadStatusAfter(List<Lead> newLeads, Map<Id, Lead> oldLeadMap) {
-        
-        if (isExecutingUpdateLeadStatusAfter) {
-            System.debug('updateLeadStatusAfter already executing - preventing recursion');
-            return;
-        }
-
-        isExecutingUpdateLeadStatusAfter = true;
-
-        try {
-            System.debug('Starting updateLeadStatusAfter method...');
-
-            List<Lead> leadsToUpdate = new List<Lead>();
-
-            for (Lead l : newLeads) {
-                System.debug('Processing Lead Id: ' + l.Id + ', Current Status: ' + l.Status);
-
-                Lead oldLead = oldLeadMap.get(l.Id);
-                System.debug('Old Status: ' + oldLead.Status);
-
-                if (l.Status != oldLead.Status) {
-                    System.debug('Status has changed for Lead Id: ' + l.Id);
-
-                    if (l.Status == 'Lost') {
-                        System.debug('Skipping Lead Id: ' + l.Id + ' because Status is ' + l.Status);
-                        continue;
-                    }
-
-                    System.debug('Preparing to update Lead_Status__c for Lead Id: ' + l.Id + ' to ' + l.Status);
-                    // Create a new Lead instance for DML
-                    Lead leadToUpdate = new Lead(Id = l.Id, Lead_Status__c = l.Status);
-                    leadsToUpdate.add(leadToUpdate);
-                } else {
-                    System.debug('No Status change for Lead Id: ' + l.Id);
-                }
-            }
-
-            if (!leadsToUpdate.isEmpty()) {
-                System.debug('Updating ' + leadsToUpdate.size() + ' Lead(s) in database');
-                update leadsToUpdate;
-                System.debug('Leads updated successfully');
-            } else {
-                System.debug('No Leads to update');
-            }
-
-            System.debug('Finished updateLeadStatusAfter method');
-        } finally {
-            // Reset flag after execution completes (success or error)
-            // isExecutingUpdateLeadStatusAfter = false;
-        }
-    }
+    
+    // Execution counters to limit recursion
+    private static Integer updateLeadStagesCount = 0;
+    private static Integer updateLeadStatusFromRelatedRecordsCount = 0;
+    private static final Integer MAX_EXECUTION_COUNT = 6;
 
     
     public static void updateLeadStages(List<Lead> leads) {
         
-        if (isExecutingUpdateLeadStages) {
-            System.debug('updateLeadStages already executing - preventing recursion');
+        // Check execution count limit
+        if (updateLeadStagesCount >= MAX_EXECUTION_COUNT) {
+            System.debug('updateLeadStages has reached maximum execution limit (' + MAX_EXECUTION_COUNT + ') - preventing further execution');
             return;
         }
         
-        isExecutingUpdateLeadStages = true;
+        updateLeadStagesCount++;
+        System.debug('updateLeadStages execution count: ' + updateLeadStagesCount);
 
         try {
             if (leads == null || leads.isEmpty()) {
@@ -117,6 +68,7 @@ public class LeadStageAndStatusHandler {
             }
 
             for (Lead l : leads) {
+                System.debug('Previous Lead Stage ==>' + l.lead_Stage__c);
                 if (l.lead_Stage__c == null) {
                     l.lead_Stage__c = 'Lead';
                     System.debug('Lead ' + l.Id + ' initialized to Lead stage');
@@ -200,18 +152,24 @@ public class LeadStageAndStatusHandler {
                         System.debug('Lead ' + l.Id + ' moved to Admission Cancelled stage');
                     }
                 }
+
+                System.debug('Final Lead Stage ==>' + stage);
             }
-        } finally {}
+        } finally {
+
+        }
     }
 
     public static void updateLeadStatusFromRelatedRecords(List<Lead> leads) {
         
-        if (isExecutingUpdateLeadStatusFromRelatedRecords) {
-            System.debug('updateLeadStatusFromRelatedRecords already executing - preventing recursion');
+        // Check execution count limit
+        if (updateLeadStatusFromRelatedRecordsCount >= MAX_EXECUTION_COUNT) {
+            System.debug('updateLeadStatusFromRelatedRecords has reached maximum execution limit (' + MAX_EXECUTION_COUNT + ') - preventing further execution');
             return;
         }
 
-        isExecutingUpdateLeadStatusFromRelatedRecords = true;
+        updateLeadStatusFromRelatedRecordsCount++;
+        System.debug('updateLeadStatusFromRelatedRecords execution count: ' + updateLeadStatusFromRelatedRecordsCount);
 
         try {
             if (leads == null || leads.isEmpty()) {
@@ -254,7 +212,12 @@ public class LeadStageAndStatusHandler {
                 }
             }
 
+            for (Application_Form__c appForm : appFormByLead.values()) {
+                System.debug('Application Form fetched for Lead ' + appForm.Lead__c + ': ' + appForm);
+            }
+
             for (Lead l : leads) {
+
                 if (l.Id == null) {
                     continue;
                 }
@@ -305,6 +268,13 @@ public class LeadStageAndStatusHandler {
                 System.debug('Processing complete for Lead ' + l.Id + ' final Status: ' + l.Lead_Status__c);
             }
         } finally {}
+    }
+    
+    // Method to reset counters (useful for testing or batch processing)
+    public static void resetExecutionCounters() {
+        updateLeadStagesCount = 0;
+        updateLeadStatusFromRelatedRecordsCount = 0;
+        System.debug('Execution counters have been reset');
     }
 
 }

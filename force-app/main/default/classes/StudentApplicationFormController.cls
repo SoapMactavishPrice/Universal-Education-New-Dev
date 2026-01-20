@@ -514,6 +514,8 @@ public without sharing class StudentApplicationFormController {
         DocumentValidationWrapper documentVal = new DocumentValidationWrapper();
         documentVal.isGuardian = student.Is_Guardian__c;
         documentVal.isSingleParent = student.Single_Parent__c;
+        documentVal.isSingleParentFather = false;
+        documentVal.isSingleParentMother = false;
         if (student.Single_Parent__c) {
             documentVal.singleParentRelation = student.Application_Form_Relation__c;
             if (student.Application_Form_Relation__c == 'Father') {
@@ -805,11 +807,12 @@ public without sharing class StudentApplicationFormController {
             }
 
             if (lod.Name == 'Father\'s photo') {
-                if (!documentValidationObject.isGuardian || documentValidationObject.isSingleParentFather) {
-                    dd.Mandatory__c = false;
-                } else {
-                    dd.Mandatory__c = true;
-                }
+                dd.Mandatory__c = documentValidationObject.isGuardian ||
+                  !(
+                      documentValidationObject.isSingleParent &&
+                      documentValidationObject.isSingleParentMother
+                   );
+
 
                 Boolean isPresent = [
                     SELECT COUNT()
@@ -824,11 +827,11 @@ public without sharing class StudentApplicationFormController {
             }
 
             if (lod.Name == 'Father\'s signature') {
-                if (!documentValidationObject.isGuardian || documentValidationObject.isSingleParentMother) {
-                    dd.Mandatory__c = false;
-                } else {
-                    dd.Mandatory__c = true;
-                }
+                dd.Mandatory__c = documentValidationObject.isGuardian ||
+                  !(
+                      documentValidationObject.isSingleParent &&
+                      documentValidationObject.isSingleParentMother
+                   );
 
                 Boolean isPresent = [
                     SELECT COUNT()
@@ -843,11 +846,11 @@ public without sharing class StudentApplicationFormController {
             }
 
             if (lod.Name == 'Mother\'s photo') {
-                if (!documentValidationObject.isGuardian || documentValidationObject.isSingleParentFather) {
-                    dd.Mandatory__c = false;
-                } else {
-                    dd.Mandatory__c = true;
-                }
+                dd.Mandatory__c = documentValidationObject.isGuardian ||
+                  !(
+                      documentValidationObject.isSingleParent &&
+                      documentValidationObject.isSingleParentFather
+                   );
 
                 Boolean isPresent = [
                     SELECT COUNT()
@@ -862,11 +865,11 @@ public without sharing class StudentApplicationFormController {
             }
 
             if (lod.Name == 'Mother\'s signature') {
-                if (!documentValidationObject.isGuardian || documentValidationObject.isSingleParentFather) {
-                    dd.Mandatory__c = false;
-                } else {
-                    dd.Mandatory__c = true;
-                }
+                dd.Mandatory__c = documentValidationObject.isGuardian ||
+                  !(
+                      documentValidationObject.isSingleParent &&
+                      documentValidationObject.isSingleParentFather
+                   );
 
                 Boolean isPresent = [
                     SELECT COUNT()
