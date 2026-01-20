@@ -1,6 +1,5 @@
 trigger NotifyLeadOwnerOnApplicationReceived on Application_Form__c (after update) {
 
-
     Set<String> applicationOwnerIds = new Set<String>();
 
     System.debug('Notify Trigger Im here in NotifyLeadOwnerOnApplicationReceived trigger');

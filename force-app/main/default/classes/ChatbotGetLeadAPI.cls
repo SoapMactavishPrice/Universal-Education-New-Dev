@@ -1,5 +1,5 @@
 @RestResource(urlMapping='/chatbot/get/lead')
-global with sharing class ChatbotGetLeadAPI {
+global with sharing class ChatbotGetLeadAPI { 
     
     @HttpGet
     global static void getLeadDetail() {

@@ -1,6 +1,5 @@
 trigger CountLeadsOnAccount on Lead (after INSERT, after UPDATE, after DELETE){
 
-    
     Set <Id> accountIds = new Set <Id>();
     List <Account> lstAccountsToUpdate = new List <Account>();
     if(Trigger.isInsert){
@@ -22,5 +21,5 @@ trigger CountLeadsOnAccount on Lead (after INSERT, after UPDATE, after DELETE){
     }
     
     UPDATE lstAccountsToUpdate;
-    
+     
 }

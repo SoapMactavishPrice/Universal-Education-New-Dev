@@ -1,11 +1,11 @@
 @isTest
-private class StudentApplicationFormControllerTest {
+public class StudentApplicationFormControllerTest {
 
     @isTest
     public static void testSetupMethod() {
         System.Test.setMock(HttpCalloutMock.class, new StellarAPICalloutMock());
-
         // Create test school
+        RecursiveTriggerHandler.skipTrigger = true;
         Account school = new Account(
             Name = 'Test School',
             School_Short_Code__c = 'TS'
@@ -96,6 +96,95 @@ private class StudentApplicationFormControllerTest {
             Terms__c = 'Test Terms for Form E2',
             Description__c = 'Form E2'
         );
+
+        // Create CC_Avenue_Settings__c custom setting
+        CC_Avenue_Settings__c ccSettings = new CC_Avenue_Settings__c(
+            SF_Site_URL__c = 'https://test.salesforce.com/'
+        );
+        insert ccSettings;
+
+        // Create List_of_Document__c records with exact spelling from apex class
+        List<List_of_Document__c> listDocs = new List<List_of_Document__c>();
+
+        listDocs.add(new List_of_Document__c(
+            Name = 'Student\'s photo',
+            isOptional__c = false,
+            isSubmitted__c = false
+        ));
+
+        listDocs.add(new List_of_Document__c(
+            Name = 'Student\'s Birth Certificate',
+            isOptional__c = false,
+            isSubmitted__c = false
+        ));
+
+        listDocs.add(new List_of_Document__c(
+            Name = 'Father\'s photo',
+            isOptional__c = false,
+            isSubmitted__c = false
+        ));
+
+        listDocs.add(new List_of_Document__c(
+            Name = 'Father\'s signature',
+            isOptional__c = false,
+            isSubmitted__c = false
+        ));
+
+        listDocs.add(new List_of_Document__c(
+            Name = 'Mother\'s photo',
+            isOptional__c = false,
+            isSubmitted__c = false
+        ));
+
+        listDocs.add(new List_of_Document__c(
+            Name = 'Mother\'s signature',
+            isOptional__c = false,
+            isSubmitted__c = false
+        ));
+
+        listDocs.add(new List_of_Document__c(
+            Name = 'Father\'s identity proof',
+            isOptional__c = false,
+            isSubmitted__c = false
+        ));
+
+        listDocs.add(new List_of_Document__c(
+            Name = 'Mother\'s identity proof',
+            isOptional__c = false,
+            isSubmitted__c = false
+        ));
+
+        listDocs.add(new List_of_Document__c(
+            Name = 'Guardian affidavit',
+            isOptional__c = false,
+            isSubmitted__c = false
+        ));
+
+        listDocs.add(new List_of_Document__c(
+            Name = 'Single parent custody',
+            isOptional__c = false,
+            isSubmitted__c = false
+        ));
+
+        listDocs.add(new List_of_Document__c(
+            Name = 'Student\'s Caste Certificate',
+            isOptional__c = false,
+            isSubmitted__c = false
+        ));
+
+        listDocs.add(new List_of_Document__c(
+            Name = 'OCI/Visa',
+            isOptional__c = false,
+            isSubmitted__c = false
+        ));
+
+        listDocs.add(new List_of_Document__c(
+            Name = 'Student\'s Passport',
+            isOptional__c = false,
+            isSubmitted__c = false
+        ));
+
+        insert listDocs;
         
         insert new List<Disclosure__c>{formC, formD, formE1, formE2};
         testGetApplicationFormId();
@@ -114,6 +203,15 @@ private class StudentApplicationFormControllerTest {
         testIsChildBelowGrade1();
         testCloseApplicationForm();
         testCamelCaseToLabel();
+        testRedirectToPaymentPage();
+        RecursiveTriggerHandler.skipTrigger = false;
+    }
+
+    static void testRedirectToPaymentPage() {
+        System.Test.setMock(HttpCalloutMock.class, new StellarAPICalloutMock());
+        Enquiry__c enquiry = [SELECT Id FROM Enquiry__c LIMIT 1];
+        
+        String result = StudentApplicationFormController.redirectToPaymentPage(enquiry.Id);
     }
     
     
@@ -123,8 +221,6 @@ private class StudentApplicationFormControllerTest {
         
         
         String formId = StudentApplicationFormController.getApplicationFormId(enquiry.Id);
-        
-        
         
     }
     

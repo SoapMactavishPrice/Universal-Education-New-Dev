@@ -1,6 +1,5 @@
 trigger sending_SMS_on_newApplicationForm on Application_Form__c (after insert) {
 
-
     ApplicationFormHandler.changeParentOfAttachments();
     // List<smsgupshupTemplate__c> sms=new List<smsgupshupTemplate__c>();
     // List<Application_Form__c> Enq=new List<Application_Form__c>();

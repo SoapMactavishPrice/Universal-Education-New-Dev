@@ -36,6 +36,7 @@ public class ContactTriggerHandlerTest {
         con.Type__c='Admission Enquiry';
         con.Contact_Status__c = 'Qualified';
         con.Contact_Reasons__c = 'N/A';
+        con.Lead__c = ld.Id;
         lstCon.add(con);
         insert lstCon;
         

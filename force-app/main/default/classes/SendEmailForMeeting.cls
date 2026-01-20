@@ -12,7 +12,6 @@ public class SendEmailForMeeting {
                              School_Institution__r.BillingCountry, School_Institution__r.BillingPostalCode, School_Institution__r.Name, School_Institution__r.Website,School_Institution__r.Social_Network_Link__c, School_Institution__r.For_Mapping_Email__c,
                              Description,Subject FROM Event WHERE Id = :eventId];
              System.debug('====================== > event : ' + e);
-             System.debug('====================== > event subject: ' + e[0].Subject);
             List<EmailTemplate> templateList = [SELECT
                                                 Id,
                                                 Body,HtmlValue,Subject
@@ -52,19 +51,17 @@ public class SendEmailForMeeting {
             if(e[0].Contact__r.Name!=null){
             HtmlValue = HtmlValue.replace('{!Contact.Name}', e[0].Contact__r.Name);
             }
-            HtmlValue = HtmlValue.replace('{!User.Name}', u.Name != null ? u.Name : '');
-            HtmlValue = HtmlValue.replace('{!User.Email}', u.Email != null ? u.Email : '');
-            HtmlValue = HtmlValue.replace('{!User.Phone}', u.Phone != null ? u.Phone : '');
-            HtmlValue = HtmlValue.replace('{!User.Profile}', (u.Profile != null && u.Profile.Name != null) ? u.Profile.Name : '');           
-
-            HtmlValue = HtmlValue.replace('{!Account.Name}', (e[0].School_Institution__r != null && e[0].School_Institution__r.Name != null) ? e[0].School_Institution__r.Name : '');
-            HtmlValue = HtmlValue.replace('{!Account.Website}', (e[0].School_Institution__r != null && e[0].School_Institution__r.Website != null) ? e[0].School_Institution__r.Website : '');
-            HtmlValue = HtmlValue.replace('{!Account.BillingStreet}', (e[0].School_Institution__r != null && e[0].School_Institution__r.BillingStreet != null) ? e[0].School_Institution__r.BillingStreet : '');
-            HtmlValue = HtmlValue.replace('{!Account.BillingState}', (e[0].School_Institution__r != null && e[0].School_Institution__r.BillingState != null) ? e[0].School_Institution__r.BillingState : '');
-            HtmlValue = HtmlValue.replace('{!Account.BillingCity}', (e[0].School_Institution__r != null && e[0].School_Institution__r.BillingCity != null) ? e[0].School_Institution__r.BillingCity : '');
-            HtmlValue = HtmlValue.replace('{!Account.BillingCountry}', (e[0].School_Institution__r != null && e[0].School_Institution__r.BillingCountry != null) ? e[0].School_Institution__r.BillingCountry : '');
-            HtmlValue = HtmlValue.replace('{!Account.BillingPostalCode}', (e[0].School_Institution__r != null && e[0].School_Institution__r.BillingPostalCode != null) ? e[0].School_Institution__r.BillingPostalCode : '');
-
+            HtmlValue = HtmlValue.replace('{!User.Name}', u.Name);
+            HtmlValue = HtmlValue.replace('{!User.Email}', u.Email);
+            HtmlValue = HtmlValue.replace('{!User.Phone}', u.Phone);
+            HtmlValue = HtmlValue.replace('{!User.Profile}', u.Profile.Name);           
+            HtmlValue = HtmlValue.replace('{!Account.Name}',e[0].School_Institution__r.Name );
+            HtmlValue = HtmlValue.replace('{!Account.Website}',e[0].School_Institution__r.Website);
+            HtmlValue = HtmlValue.replace('{!Account.BillingStreet}' ,e[0].School_Institution__r.BillingStreet);
+            HtmlValue = HtmlValue.replace('{!Account.BillingState}' ,e[0].School_Institution__r.BillingState);
+            HtmlValue = HtmlValue.replace('{!Account.BillingCity}' ,e[0].School_Institution__r.BillingCity);
+            HtmlValue = HtmlValue.replace('{!Account.BillingCountry}' ,e[0].School_Institution__r.BillingCountry);
+            HtmlValue = HtmlValue.replace('{!Account.BillingPostalCode}' ,e[0].School_Institution__r.BillingPostalCode);
             if(e[0].School_Institution__r.Social_Network_Link__c != null){
                  HtmlValue = HtmlValue.replace('{!Account.Social_Network_Link__c}',e[0].School_Institution__r.Social_Network_Link__c );
             }

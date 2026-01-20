@@ -1,5 +1,8 @@
 trigger LeadTrigger on Lead (before insert, before update, after update) {
-
+    if (RecursiveTriggerHandler.skipTrigger) {
+        System.debug('--- LeadTrigger skipped due to test flag ---');
+        return;
+    }
     
     if (Trigger.isBefore) {
         if (Trigger.isUpdate) {

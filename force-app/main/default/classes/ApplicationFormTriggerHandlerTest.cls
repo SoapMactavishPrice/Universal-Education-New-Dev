@@ -5,15 +5,23 @@ private class ApplicationFormTriggerHandlerTest {
     static void testUpdateAddressFields() {
         
          Test.setMock(HttpCalloutMock.class, new MockHttpResponseGenerator());
+
+         Lead lead = new Lead(
+            FirstName = 'Jane',
+            LastName = 'Doe',
+            Company = 'Test Company'
+        );
+        insert lead;
         
         // Create test data: one record with Full_Address__c populated and one without
         Application_Form__c formWithAddress = new Application_Form__c(
-            Name = 'Form A'
-           
+            Name = 'Form A',
+            Lead__c = lead.Id
         );
 
         Application_Form__c formWithoutAddress = new Application_Form__c(
-            Name = 'Form B'
+            Name = 'Form B',
+            Lead__c = lead.Id
         );
 
         // If callouts are triggered on insert, move Test.startTest here and add mocks

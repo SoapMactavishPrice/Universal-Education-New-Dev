@@ -1,5 +1,5 @@
 trigger CountAddmissionFormOnAccount on Admission_Form__c (after INSERT, after UPDATE, after DELETE) {
-
+    
     
     Set <Id> accountIds = new Set <Id>();
     List <Account> lstAccountsToUpdate = new List <Account>();

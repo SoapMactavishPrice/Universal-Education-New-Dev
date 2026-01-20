@@ -85,7 +85,6 @@ global without sharing class SaveWebSiteForm {
             dmlOpts.DuplicateRuleHeader.allowSave = true;
             dmlOpts.DuplicateRuleHeader.runAsCurrentUser = false;
             Database.insert(ld, dmlOpts);
-
             
             result.put('Message', 'web site Lead Inserted Successfully.!!!');
             result.put('Status', 'Success');

@@ -27,6 +27,7 @@ public class AdmissiGrantTriggerHandler {
             }
         }
     }
+    
     public static void updateRemark(List<Admission_Granted__c> listAdmissionGranted,Map < Id, Admission_Granted__c > oMap)
     {
         List<Admission_Granted__c> toBeUpdate=new List<Admission_Granted__c>();
@@ -91,7 +92,7 @@ public class AdmissiGrantTriggerHandler {
             }
         }
     }
-    public static void fakeMethod() {
+   /* public static void fakeMethod() {
         Integer j = 0;
         j++;
         j++;
@@ -302,5 +303,5 @@ public class AdmissiGrantTriggerHandler {
         j++;
         j++;
         j++;
-    }
+    } */
 }

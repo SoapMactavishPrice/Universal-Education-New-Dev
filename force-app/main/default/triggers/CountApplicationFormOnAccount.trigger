@@ -1,6 +1,5 @@
 trigger CountApplicationFormOnAccount on Application_Form__c (after insert, after update, after delete, before insert) {
 
-
 Set <Id> accountIds = new Set <Id>();
 List <Account> lstAccountsToUpdate = new List <Account>();
 if(Trigger.isInsert){

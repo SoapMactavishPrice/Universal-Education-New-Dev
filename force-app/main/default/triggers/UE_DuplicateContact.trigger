@@ -1,5 +1,6 @@
 trigger UE_DuplicateContact on Contact (before insert, Before update) 
 {
+    
     for(Contact c:trigger.new)
     {
         for(Contact l:[Select MobilePhone,SecondaryMobileNo__c,Phone from Contact])

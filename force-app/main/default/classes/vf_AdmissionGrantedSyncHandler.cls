@@ -1,4 +1,4 @@
-public class vf_AdmissionGrantedSyncHandler {
+public class vf_AdmissionGrantedSyncHandler { 
     
     public Id Id {get;set;}
     public boolean Sync_With_Ether {get;set;}

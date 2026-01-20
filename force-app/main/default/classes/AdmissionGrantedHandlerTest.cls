@@ -4,6 +4,12 @@ public class AdmissionGrantedHandlerTest {
     @isTest public static void testmethod1(){
         
          Test.setMock(HttpCalloutMock.class, new MockHttpResponseGenerator());
+
+        Lead lead = new Lead();
+        lead.FirstName = 'TestLeadFirstName';
+        lead.LastName = 'TestLeadLastName';
+        lead.Company = 'TestCompany';
+        insert lead;
         
          Account acc = new Account();
         acc.Name ='Testaccountname';
@@ -17,6 +23,7 @@ public class AdmissionGrantedHandlerTest {
    		con.MobilePhone='9123445678';
     	con.Email='rumeli@gmail.com';
     	con.Type__c='Admission Enquiry';
+        con.Lead__c = lead.Id;
     	insert con;
         
         
@@ -42,6 +49,7 @@ public class AdmissionGrantedHandlerTest {
         enq.Stages__c='Application submitted';
         enq.Application_Received__c=true;
         enq.Application_Sent__c=true;
+        enq.Lead__c = lead.Id;
         insert enq;
         
        
@@ -68,6 +76,7 @@ public class AdmissionGrantedHandlerTest {
         af1.Status__c='Application submitted';
         af1.State__c='state';
         af1.School_Institution__c = enq.School_Institution__c;
+        af1.Lead__c = lead.Id;
 		insert af1;
         
         List<Admission_Form__c> addlist=new List<Admission_Form__c>();
@@ -90,6 +99,7 @@ public class AdmissionGrantedHandlerTest {
         af2.Nationality__c='Indian';
         af2.Registration_No__c='2019-20/II/UHSC/REG/9';
         af2.School_Institution__c = af1.School_Institution__c;
+        af2.Lead__c = lead.Id;
 		addlist.add(af2);       
         insert addlist;
         
@@ -104,6 +114,7 @@ public class AdmissionGrantedHandlerTest {
         af3.Admission_Form__c=af2.Id;
         af3.School_Institution__c = af2.School_Institution__c;
         af3.Enrollment_No__c = 'STD123';
+        af3.Lead__c = lead.Id;
         insert af3;
         
         AdmissionGrantedHandler.FormFactory();
@@ -113,6 +124,12 @@ public class AdmissionGrantedHandlerTest {
     @isTest public static void testmethod2(){
         
          Test.setMock(HttpCalloutMock.class, new MockHttpResponseGenerator());
+
+         Lead lead = new Lead();
+        lead.FirstName = 'TestLeadFirstName';
+        lead.LastName = 'TestLeadLastName';
+        lead.Company = 'TestCompany';
+        insert lead;
         
          Account acc = new Account();
         acc.Name ='Testaccountname';
@@ -125,6 +142,7 @@ public class AdmissionGrantedHandlerTest {
    		con.MobilePhone='9123445678';
     	con.Email='rumeli@gmail.com';
     	con.Type__c='Admission Enquiry';
+        con.Lead__c = lead.Id; 
     	insert con;
         
         
@@ -150,6 +168,7 @@ public class AdmissionGrantedHandlerTest {
         enq.Stages__c='Application submitted';
         enq.Application_Received__c=true;
         enq.Application_Sent__c=true;
+        enq.Lead__c = lead.Id;
         insert enq;
         
        
@@ -176,6 +195,7 @@ public class AdmissionGrantedHandlerTest {
         af1.Status__c='Application submitted';
         af1.State__c='state';
         af1.School_Institution__c =enq.School_Institution__c;
+        af1.Lead__c = lead.Id;
 		insert af1;
         
         List<Admission_Form__c> addlist=new List<Admission_Form__c>();
@@ -198,6 +218,7 @@ public class AdmissionGrantedHandlerTest {
         af2.Nationality__c='Indian';
         af2.Registration_No__c='2019-20/II/UHSC/REG/9';
         af2.School_Institution__c = af1.School_Institution__c;
+        af2.Lead__c = lead.Id;
 		addlist.add(af2);       
         insert addlist;
         

@@ -701,7 +701,7 @@ public without sharing class StudentApplicationFormController {
         System.debug('enq.School_Institution__r.School_Short_Code__c -> ' + enq.School_Institution__r.School_Short_Code__c);
         System.debug('enq.Payment_Done__c => -> ' + enq.Payment_Done__c + ' Contains => ' + schoolNameUAmdtMap.containsKey(enq.School_Institution__r.School_Short_Code__c));
         
-        if (schoolNameUAmdtMap.get(enq.School_Institution__r.School_Short_Code__c).Payment_Applicable__c == true) {
+        if (schoolNameUAmdtMap.get(enq.School_Institution__r.School_Short_Code__c) != null && schoolNameUAmdtMap.get(enq.School_Institution__r.School_Short_Code__c).Payment_Applicable__c == true) {
             if (!enq.Payment_Done__c && schoolNameUAmdtMap.containsKey(enq.School_Institution__r.School_Short_Code__c)) {
                 System.debug('Applicable -> ' + schoolNameUAmdtMap.get(enq.School_Institution__r.School_Short_Code__c).Payment_Applicable__c + ' Gateway ' + schoolNameUAmdtMap.get(enq.School_Institution__r.School_Short_Code__c).Payment_Gateway__c);
                 if (schoolNameUAmdtMap.get(enq.School_Institution__r.School_Short_Code__c).Payment_Applicable__c && schoolNameUAmdtMap.get(enq.School_Institution__r.School_Short_Code__c).Payment_Gateway__c == 'HDFC') {

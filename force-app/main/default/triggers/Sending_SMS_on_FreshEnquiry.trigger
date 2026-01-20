@@ -1,5 +1,4 @@
 trigger Sending_SMS_on_FreshEnquiry on Enquiry__c (Before Insert,before update, after update) {
-
     
     List<smsgupshupTemplate__c> sms=new List<smsgupshupTemplate__c>();
     List<Enquiry__c> Enq=new List<Enquiry__c>();
