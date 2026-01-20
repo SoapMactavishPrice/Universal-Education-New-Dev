@@ -1,0 +1,39 @@
+<apex:page standardController="Lead" extensions="ReAssignSchool" lightningStylesheets="true" standardStylesheets="true" sidebar="true" showHeader="true">
+    <apex:form >
+        <apex:slds />
+        <apex:pageBlock >
+            <apex:pageMessages />
+            <style>
+                .center-align {
+                    text-align: center;
+                }
+              
+            </style>
+            <apex:pageBlockSection title="Reassign School/Institution" id="eventInformation" collapsible="false" >
+                     <div class="slds-form-element__control slds-input-has-fixed-addon" style="margin: auto; position: absolute; width: -webkit-fill-available; display: flex; justify-content: center;">
+                            <span><strong style="text-align : center;">School/Institution</strong></span> 
+                            
+                            <apex:selectList value="{!AccountId}" multiselect="false" styleClass="slds-select" required="true" size="1" style="width: 40%; margin-top: 2em; text-align:center">
+                                <apex:selectOptions value="{!schoolOptionsList}"/>
+                            </apex:selectList>
+                        </div>
+                   
+            </apex:pageBlockSection>
+            
+            <div class="center-align">
+                <apex:pageBlockSection >
+                    <apex:commandButton action="{!save}" value="Update" style="width:100px; height:25px; margin-top:0.6em; margin-bottom:3em; background-color:lightblue; font-size:10px;margin-left: 87%;; margin-right: auto;" />
+                    <apex:commandButton action="{!cancel}" value="Cancel" immediate="true" style="width:100px; height:25px; margin-top:0.6em; margin-bottom:3em; background-color:lightblue; font-size:10px; margin-left: 3%; margin-right: auto;" />
+                </apex:pageBlockSection>
+            </div>
+
+            <apex:pageBlockSection rendered="{!back}">
+                <center>
+                    <b>
+                        <apex:commandButton action="{!cancel}" value="Back" styleClass="slds-button slds-button_neutral"/> 
+                    </b>
+                </center>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

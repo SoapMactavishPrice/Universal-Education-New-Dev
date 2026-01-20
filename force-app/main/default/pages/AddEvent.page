@@ -1,0 +1,34 @@
+<apex:page standardController="Admission_Form__c" extensions="NewEventController" action="{!alreadycalledforobservation}" lightningStylesheets="true" standardStylesheets="true" sidebar="true" showHeader="true">
+    <apex:form >
+        <apex:slds />
+        <apex:pageBlock title="Observation Schedule">
+            <apex:outputPanel id="resultPanel" >
+                <apex:pageMessages >
+                </apex:pageMessages>
+            </apex:outputPanel>
+            <apex:pageBlockSection title="Scheduled" id="eventInformation" collapsible="false" columns="2" >
+                <apex:inputfield value="{!ev.Subject}" required="true"/>
+                <apex:outputField value="{!ev.WhatId}"/>
+                <apex:inputfield value="{!ev.StartDateTime}" required="true"/>
+                <apex:inputfield value="{!ev.EndDateTime}" required="true"/>    
+                <!-- <apex:inputField value="{!ev.Location}"/>--> 
+                <apex:outputfield value="{!ev.School_Institution__c}" label="Location"/>
+                <apex:inputField value="{!ev.OwnerId}"/>
+                <apex:inputfield value="{!ev.Description}"/>
+                
+                <center>
+                    <b> <apex:commandButton action="{!createevent}" value="Submit"  style="width:180px;height:40px;margin-top:3em; margin-left:83%;margin-bottom:3em;background-color:lightblue;font-size:16px" styleClass="slds-button slds-button_success"/>
+                        
+                    </b>
+                </center>
+            </apex:pageBlockSection>
+            
+           <!--  <center>
+            <b><apex:commandButton action="{!cancel}" value="Cancel"  style="width:180px;height:40px;margin-top:3em;margin-bottom:3em;background-color:lightblue;font-size:16px" styleClass="slds-button slds-button_success"/> 
+            </b>
+            
+            </center>-->
+            
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

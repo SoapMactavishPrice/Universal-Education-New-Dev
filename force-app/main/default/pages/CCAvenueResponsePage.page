@@ -1,0 +1,7 @@
+<apex:page controller="CCAvenueResponse_Cntl" action="{!redirectToOTPpage}">
+
+    <!-- Begin Default Content REMOVE THIS -->
+  <h1>Transaction Successfull</h1>
+  
+  <!-- End Default Content REMOVE THIS -->
+</apex:page>

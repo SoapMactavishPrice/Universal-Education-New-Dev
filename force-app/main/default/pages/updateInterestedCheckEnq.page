@@ -1,0 +1,11 @@
+<apex:page standardController="Enquiry__c" extensions="SchoolTourController" action="{!enqInterested}" sidebar="true" lightningStylesheets="true" standardStylesheets="true" >
+    <apex:form >
+        <apex:slds /> 
+        <apex:outputPanel >
+            <apex:pageMessages >
+            </apex:pageMessages>
+           <center><b><apex:commandButton value="Back" action="{!cancel}"  styleClass="slds-button slds-button_neutral"/></b></center>
+
+       </apex:outputPanel>
+    </apex:form>
+</apex:page>

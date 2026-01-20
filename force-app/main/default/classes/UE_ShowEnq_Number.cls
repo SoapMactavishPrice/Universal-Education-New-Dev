@@ -1,0 +1,51 @@
+public class UE_ShowEnq_Number {
+    
+    
+    Public Enquiry__c enq{get;set;}
+    Public String Sname{get;set;}
+    Public Account school{get;set;}
+    
+    
+    public String eid = ApexPages.currentPage().getParameters().get('Eid');
+    
+    
+    public UE_ShowEnq_Number(ApexPages.StandardController Controller){
+         // enq = (Enquiry__c)Controller.getRecord();
+        
+        enq = [Select id,Name,CreatedDate,School_Name__c,School_Institution__c from Enquiry__c where id =: eid]; 
+        system.debug('ENQUIRY NUMBER:::::'+enq.School_Institution__c);
+        
+        school =[select id,name,School_Short_Code__c from Account where Id=: enq.School_Institution__c];
+         //system.debug('school:::::'+school);
+        
+        if(school.School_Short_Code__c != null){
+            Sname=school.School_Short_Code__c +'_ENQ';  
+        }
+       
+/*else if(enq.School_Name__c=='St. John'+'\''+'s Universal School'){
+            system.debug('Inside st John s');
+            Sname='SJUS_ENQ';
+        }else if(enq.School_Name__c=='Ebenezer International School Bangalore'){
+            Sname='EISB_ENQ';
+        }else if(enq.School_Name__c=='Silver Oak Universal School'){
+            Sname='SOUS_ENQ';
+        }else if(enq.School_Name__c=='Primus Public School'){
+            Sname='PPUBS_ENQ';
+        }else if(enq.School_Name__c=='Alpha Plus Matriculation'){
+            Sname='APM_ENQ';
+        }else if(enq.School_Name__c=='Alpha Cambridge School (IGCSE)'){
+            Sname='ACS_ENQ';
+        }else if(enq.School_Name__c=='Alpha Wisdom Vidyashram (CBSE)'){
+            Sname='AWV_ENQ';   
+        }else if(enq.School_Name__c=='Universal High School Chembur'){
+            Sname='UHSC_ENQ';   
+        }
+*/
+        else {
+            Sname='UniversalLogo';
+        }
+          System.debug('Sname' + Sname);
+        
+    }
+    
+}

@@ -1,0 +1,115 @@
+<apex:page controller="ApplicationPaymentGateway_Ctrl" showHeader="false" standardStylesheets="false" sidebar="false" applyHtmlTag="false" applyBodyTag="false" docType="html-5.0">
+   
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" lang="en">
+        <script src="{!endpoint}"></script>
+        <script type='text/javascript'>
+            var options = {
+                "key": "{!KeyValue}", 
+                "amount": "{!amt}", 
+                "currency": "INR",
+                "name": "Universal Education",
+                "description": "Application Fees",
+                "image": "",
+                "order_id": "{!enqOrderId}",
+                "prefill": {
+                    "name": "{!eName}",
+                    "email": "{!eEmail}",
+                    "contact": "{!eContactNo}"
+                },
+                "handler": function (response){
+                    
+                 //   alert("===paymentid==="+response.razorpay_payment_id);
+                 //   alert("===orderid===="+response.razorpay_order_id);
+                 //   alert("=====signatureid====="+response.razorpay_signature);
+                    responceDt(JSON.stringify(response));
+                    // responceDt(response);                    
+                },
+                "notes": {
+                    "address": "Razorpay Corporate Office"
+                },
+                "theme": {
+                    "color": "#3399cc"
+                }
+            };
+        var rzp1 = new Razorpay(options);
+        function openPay(event){
+            
+            rzp1.open();
+            event.preventDefault();
+        }
+        </script>
+        <head>
+            <meta charset="utf-8" />
+            <meta http-equiv="x-ua-compatible" content="ie=edge" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <!-- Import the Design System style sheet -->
+            <apex:slds />  
+            <style>
+                .main_div {
+                background-color: White;
+                border: 2px solid black;
+                max-width: 720px;
+                margin: 8% auto;
+                padding: 30px 0;
+                }
+                .main_div h2 {
+                font-weight: bold !important;
+                text-align: center;
+                padding: 0 5%;
+                line-height: 35px !important;
+                }
+                
+                .main_div h3 {
+                padding: 0 5%;
+                }
+                
+                pre.pre_style {
+                white-space: pre-wrap;
+                margin: 0 auto;
+                margin-top: 35px;
+                font-family: 'Salesforce Sans',Arial,sans-serif;
+                max-width: 90%;
+                font-size: 14px;
+                color: black;
+                }
+                
+                h4.fee_app {
+                margin: 20px auto;
+                max-width: 90%;
+                margin-bottom: 40px;
+                font-size: 14px;
+                color: black;
+                }
+                
+                @media(max-width:1023px) {                    
+                .main_div {
+                width: 90% !important;
+                margin: 20px auto !important;
+                }
+                }
+            </style>         
+        </head>
+        <body>
+            
+            <apex:form >
+                <apex:actionFunction name="responceDt" action="{!paynow}" rerender="pb">
+                    <apex:param name="PaymentId" value="" assignTo="{!paymentId}" />
+                </apex:actionFunction>
+                 
+                <!-- REQUIRED SLDS WRAPPER -->
+                <div class="slds-scope">    
+                    <div class="main_div">    
+                        
+                        <h2 class="slds-align_absolute-center slds-text-heading_large">{!schoolName}</h2>
+                        <h3 class="slds-align_absolute-center slds-text-heading_medium" >Online Application Form</h3>
+                        <pre class="pre_style">{!schoolText}</pre>
+                        <h4 class="fee_app" >Registration fee: Rs: {!amount}{!IF(amt != null,'/-','')}</h4>
+                        <apex:commandButton styleClass="slds-align_absolute-center" value="Pay Now" id="rzp-button1"  onclick="openPay(event)"/> 
+                        <!-- <apex:commandButton styleClass="slds-align_absolute-center" value="Pay Now" action="{!payNow}" />styleClass="slds-button slds-button_brand slds-align_absolute-center"-->
+                    </div>
+                </div>
+                <!-- / REQUIRED SLDS WRAPPER -->            
+            </apex:form>
+        </body>
+    </html>    
+</apex:page>

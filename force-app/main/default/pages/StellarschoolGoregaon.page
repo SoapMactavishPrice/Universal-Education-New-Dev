@@ -1,0 +1,166 @@
+<apex:page docType="html-5.0" title="Stellar School Goregaon" standardController="Lead" lightningStylesheets="true" sidebar="false" showHeader="false" standardStylesheets="true">
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" lang="en">
+        <head>
+            <meta charset="utf-8" />
+            <meta http-equiv="x-ua-compatible" content="ie=edge" />
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <!-- Import the Design System style sheet -->
+            <style>
+                .DIVContainer{
+                border-radius: 3px;
+                margin-bottom: 5px;
+                margin-top: 10px;
+                }
+                .Divelementstyle {
+                margin: 0px;
+                padding: 0px;
+                width: 100%;
+                height: 30px;
+                height: 30px;
+                text-transform: uppercase;
+                }
+            </style>
+            <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" />
+            <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/css/bootstrap-datepicker.css" rel="stylesheet" />
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/js/bootstrap-datepicker.js"></script>
+        </head>
+        <body>
+            <apex:slds />
+            <form action="https://universaleducation.my.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8" method="POST">
+            <input type="hidden" name="oid" value="00D7F000005B7Td"/>
+                <input type="hidden" name="retURL" value="https://universaleducation.secure.force.com/StellarSchoolGoregaonThankYou"/>
+                <div class="container" style="Border:3px solid black;">
+                    <div class="row">
+                        <div class="container DIVContainer">
+                            <div class="row" style="font-size: xx-large;">
+                                <center><b style="margin-left: 400px;">Stellar World School</b></center>
+                            </div>
+                        </div>
+                        <div class="container DIVContainer">
+                            <div class="row" Style="background-color: lightgray; padding: 2px;font-size: x-large;">
+                                <b style="margin-left: 12px;">Information</b>
+                            </div>
+                        </div>
+                        <div class="container DIVContainer">
+                            <div class="row">
+                                <div class="col-2">
+                                    <label for="Email" class="labelclass">Email</label>
+                                </div>
+                                <div class="col-4 mb-3">
+                                    <input  id="email" maxlength="80" required="true" Placeholder="Example@gmail.com" name="email" size="20" type="email" class=" form-control" style="border-left: 3px solid red;"/>
+                                </div>
+                                <div class="col-2">
+                                    <label for="Mobile" class="labelclass" >Mobile</label>
+                                </div>
+                                <div class="col-4 mb-3">
+                                    <input  id="mobile" maxlength="10" required="true" name="mobile" size="20" type="text" class="form-control" Placeholder="Mobile" style="border-left: 3px solid red;"/>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="container DIVContainer">
+                            <div class="row">
+                                <div class="col-2">
+                                    <label for="first_name"  class="labelclass">First Name </label>
+                                </div>
+                                <div class="col-4 mb-3">
+                                    <input Placeholder="First Name" required="true" id="first_name" value="" style="text-transform: uppercase;border-left: 3px solid red;" maxlength="40" name="first_name" size="20" type="text" class="form-control" />
+                                </div>
+                                <div class="col-2">
+                                    <label for="last_name"  class="labelclass">Last Name</label>
+                                </div>
+                                <div class="col-4 mb-3">
+                                    <input  id="last_name" Placeholder="Last Name" required="true" maxlength="80" style="text-transform: uppercase;border-left: 3px solid red;"  name="last_name" size="20" type="text" class="form-control"/>
+                                </div>
+                            </div>
+                        </div> 
+                        
+                        
+                        <div class="container DIVContainer">
+                            <div class="row">
+                                <div class="col-2">
+                                    <label for="" class="labelclass">Relation</label>
+                                </div>
+                                <div class="col-4 mb-3">
+                                    <select  id="00NC5000000NmKx" name="00NC5000000NmKx" required="true" title="Relation" class="form-control" style="border-left: 3px solid red;">
+                                        <option value="">None</option>
+                                        <option value="FATHER">FATHER</option>
+                                        <option value="MOTHER">MOTHER</option>
+                                        <option value="OTHER">OTHER</option>
+                                    </select>
+                                </div>
+                                <div class="col-2">
+                                    <label for="" class="labelclass">Grade</label>
+                                </div>
+                                <div class="col-4 mb-3">
+                                    <select  id="00NC5000000Nr40" name="00NC5000000Nr40" required="true" title="Stellar Seeking Admission in Grade" class="form-control " style="border-left: 3px solid red;">
+                                        <option value="">None</option>
+                                        <option value="NURSERY">NURSERY</option>
+                                        <option value="JR. KINDERGARTEN">JR. KINDERGARTEN</option>
+                                        <option value="SR. KINDERGARTEN">SR. KINDERGARTEN</option>
+                                        <option value="GRADE 1">GRADE 1</option>
+                                        <option value="GRADE 2">GRADE 2</option>
+                                        <option value="GRADE 3">GRADE 3</option>
+                                        <option value="GRADE 4">GRADE 4</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="container DIVContainer">
+                            <div class="row">
+                                <div class="col-2">
+                                    <label for="" class="labelclass">Child&#39;s First Name</label>
+                                </div>
+                                <div class="col-4 mb-3">
+                                    <input  id="00NC5000000NmKy" maxlength="80" required="true" name="00NC5000000NmKy" style="text-transform: uppercase;border-left: 3px solid red;"  Placeholder="Child First Name" size="20" type="text" class="form-control"/>
+                                </div>
+                                <div class="col-2">
+                                    <label for=""  class="labelclass">Child&#39;s Last Name</label>
+                                </div>
+                                <div class="col-4 mb-3">
+                                    <input  id="00NC5000000NmKz" maxlength="80" required="true" name="00NC5000000NmKz" style="text-transform: uppercase;border-left: 3px solid red;"  Placeholder="Child Last Name" size="20" type="text" class="form-control "/>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="container DIVContainer">
+                            <div class="row">
+                                <div class="col-2">
+                                    <label for=""  class="labelclass">Date of Birth</label>
+                                </div>
+                                <div class="col-4 mb-3">
+                                    <input Placeholder="DD/MM/YYYY" id="00NC5000000NmKv" required="true" name="00NC5000000NmKv" size="12" type="Text" class="form-control date"/>    
+                                </div> 
+                                <div class="col-2">
+                                    <label for=""  class="labelclass"></label>
+                                </div>
+                                <div class="col-4 mb-3">
+                                    <input  id="00N2t000000i4op" maxlength="6" name="00N2t000000i4op" size="20" Value="STELRG" type="hidden"/>
+                                     <select type="hidden" id="lead_source" name="lead_source" style="display: none;">
+                                        <option type="hidden" value="Walkin">Walkin</option>
+                                    </select>
+                                </div> 
+                            </div>
+                        </div>
+                        
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-12">
+                                    <center><input type="submit" value="submit" name="submit" class="slds-button slds-button_brand" style="margin:15px;" /></center>
+                                  </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form> 
+            <script type="text/javascript">
+              $(".date").datepicker({
+                format: "dd/mm/yyyy",
+              });
+            </script>
+        </body>
+    </html>
+</apex:page>

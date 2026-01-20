@@ -1,0 +1,5 @@
+/* Increase the width of the combobox */
+.wide-combobox {
+    width: 300px; /* Adjust the size as per your requirement */
+    max-width: 100%; /* Ensure responsiveness */
+}

@@ -1,0 +1,427 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+.THIS {
+    font-family: 'Poppins', sans-serif !important;
+    font-size: 16px;
+    color: #445069;
+    border: 0;
+}
+
+.THIS.custom-card {
+    border:0 !important;
+}
+.THIS.c-container {
+    border: 1px solid #d8dde6;
+    margin: 10px 0 20px;
+}
+
+.THIS .header-column {
+    padding: 0 2rem;
+}
+
+.THIS .field-title {
+    font-size: .75rem;
+    line-height: 1.25;
+    color: #54698d;
+    margin-bottom: .25rem;
+}
+.THIS .container {
+    background: #fff;
+    border-radius: 5px;
+    padding: 1rem 10rem;
+    font-family: 'Poppins', sans-serif !important;
+}
+.THIS .first-col {
+    margin-left: -1rem;
+}
+.THIS .second-col {
+    margin-left: 3rem;
+}
+/*.THIS .slds-form-element__label {
+    color: #8b8888;
+    font-size: 16px;
+    position: relative;
+    top: 2.8rem;
+    z-index: 1;
+    left: 1rem;
+}*/
+
+
+.THIS .address-label {
+    background: #e4e4e4;
+    height: 40px;
+    padding: 9px 1rem;
+    font-weight: bold;
+    font-size: 16px;
+    border-radius: 5px;
+}
+.THIS .current-discussion .slds-form-element__label {
+    font-size: 10px;
+}
+.THIS .address-details .slds-form-element__control {
+    margin-bottom: 6px;
+}
+.THIS .ErrorMsg {
+    min-height: 30px;
+    background-color: #931621;
+    font-size: 15px;
+    font-weight: bold;
+    color: #fff;
+    padding: 4px 15px;
+    width: 100%;
+    position: relative;
+    top: 0.5rem;
+    text-align: left;
+}
+.THIS .ORmsg
+{
+   text-align: center;
+    color:black;
+}
+.THIS .SuccessMsg1 {
+	min-height: 30px;
+    background-color: green;
+    font-size: 15px;
+    font-weight: bold;
+    color: #fff;
+    padding: 4px 15px;
+    width: 100%;
+    position: relative;
+    top: 0.5rem;
+    text-align: left;
+}
+.THIS .slds-notify_container {
+    z-index: 0;
+}
+.THIS .slds-section-title{
+    text-align: center;
+    font-size: 18px;
+    color: blue;
+}
+
+.THIS .formLogo {
+    width: 300px;
+}
+
+.THIS #j_id0:j_id1 {
+    display: none;
+}
+
+.THIS .slds-card__header.slds-grid {
+    margin: 0;
+    padding: 0;
+}
+
+.THIS .page-title {
+    margin: 30px 0;
+    position: sticky;
+    top: 80px;
+    z-index: 50;
+    background: #fff;
+}
+
+.THIS .page-title h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #191970;
+}
+
+.THIS .header {
+    border: 0;
+    box-shadow: 0 4px 8px rgba(58,58,58,.14);
+    position: sticky;
+    top: 0;
+    z-index: 80;
+}
+
+.THIS h2 {
+     font-family: 'Poppins', sans-serif !important;
+}
+
+.THIS .slds-card__body {
+    margin: 0;
+}
+
+.THIS .error-message {
+    color: #FF4B91;
+    background: none;
+    font-family: 'Poppins', sans-serif !important;
+}
+
+.THIS .form-actions {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.THIS  .slds-button,
+.THIS .slds-button:hover,
+.THIS .slds-button:focus{
+    padding: 4px 16px;
+    background: #191970;
+    border-radius: 8px;
+    border-color: #191970;
+    font-family: 'Poppins', sans-serif !important;
+}
+
+.THIS .slds-button:hover,
+.THIS .slds-button:focus {
+     mix-blend-mode: multiply;
+}
+
+.THIS .slds-input,
+.THIS .slds-select{
+   height: 48px;
+   padding: 6px 16px !important;
+   font-family: 'Poppins', sans-serif !important;
+   color: #445069;
+   font-size: 16px;
+   border: 1px solid #d4d4d4;
+}
+
+.THIS .slds-select_container:before {
+  top: 16px;
+  right: 15px;
+}
+
+.THIS .slds-select_container:after {
+    bottom: 18px;
+    right: 15px;
+}
+
+
+.THIS .section-box {
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(58,58,58,.14);
+    margin: 0 0 30px;
+    border-radius: 8px;
+}
+
+.THIS .xl-form-actions {
+    margin: 0 0 30px;
+    display: flex;
+    flex: 0 0 100%;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.THIS .section-title  {
+    background: none;
+    padding: 0;
+    font-size: 18px;
+    font-weight: 700;
+    text-transform: none;
+    margin: 0 0 15px;
+    letter-spacing: 0;
+    color: #191970;
+}
+
+.THIS .no-padding {
+    padding: 0;
+}
+
+.THIS .search-grid-form {
+    width: 480px;
+    margin: 0 auto;
+    border: 1px solid #d4d4d4;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(58,58,58,.14);
+
+}
+
+.THIS .slds-scope .slds-card {
+    border: 0;
+}
+
+
+/*.THIS input,
+.THIS select {
+    height: 60px;
+    width: 100%;
+}
+.THIS select {
+    cursor: pointer;
+}
+
+.THIS .society-label {
+  	position: absolute;
+    pointer-events: none;
+    left: 10rem;
+    top: 6.5rem;
+    transition: .2s ease all;
+    font-weight: 600;
+}
+.THIS .pin-label {
+  	position: absolute;
+    pointer-events: none;
+    left: 10rem;
+    top: 12rem;
+    transition: .2s ease all;
+    font-weight: 600;
+}
+.THIS .loc-label {
+  	position: absolute;
+    pointer-events: none;
+    left: 38rem;
+    top: 6.3rem;
+    transition: .2s ease all;
+    font-weight: 600;
+}
+.THIS .me-label {
+  	position: absolute;
+    pointer-events: none;
+    left: 10rem;
+    top: 17.8rem;
+    transition: .2s ease all;
+    font-weight: 600;
+}
+.THIS .mo-label {
+  	position: absolute;
+    pointer-events: none;
+    left: 10rem;
+    top: 23.5rem;
+    transition: .2s ease all;
+    font-weight: 600;
+}
+.THIS .fe-label {
+  	position: absolute;
+    pointer-events: none;
+    left: 38rem;
+    top: 12rem;
+    transition: .2s ease all;
+    font-weight: 600;
+}
+.THIS .fo-label {
+  	position: absolute;
+    pointer-events: none;
+    left: 38rem;
+    top: 17.8rem;
+    transition: .2s ease all;
+    font-weight: 600;
+}
+.THIS .hear-label {
+  	position: absolute;
+    pointer-events: none;
+    left: 38rem;
+    top: 23.5rem;
+    transition: .2s ease all;
+    font-weight: 600;
+}
+.THIS .me-select:focus,
+.THIS .mo-select:focus,
+.THIS .fe-select:focus,
+.THIS .fo-select:focus,
+.THIS .hear-select:focus {
+    border: 1.5px solid #77a3dc;
+}
+
+.THIS .society-input:focus,
+.THIS .pin-input:focus,
+.THIS .loc-input:focus {
+    border: 1.5px solid #77a3bc;
+    outline: unset;
+}
+.THIS .society-input:focus ~ .society-label {
+    position: absolute;
+    top: 4.3rem;
+    left: 10rem;
+    background: #fff;
+    font-weight: 600;
+    color: #77a3dc;
+}
+
+.THIS .society-input:focus ~ .society-label {
+    position: absolute;
+    top: 4.3rem;
+    left: 10rem;
+    background: #fff;
+    font-weight: 600;
+    color: #77a3dc;
+}
+.THIS .pin-input:focus ~ .pin-label {
+    position: absolute;
+    top: 10.2rem;
+    left: 10rem;
+    background: #fff;
+    font-weight: 600;
+    color: #77a3dc;
+}
+.THIS .loc-input:focus ~ .loc-label {
+    position: absolute;
+    top: 4.3rem;
+    left: 38rem;
+    background: #fff;
+    font-weight: 600;
+    color: #77a3dc;
+}
+.THIS .me-select:focus ~ .me-label {    
+    position: absolute;
+    left: 10rem;
+    top: 15.8rem;
+    background: #fff;
+    font-weight: 600;
+    color: #77a3dc;
+}
+.THIS .mo-select:focus ~ .mo-label {    
+    position: absolute;
+    left: 10rem;
+    top: 21.6rem;
+    background: #fff;
+    font-weight: 600;
+    color: #77a3dc;
+}
+.THIS .fe-select:focus ~ .fe-label {    
+    position: absolute;
+    left: 38rem;
+    top: 10.1rem;
+    background: #fff;
+    font-weight: 600;
+    color: #77a3dc;
+}
+.THIS .fo-select:focus ~ .fo-label {    
+    position: absolute;
+    left: 38rem;
+    top: 15.8rem;
+    background: #fff;
+    font-weight: 600;
+    color: #77a3dc;
+}
+.THIS .hear-select:focus ~ .hear-label {    
+    position: absolute;
+    left: 38rem;
+    top: 21.6rem;
+    background: #fff;
+    font-weight: 600;
+    color: #77a3dc;
+}
+
+ @media screen and (max-width: 480px) {
+	.THIS .first-col {
+        width: 300px;
+    }
+    .THIS .second-col {
+        width: 300px;
+    }
+}*/
+
+@media screen and (max-width: 767px) {
+    .THIS .container {
+        padding: 0 30px;
+    }
+    .THIS .search-grid-form {
+        width: 100%;
+    }
+    
+    .THIS .page-title h2 {
+        font-size: 20px;
+    }
+    
+    .THIS .section-box .slds-grid {
+        display: block;
+    }
+    
+    .THIS .section-box .second-col {
+        margin-left: 0;
+    }
+}

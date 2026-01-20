@@ -1,0 +1,116 @@
+<template>
+    <lightning-quick-action-panel title="Schedule Campus Visit" style="height: fit-content;">
+        <!-- Error Messages -->
+        <!-- <template if:true={errorMessage}>
+            <div class="slds-text-color_error slds-p-around_medium">{errorMessage}</div>
+        </template> -->
+
+        <!-- Event Information Section -->
+        <template if:true={showEventInformation}>
+            <div class="slds-p-around_medium">
+                <h2 class="slds-text-heading_medium slds-border_bottom slds-p-bottom_x-small slds-text-align_center">
+                    Meet at School
+                </h2>
+                <div class="slds-grid slds-wrap slds-gutters">
+                    <!-- Subject Field -->
+                    <div class="slds-col slds-size_1-of-2">
+                        <lightning-combobox
+                            name="subjectPicklist"
+                            label="Subject"
+                            value={selectedSubject}
+                            options={subjectOptions}
+                            onchange={handleSubjectSelect}
+                        ></lightning-combobox>
+                    </div>
+
+                    <!-- Contact Name Field -->
+                    <div class="slds-col slds-size_1-of-2">
+                        <lightning-input
+                            label="Enquiry Name"
+                            value={enquiryName}
+                            disabled
+                        ></lightning-input>
+                    </div>
+
+                    <!-- Start Date Field -->
+                    <div class="slds-col slds-size_1-of-2">
+                        <lightning-input
+                            label="Start Date"
+                            name="StartDateTime"
+                            type="datetime-local"
+                            value={eventRecord.StartDateTime}
+                            onchange={handleInputChange}
+                            required
+                        ></lightning-input>
+                    </div>
+
+                    <!-- End Date Field -->
+                    <div class="slds-col slds-size_1-of-2">
+                        <lightning-input
+                            label="End Date"
+                            name="EndDateTime"
+                            type="datetime-local"
+                            value={eventRecord.EndDateTime}
+                            onchange={handleInputChange}
+                            required
+                        ></lightning-input>
+                    </div>
+
+                    <!-- Location and User on Same Line -->
+                    <!-- <div class="slds-col slds-size_2-of-2 slds-grid slds-gutters"> -->
+                        <!-- Location Field -->
+                        <div class="slds-col slds-size_1-of-2 slds-p-bottom_medium">
+                            <lightning-input
+                                label="Location"
+                                value={schoolName}
+                                disabled
+                            ></lightning-input>
+                        </div>
+
+                        <!-- Select User Field -->
+                        <div class="slds-col slds-size_1-of-2 slds-p-bottom_medium">
+                            <lightning-combobox
+                                name="userPicklist"
+                                label="Assigned To"
+                                placeholder="Select a User"
+                                options={userOptions}
+                                value={selectedUserId}
+                                onchange={handleUserSelect}
+                                required
+                            ></lightning-combobox>
+                        </div>
+                    <!-- </div> -->
+
+                    <!-- Description Field -->
+                    <div class="slds-col slds-size_2-of-2">
+                        <lightning-textarea
+                            label="Description"
+                            name="Description"
+                            value={eventRecord.Description}
+                            onchange={handleInputChange}
+                        ></lightning-textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit and Cancel Buttons -->
+            <div class="slds-modal__footer slds-grid slds-grid_align-center slds-p-horizontal_large slds-p-bottom_medium">
+                <lightning-button
+                    label="Submit"
+                    variant="brand"
+                    class="slds-m-right_small"
+                    onclick={handleSubmit}
+                    disabled={isLoading}
+                ></lightning-button>
+                <lightning-button
+                    label="Cancel"
+                    variant="neutral"
+                    class="slds-m-left_small"
+                    onclick={handleCancel}
+                ></lightning-button>
+            </div>
+        </template>
+
+
+    </lightning-quick-action-panel>
+</template>

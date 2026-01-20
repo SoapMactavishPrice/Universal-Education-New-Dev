@@ -1,0 +1,40 @@
+.bold-output {
+        font-weight: bold;
+        color: #000000; /* Optional: Make it black */
+    }
+    
+    .id-card {
+        border: 1px solid #d8dde6;
+        border-radius: 8px;
+        padding: 16px;
+        background-color: #ffffff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        font-family: 'Salesforce Sans', Arial, sans-serif;
+        max-width: 800px; /* Increased width to accommodate two columns */
+        margin: 0 auto;
+    }
+
+    .header {
+        font-size: 18px;
+        font-weight: bold;
+        color: #16325c;
+        margin-bottom: 16px;
+        text-align: left;
+        border-bottom: 1px solid #d8dde6;
+        padding-bottom: 8px;
+    }
+    
+    .details {
+        margin-top: 16px;
+    }
+    
+    .field-item {
+        margin-bottom: 16px;
+        padding-right: 16px; /* Add spacing between columns */
+    }
+    
+    .lightning-output-field {
+        font-weight: bold;
+        color: #3e3e3e;
+        display: block;
+    }

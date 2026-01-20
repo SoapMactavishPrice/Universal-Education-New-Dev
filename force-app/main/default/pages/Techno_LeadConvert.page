@@ -1,0 +1,9 @@
+<apex:page standardController="Lead" extensions="Leadconvert" action="{!createContact}">
+    
+    <apex:outputPanel id="resultPanel">
+        <apex:pageMessages >
+        </apex:pageMessages>
+        
+        <br />
+    </apex:outputPanel>
+</apex:page>

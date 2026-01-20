@@ -1,0 +1,9 @@
+<apex:page standardController="Application_Form__c" extensions="Ue_ApplicationReceivedButton" action="{!UpdateApplicationForm}">
+    
+    <apex:outputPanel id="resultPanel">
+        <apex:pageMessages >
+        </apex:pageMessages>
+        
+        <br />
+    </apex:outputPanel>
+</apex:page>

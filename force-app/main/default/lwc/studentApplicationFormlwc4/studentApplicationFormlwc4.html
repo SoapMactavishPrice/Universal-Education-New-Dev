@@ -1,0 +1,318 @@
+<template>
+    <lightning-card class={cardClass}>
+        <div class={waterMarkClass}>
+            <img src={stellarWatermark}>
+        </div>
+        <lightning-layout multiple-rows>
+            <template if:false={isMobile}>
+                <lightning-layout-item size="1"></lightning-layout-item>
+            </template>
+            <lightning-layout-item size={itemSize}>
+                <div class="step-content slds-box slds-m-top_medium">
+                    <template if:true={isStep4}>
+                        <lightning-accordion allow-multiple-sections-open active-section-name={sectionsTitle}>
+                            <template for:each={sections} for:item="section">
+                                <lightning-accordion-section class="accordian" key={section.title} name={section.title}
+                                    label={section.title}>
+                                    <template for:each={section.documents} for:item="pair">
+                                        <div key={pair.id}
+                                            class="slds-m-bottom_small slds-grid slds-wrap slds-gutters topSection">
+                                            <template for:each={pair.items} for:item="doc">
+                                                <div key={doc.dataId} class={sectionClass}>
+                                                    <template if:true={isMobile}>
+                                                        <lightning-layout vertical-align="center"
+                                                            horizontal-align="center" multiple-rows>
+                                                            <lightning-layout-item size="12"
+                                                                class="slds-text-align_center">
+                                                                <lightning-button label="Upload" data-id={doc.dataId}
+                                                                    icon-name="utility:upload" onclick={openFileDialog}>
+                                                                </lightning-button>
+                                                                <input type="file" accept=".pdf, .jpg, .jpeg, .png"
+                                                                    style="display: none;" onchange={handleFileChange}
+                                                                    class={doc.dataId} data-id={doc.dataId} />
+                                                                <template if:true={doc.ispassport}>
+                                                                    <template if:true={showPassportUploadText}>
+                                                                        <div class="slds-text-color_success slds-text-align_center">Uploaded!</div>
+                                                                    </template>
+                                                                    <template if:true={showPassportValidation}>
+                                                                        <div class="slds-text-color_error slds-text-align_center">Document required!</div>
+                                                                    </template>
+                                                                </template> 
+                                                                <template if:true={doc.isociVisa}>
+                                                                    <template if:true={showOciVisaUploadText}>
+                                                                        <div class="slds-text-color_success slds-text-align_center">Uploaded!</div>
+                                                                    </template>
+                                                                    <template if:true={showOciVisaValidation}>
+                                                                        <div class="slds-text-color_error slds-text-align_center">Document required!</div>
+                                                                    </template>
+                                                                </template>
+                                                                <template if:true={doc.isbirthCertificate}>
+                                                                    <template if:true={showBirthCertificateUploadText}>
+                                                                        <div class="slds-text-color_success slds-text-align_center">Uploaded!</div>
+                                                                    </template>
+                                                                    <template if:true={showBirthCertificateValidation}>
+                                                                        <div class="slds-text-color_error slds-text-align_center">Document required!</div>
+                                                                    </template>
+                                                                </template>
+                                                                <template if:true={doc.isschoolLeavingCertificate}>
+                                                                    <template if:true={showSchoolLeavingCertificateUploadText}>
+                                                                        <div class="slds-text-color_success slds-text-align_center">Uploaded!</div>
+                                                                    </template>
+                                                                    <!-- <template if:true={showSchoolLeavingCertificateValidation}>
+                                                                        <div class="slds-text-color_error slds-text-align_center">Document required!</div>
+                                                                    </template>     -->
+                                                                </template>
+                                                                <template if:true={doc.isstudentAadharCard}>
+                                                                    <template if:true={showStudentAadharCardUploadText}>
+                                                                        <div class="slds-text-color_success slds-text-align_center">Uploaded!</div>
+                                                                    </template>
+                                                                    <!-- <template if:true={showStudentAadharCardValidation}>
+                                                                        <div class="slds-text-color_error slds-text-align_center">Document required!</div>
+                                                                    </template>     -->
+                                                                </template>
+                                                                <template if:true={doc.islatestMarksheet}>
+                                                                    <template if:true={showLatestMarksheetForGrade2AndAboveUploadText}>
+                                                                        <div class="slds-text-color_success slds-text-align_center">Uploaded!</div>
+                                                                    </template>    
+                                                                </template>
+                                                                <template if:true={doc.iscasteCertificate}>
+                                                                    <template if:true={showCasteCertificateUploadText}>
+                                                                        <div class="slds-text-color_success slds-text-align_center">Uploaded!</div>
+                                                                    </template>
+                                                                    <template if:true={showCasteCertificateValidation}>
+                                                                        <div class="slds-text-color_error slds-text-align_center">Document required!</div>
+                                                                    </template>      
+                                                                </template>
+                                                                <template if:true={doc.isfatherAadharCard}>
+                                                                    <template if:true={showFatherAadharCardUploadText}>
+                                                                        <div class="slds-text-color_success slds-text-align_center">Uploaded!</div>
+                                                                    </template>
+                                                                    <template if:true={showFatherAadharCardValidation}>
+                                                                        <div class="slds-text-color_error slds-text-align_center">Document required!</div>
+                                                                    </template>      
+                                                                </template>
+                                                                <template if:true={doc.ismotherAadharCard}>
+                                                                    <template if:true={showMotherAadharCardUploadText}>
+                                                                        <div class="slds-text-color_success slds-text-align_center">Uploaded!</div>
+                                                                    </template>
+                                                                    <template if:true={showMotherAadharCardValidation}>
+                                                                        <div class="slds-text-color_error slds-text-align_center">Document required!</div>
+                                                                    </template>      
+                                                                </template>
+                                                                <template if:true={doc.isfatherPanCard}>
+                                                                    <template if:true={showFatherPanCardUploadText}>
+                                                                        <div class="slds-text-color_success slds-text-align_center">Uploaded!</div>
+                                                                    </template>
+                                                                    <!-- <template if:true={showFatherPanCardValidation}>
+                                                                        <div class="slds-text-color_error slds-text-align_center">Document required!</div>
+                                                                    </template>       -->
+                                                                </template>
+                                                                <template if:true={doc.ismotherPanCard}>
+                                                                    <template if:true={showMotherPanCardUploadText}>
+                                                                        <div class="slds-text-color_success slds-text-align_center">Uploaded!</div>
+                                                                    </template>
+                                                                    <!-- <template if:true={showMotherPanCardValidation}>
+                                                                        <div class="slds-text-color_error slds-text-align_center">Document required!</div>
+                                                                    </template>       -->
+                                                                </template>
+                                                                <template if:true={doc.isevidenceOrAffidavitForLegalGuardianship}>
+                                                                    <template if:true={showEvidenceOrAffidavitForLegalGuardianshipApplicableToSingleParentsUploadText}>
+                                                                        <div class="slds-text-color_success slds-text-align_center">Uploaded!</div>
+                                                                    </template>
+                                                                    <template if:true={showEvidenceOrAffidavitForLegalGuardianshipApplicableToSingleParentsValidation}>
+                                                                        <div class="slds-text-color_error slds-text-align_center">Document required!</div>
+                                                                    </template>      
+                                                                </template>
+                                                                <template if:true={doc.isguardianAadharCard}>
+                                                                    <template if:true={showGuardianAadharCardUploadText}>
+                                                                        <div class="slds-text-color_success slds-text-align_center">Uploaded!</div>
+                                                                    </template>    
+                                                                </template>
+                                                                <template if:true={doc.isguardianPanCard}>
+                                                                    <template if:true={showGuardianPanCardUploadText}>
+                                                                        <div class="slds-text-color_success slds-text-align_center">Uploaded!</div>
+                                                                    </template>    
+                                                                </template>
+                                                                <template if:true={doc.isaffidavitForLegalGuardian}>
+                                                                    <template if:true={showAffidavitForLegalGuardianUploadText}>
+                                                                        <div class="slds-text-color_success slds-text-align_center">Uploaded!</div>
+                                                                    </template>    
+                                                                </template>
+                                                            </lightning-layout-item>
+                                                            <lightning-layout-item size="12"
+                                                                class="slds-text-align_center slds-p-around_xx-small">
+                                                                <p style="color: #444444;">{doc.label}</p>
+                                                            </lightning-layout-item>
+                                                        </lightning-layout>
+                                                    </template>
+                                                    <template if:false={isMobile}>
+                                                        <lightning-layout vertical-align="center">
+                                                            <lightning-layout-item class="slds-p-right_large"
+                                                                flexibility="auto">
+                                                                <p style="color: #444444;">{doc.label}</p>
+                                                            </lightning-layout-item>
+                                                            <lightning-layout-item>
+                                                                <button class="custom-upload-button"
+                                                                    onclick={openFileDialog} data-id={doc.dataId}>
+                                                                    <span style="width: 100%; text-align:center;">
+                                                                        <svg width="5mm" height="5mm" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                            <path d="M12.5535 2.49392C12.4114 2.33852 12.2106 2.25 12 2.25C11.7894 2.25 11.5886 2.33852 11.4465 2.49392L7.44648 6.86892C7.16698 7.17462 7.18822 7.64902 7.49392 7.92852C7.79963 8.20802 8.27402 8.18678 8.55352 7.88108L11.25 4.9318V16C11.25 16.4142 11.5858 16.75 12 16.75C12.4142 16.75 12.75 16.4142 12.75 16V4.9318L15.4465 7.88108C15.726 8.18678 16.2004 8.20802 16.5061 7.92852C16.8118 7.64902 16.833 7.17462 16.5535 6.86892L12.5535 2.49392Z" fill="#1C274C"/>
+                                                                            <path d="M3.75 15C3.75 14.5858 3.41422 14.25 3 14.25C2.58579 14.25 2.25 14.5858 2.25 15V15.0549C2.24998 16.4225 2.24996 17.5248 2.36652 18.3918C2.48754 19.2919 2.74643 20.0497 3.34835 20.6516C3.95027 21.2536 4.70814 21.5125 5.60825 21.6335C6.47522 21.75 7.57754 21.75 8.94513 21.75H15.0549C16.4225 21.75 17.5248 21.75 18.3918 21.6335C19.2919 21.5125 20.0497 21.2536 20.6517 20.6516C21.2536 20.0497 21.5125 19.2919 21.6335 18.3918C21.75 17.5248 21.75 16.4225 21.75 15.0549V15C21.75 14.5858 21.4142 14.25 21 14.25C20.5858 14.25 20.25 14.5858 20.25 15C20.25 16.4354 20.2484 17.4365 20.1469 18.1919C20.0482 18.9257 19.8678 19.3142 19.591 19.591C19.3142 19.8678 18.9257 20.0482 18.1919 20.1469C17.4365 20.2484 16.4354 20.25 15 20.25H9C7.56459 20.25 6.56347 20.2484 5.80812 20.1469C5.07435 20.0482 4.68577 19.8678 4.40901 19.591C4.13225 19.3142 3.9518 18.9257 3.85315 18.1919C3.75159 17.4365 3.75 16.4354 3.75 15Z" fill="#1C274C"/>
+                                                                        </svg>
+                                                                        <span style="padding-left: 4px;" class="upload-label">{doc.uploadLabel}</span>
+                                                                    </span>
+                                                                </button>
+
+                                                                <!-- Hidden file input -->
+                                                                <input type="file" accept=".pdf, .jpg, .jpeg, .png"
+                                                                    style="display: none;" class={doc.dataId}
+                                                                    onchange={handleFileChange} data-id={doc.dataId} />
+                                                                <template if:true={doc.ispassport}>
+                                                                    <template if:true={showPassportUploadText}>
+                                                                        <div class="slds-text-color_success slds-text-align_center">Uploaded!</div>
+                                                                    </template>
+                                                                    <template if:true={showPassportValidation}>
+                                                                        <div class="slds-text-color_error slds-text-align_center">Document required!</div>
+                                                                    </template>
+                                                                </template>
+                                                                <template if:true={doc.isociVisa}>
+                                                                    <template if:true={showOciVisaUploadText}>
+                                                                        <div class="slds-text-color_success slds-text-align_center">Uploaded!</div>
+                                                                    </template>
+                                                                    <template if:true={showOciVisaValidation}>
+                                                                        <div class="slds-text-color_error slds-text-align_center">Document required!</div>
+                                                                    </template>
+                                                                </template>
+                                                                <template if:true={doc.isbirthCertificate}>
+                                                                    <template if:true={showBirthCertificateUploadText}>
+                                                                        <div class="slds-text-color_success slds-text-align_center">Uploaded!</div>
+                                                                    </template>
+                                                                    <template if:true={showBirthCertificateValidation}>
+                                                                        <div class="slds-text-color_error slds-text-align_center">Document required!</div>
+                                                                    </template>
+                                                                </template>
+                                                                <template if:true={doc.isschoolLeavingCertificate}>
+                                                                    <template if:true={showSchoolLeavingCertificateUploadText}>
+                                                                        <div class="slds-text-color_success slds-text-align_center">Uploaded!</div>
+                                                                    </template>
+                                                                    <!-- <template if:true={showSchoolLeavingCertificateValidation}>
+                                                                        <div class="slds-text-color_error slds-text-align_center">Document required!</div>
+                                                                    </template>     -->
+                                                                </template>
+                                                                <template if:true={doc.isstudentAadharCard}>
+                                                                    <template if:true={showStudentAadharCardUploadText}>
+                                                                        <div class="slds-text-color_success slds-text-align_center">Uploaded!</div>
+                                                                    </template>
+                                                                    <!-- <template if:true={showStudentAadharCardValidation}>
+                                                                        <div class="slds-text-color_error slds-text-align_center">Document required!</div>
+                                                                    </template>     -->
+                                                                </template>
+                                                                <template if:true={doc.islatestMarksheet}>
+                                                                    <template if:true={showLatestMarksheetForGrade2AndAboveUploadText}>
+                                                                        <div class="slds-text-color_success slds-text-align_center">Uploaded!</div>
+                                                                    </template>    
+                                                                </template>
+                                                                <template if:true={doc.iscasteCertificate}>
+                                                                    <template if:true={showCasteCertificateUploadText}>
+                                                                        <div class="slds-text-color_success slds-text-align_center">Uploaded!</div>
+                                                                    </template>
+                                                                    <template if:true={showCasteCertificateValidation}>
+                                                                        <div class="slds-text-color_error slds-text-align_center">Document required!</div>
+                                                                    </template>      
+                                                                </template>
+                                                                <template if:true={doc.isfatherAadharCard}>
+                                                                    <template if:true={showFatherAadharCardUploadText}>
+                                                                        <div class="slds-text-color_success slds-text-align_center">Uploaded!</div>
+                                                                    </template>
+                                                                    <template if:true={showFatherAadharCardValidation}>
+                                                                        <div class="slds-text-color_error slds-text-align_center">Document required!</div>
+                                                                    </template>      
+                                                                </template>
+                                                                <template if:true={doc.ismotherAadharCard}>
+                                                                    <template if:true={showMotherAadharCardUploadText}>
+                                                                        <div class="slds-text-color_success slds-text-align_center">Uploaded!</div>
+                                                                    </template>
+                                                                    <template if:true={showMotherAadharCardValidation}>
+                                                                        <div class="slds-text-color_error slds-text-align_center">Document required!</div>
+                                                                    </template>      
+                                                                </template>
+                                                                <template if:true={doc.isfatherPanCard}>
+                                                                    <template if:true={showFatherPanCardUploadText}>
+                                                                        <div class="slds-text-color_success slds-text-align_center">Uploaded!</div>
+                                                                    </template>
+                                                                    <!-- <template if:true={showFatherPanCardValidation}>
+                                                                        <div class="slds-text-color_error slds-text-align_center">Document required!</div>
+                                                                    </template>       -->
+                                                                </template>
+                                                                <template if:true={doc.ismotherPanCard}>
+                                                                    <template if:true={showMotherPanCardUploadText}>
+                                                                        <div class="slds-text-color_success slds-text-align_center">Uploaded!</div>
+                                                                    </template>
+                                                                    <!-- <template if:true={showMotherPanCardValidation}>
+                                                                        <div class="slds-text-color_error slds-text-align_center">Document required!</div>
+                                                                    </template>       -->
+                                                                </template>
+                                                                <template if:true={doc.isevidenceOrAffidavitForLegalGuardianship}>
+                                                                    <template if:true={showEvidenceOrAffidavitForLegalGuardianshipApplicableToSingleParentsUploadText}>
+                                                                        <div class="slds-text-color_success slds-text-align_center">Uploaded!</div>
+                                                                    </template>
+                                                                    <template if:true={showEvidenceOrAffidavitForLegalGuardianshipApplicableToSingleParentsValidation}>
+                                                                        <div class="slds-text-color_error slds-text-align_center">Document required!</div>
+                                                                    </template>      
+                                                                </template>
+                                                                <template if:true={doc.isguardianAadharCard}>
+                                                                    <template if:true={showGuardianAadharCardUploadText}>
+                                                                        <div class="slds-text-color_success slds-text-align_center">Uploaded!</div>
+                                                                    </template>
+                                                                    <template if:true={showGuardianAadharCardValidation}>
+                                                                        <div class="slds-text-color_error slds-text-align_center">Document required!</div>
+                                                                    </template>  
+                                                                </template>
+                                                                <template if:true={doc.isguardianPanCard}>
+                                                                    <template if:true={showGuardianPanCardUploadText}>
+                                                                        <div class="slds-text-color_success slds-text-align_center">Uploaded!</div>
+                                                                    </template>
+                                                                    <!-- <template if:true={showGuardianPanCardValidation}>
+                                                                        <div class="slds-text-color_error slds-text-align_center">Document required!</div>
+                                                                    </template>   -->
+                                                                </template>
+                                                                <template if:true={doc.isaffidavitForLegalGuardian}>
+                                                                    <template if:true={showAffidavitForLegalGuardianUploadText}>
+                                                                        <div class="slds-text-color_success slds-text-align_center">Uploaded!</div>
+                                                                    </template>
+                                                                    <template if:true={showAffidavitForLegalGuardianValidation}>
+                                                                        <div class="slds-text-color_error slds-text-align_center">Document required!</div>
+                                                                    </template>  
+                                                                </template>
+
+                                                            </lightning-layout-item>
+                                                        </lightning-layout>
+                                                    </template>
+                                                </div>
+                                                <!-- <template if:false={isMobile}>
+                                                    <div key={doc.label} class="slds-size_1-of-8"></div>
+                                                </template> -->
+                                            </template>
+                                        </div>
+                                    </template>
+                                </lightning-accordion-section>
+                            </template>
+                        </lightning-accordion>
+
+                    </template>
+                </div>
+            </lightning-layout-item>
+            <template if:false={isMobile}>
+                <lightning-layout-item size="1"></lightning-layout-item>
+            </template>
+        </lightning-layout>
+        <div slot="footer">
+            <div class="slds-align_absolute-center" style="display:flex">
+                <lightning-button variant="neutral" label="Previous" onclick={navigateToPrev}></lightning-button>
+                <lightning-button variant="brand" label="Submit" class="slds-m-left_xx-small custom-button"
+                    onclick={handleSubmit}>
+                </lightning-button>
+            </div>
+        </div>
+    </lightning-card>
+</template>

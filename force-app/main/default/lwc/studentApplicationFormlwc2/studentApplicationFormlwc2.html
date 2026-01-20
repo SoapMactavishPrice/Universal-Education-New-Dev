@@ -1,0 +1,739 @@
+<template>
+	<lightning-card class={cardClass} title="">
+		<div class={waterMarkClass}>
+			<img src={stellarWatermark}>
+		</div>
+		<lightning-layout multiple-rows>
+			<template if:false={isMobile}>
+				<lightning-layout-item size="1"></lightning-layout-item>
+			</template>
+			<lightning-layout-item size={itemSize}>
+				<!-- Step Content -->
+				<div class="step-content slds-box slds-m-top_medium">
+
+					<!-- Step 1 -->
+					<template if:true={isStep2}>
+						<lightning-accordion allow-multiple-sections-open="true" active-section-name={activeSection}>
+
+							<lightning-accordion-section class="accordian" name="isSingleParent"
+								label="Are you a Single Parent?">
+								<lightning-layout class="topSection" multiple-rows>
+									<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+										large-device-size="4" class="slds-p-horizontal_small">
+										<lightning-input class="input-element" type="checkbox" label="Is Single Parent" checked={isSingleParent}
+											name="isSingleParent" onchange={handleInputChange}></lightning-input>
+									</lightning-layout-item>
+									<template if:true={isSingleParent}>
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+											<lightning-combobox options={relationOptions} value={student.singleParentRelation} label="Relation"
+												name="singleParentRelation" onchange={handleInputChange}
+												required></lightning-combobox>
+											<template if:true={showSingleParentRelationValidation}>
+												<div class="slds-text-color_error">This field is required!</div>
+											</template>
+										</lightning-layout-item>
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4"
+											class="slds-p-horizontal_small"></lightning-layout-item>
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4"
+											class="slds-p-horizontal_small"></lightning-layout-item>
+									</template>
+								</lightning-layout>
+							</lightning-accordion-section>
+							<template if:true={isFather}>
+								<lightning-accordion-section class="accordian" name="fatherInformation"
+									label="Father Information">
+									<lightning-layout class="topSection" multiple-rows>
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+											<lightning-input class="input-element" label="First Name" type="text"
+												name="fatherFirstName" value={student.fatherFirstName}
+												onchange={handleInputChange} required></lightning-input>
+											<template if:true={showFatherFirstNameValidation}>
+												<div class="slds-text-color_error">This field is required!</div>
+											</template>
+										</lightning-layout-item>
+	
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+											<lightning-input class="input-element" label="Last Name" type="text"
+												name="fatherLastName" value={student.fatherLastName}
+												onchange={handleInputChange} required></lightning-input>
+											<template if:true={showFatherLastNameValidation}>
+												<div class="slds-text-color_error">This field is required!</div>
+											</template>
+										</lightning-layout-item>
+	
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+												<lightning-input
+													class="input-element"
+													label="Mobile No."
+													name="fatherMobileNo"
+													value={student.fatherMobileNo}
+													onchange={handleInputChange}
+													max-length="10"
+													required>
+												</lightning-input>
+											<template if:true={showFatherMobileValidation}>
+												<div class="slds-text-color_error">Please enter a 10-digit number</div>
+											</template>
+										</lightning-layout-item>
+	
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+											<lightning-input class="input-element" label="Email id" name="fatherEmailId"
+												value={student.fatherEmailId}
+												onchange={handleInputChange} required></lightning-input>
+											<template if:true={showFatherEmailIdValidation}>
+												<div class="slds-text-color_error">Enter valid email!</div>
+											</template>
+										</lightning-layout-item>
+	
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+											<lightning-input class="input-element"
+												label="Aadhaar No (Mandatory for Indian Resident)"
+												name="fatherAadhaarNo" value={student.fatherAadhaarNo} max-length="12"
+												onchange={handleInputChange} required={isIndian}></lightning-input>
+											<template if:true={showFatherAadharNumberValidation}>
+												<div class="slds-text-color_error">Please enter a 12-digit number</div>
+											</template>
+										</lightning-layout-item>
+	
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+											<lightning-input class="input-element"
+												label="PAN (Mandatory for Indian Resident)" name="fatherPAN"
+												value={student.fatherPAN} max-length="10"
+												onchange={handleInputChange} required={isIndian}></lightning-input>
+											<template if:true={showFatherPanNumberValidation}>
+												<div class="slds-text-color_error">Please enter a valid PAN</div>
+											</template>
+										</lightning-layout-item>
+	
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+											<lightning-combobox
+												label="Educational qualification" name="fatherEducationalQualification" value={student.fatherEducationalQualification} 
+												onchange={handleInputChange} options={qualificationOptions} required>
+											</lightning-combobox>
+											<template if:true={showFatherEducationQualification}>
+												<div class="slds-text-color_error">This field is required!</div>
+											</template>
+										</lightning-layout-item>
+	
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+											<lightning-input class="input-element" label="Profession" type="text"
+												name="fatherProfession" value={student.fatherProfession}
+												onchange={handleInputChange} required></lightning-input>
+											<template if:true={showFatherProfessionValidation}>
+												<div class="slds-text-color_error">This field is required!</div>
+											</template>
+										</lightning-layout-item>
+	
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+											<lightning-input class="input-element" label="Name of the organisation" type="text"
+												name="fatherNameOfTheOrganisation" value={student.fatherNameOfTheOrganisation}
+												onchange={handleInputChange} required></lightning-input>
+											<template if:true={showFatherNameOfOrganisation}>
+												<div class="slds-text-color_error">This field is required!</div>
+											</template>
+										</lightning-layout-item>
+	
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+											<lightning-input class="input-element" label="Designation" type="text"
+												name="fatherDesignation" value={student.fatherDesignation}
+												onchange={handleInputChange} required></lightning-input>
+											<template if:true={showFatherDesignationValidation}>
+												<div class="slds-text-color_error">This field is required!</div>
+											</template>
+										</lightning-layout-item>
+	
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+												<lightning-input
+													class="input-element"
+													label="Office contact No"
+													name="fatherOfficeContactNo"
+													value={student.fatherOfficeContactNo}
+													onchange={handleInputChange}
+													max-length="10"
+													required>
+												</lightning-input>
+											<template if:true={showFatherOfficeContactNumberValidation}>
+												<div class="slds-text-color_error">Please enter a 10-digit number</div>
+											</template>
+										</lightning-layout-item>
+	
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+											<lightning-input class="input-element" label="Office address"
+												name="fatherOfficeAddress" value={student.fatherOfficeAddress}
+												onchange={handleInputChange} required></lightning-input>
+											<template if:true={showFatherOfficeAddressValidation}>
+												<div class="slds-text-color_error">This field is required!</div>
+											</template>
+										</lightning-layout-item>
+	
+										<!-- <lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+											<lightning-input class="input-element" label="Floor, building name"
+												name="fatherFloorBuildingName" value={student.fatherFloorBuildingName}
+												onchange={handleInputChange}></lightning-input>
+										</lightning-layout-item>
+	
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+											<lightning-input class="input-element" label="Street, Locality"
+												name="fatherStreetLocality" value={student.fatherStreetLocality}
+												onchange={handleInputChange}></lightning-input>
+										</lightning-layout-item>
+	
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+											<lightning-input class="input-element" label="Pin code" name="fatherPinCode" type="text" max-length="6"
+												value={student.fatherPinCode}
+												onchange={handleInputChange}></lightning-input>
+										</lightning-layout-item> -->
+	
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+											<lightning-input class="input-element" label="Website/LinkedIn Profile"
+												name="fatherWebsiteLinkedinProfile" value={student.fatherWebsiteLinkedinProfile}
+												onchange={handleInputChange}></lightning-input>
+										</lightning-layout-item>
+	
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+											<lightning-input class="input-element" label="Annual Income" type="text"
+												name="fatherAnnualIncome" value={student.fatherAnnualIncome}
+												onchange={handleInputChange}></lightning-input>
+										</lightning-layout-item>
+	
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+											<lightning-combobox
+												label="Covid vaccination status" name="fatherCovidVaccinationStatus" value={student.fatherCovidVaccinationStatus} 
+												onchange={handleInputChange} options={vaccinationOptions} required>
+											</lightning-combobox>
+											<template if:true={showFatherCovidVaccinationValidation}>
+												<div class="slds-text-color_error">This field is required!</div>
+											</template>
+										</lightning-layout-item>
+
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+											<lightning-combobox
+												label="Are you a Government employee" name="fatherGovernmentEmployee" value={student.fatherGovernmentEmployee} 
+												onchange={handleInputChange} options={governmentEmployeeOptions} required>
+											</lightning-combobox>
+											<template if:true={showFatherGovernmentEmployee}>
+												<div class="slds-text-color_error">This field is required!</div>
+											</template>
+										</lightning-layout-item>
+
+										<template if:true={isFatherGovernmentEmployee}>
+											<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+												large-device-size="4" class="slds-p-horizontal_small">
+												<lightning-input class="input-element" label="Name of department" type="text"
+													name="fatherNameOfDepartment" value={student.fatherNameOfDepartment}
+													onchange={handleInputChange} required={isFatherGovernmentEmployee}></lightning-input>
+												<template if:true={showFatherGovNameOfDepartment}>
+													<div class="slds-text-color_error">This field is required!</div>
+												</template>
+											</lightning-layout-item>
+										</template>
+
+									</lightning-layout>
+								</lightning-accordion-section>
+							</template>
+
+							<template if:true={isMother}>
+								<lightning-accordion-section class="accordian" name="motherInformation"
+									label="Mother Information">
+									<lightning-layout class="topSection" multiple-rows>
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+											<lightning-input class="input-element" onchange={handleInputChange} type="text"
+												label="First Name" name="motherFirstName" value={student.motherFirstName} required></lightning-input>
+											<template if:true={showMotherFirstNameValidation}>
+												<div class="slds-text-color_error">This field is required!</div>
+											</template>
+										</lightning-layout-item>
+	
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+											<lightning-input class="input-element" onchange={handleInputChange} type="text"
+												label="Last Name" name="motherLastName" value={student.motherLastName} required></lightning-input>
+											<template if:true={showMotherLastNameValidation}>
+												<div class="slds-text-color_error">This field is required!</div>
+											</template>
+										</lightning-layout-item>
+	
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+												<lightning-input
+													class="input-element"
+													label="Mobile No."
+													name="motherMobileNo"
+													value={student.motherMobileNo}
+													onchange={handleInputChange}
+													max-length="10"
+													required>
+												</lightning-input>
+											<template if:true={showMotherMobileValidation}>
+												<div class="slds-text-color_error">Please enter a 10-digit number</div>
+											</template>
+										</lightning-layout-item>
+	
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+											<lightning-input class="input-element" onchange={handleInputChange}
+												label="Email id" name="motherEmail" value={student.motherEmail} required></lightning-input>
+											<template if:true={showMotherEmailIdValidation}>
+												<div class="slds-text-color_error">Enter valid email!</div>
+											</template>
+										</lightning-layout-item>
+	
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+											<lightning-input class="input-element" onchange={handleInputChange}
+												label="Aadhaar No (Mandatory for Indian Resident)"
+												name="motherAadhaar" value={student.motherAadhaar} required={isIndian} max-length="12"></lightning-input>
+											<template if:true={showMotherAadharNumberValidation}>
+												<div class="slds-text-color_error">Please enter a 12-digit number</div>
+											</template>
+										</lightning-layout-item>
+	
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+											<lightning-input class="input-element" onchange={handleInputChange}
+												label="PAN (Mandatory for Indian Resident)"
+												name="motherPAN" value={student.motherPAN} required={isIndian} max-length="10"></lightning-input>
+											<template if:true={showMotherPanNumberValidation}>
+												<div class="slds-text-color_error">Please enter a valid PAN</div>
+											</template>
+										</lightning-layout-item>
+	
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+											<lightning-combobox
+												label="Educational qualification" name="motherEducationalQualification" value={student.motherEducationalQualification} 
+												onchange={handleInputChange} options={qualificationOptions} required>
+											</lightning-combobox>
+											<template if:true={showMotherEducationQualification}>
+												<div class="slds-text-color_error">This field is required!</div>
+											</template>
+										</lightning-layout-item>
+	
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+											<lightning-input class="input-element" onchange={handleInputChange} type="text"
+												label="Profession" name="motherProfession" value={student.motherProfession} required></lightning-input>
+											<template if:true={showMotherProfessionValidation}>
+												<div class="slds-text-color_error">This field is required!</div>
+											</template>
+										</lightning-layout-item>
+	
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+											<lightning-input class="input-element" onchange={handleInputChange} type="text"
+												label="Name of the organisation"
+												name="motherNameOfTheOrganisation" value={student.motherNameOfTheOrganisation} required></lightning-input>
+											<template if:true={showMotherNameOfOrganisation}>
+												<div class="slds-text-color_error">This field is required!</div>
+											</template>
+										</lightning-layout-item>
+	
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+											<lightning-input class="input-element" onchange={handleInputChange} type="text"
+												label="Designation" name="motherDesignation" value={student.motherDesignation} required></lightning-input>
+											<template if:true={showMotherDesignationValidation}>
+												<div class="slds-text-color_error">This field is required!</div>
+											</template>
+										</lightning-layout-item>
+	
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+												<lightning-input
+													class="input-element"
+													label="Office contact No."
+													name="motherOfficeContactNo"
+													value={student.motherOfficeContactNo}
+													onchange={handleInputChange}
+													max-length="10"
+													required>
+												</lightning-input>
+											<template if:true={showMotherOfficeContactNumberValidation}>
+												<div class="slds-text-color_error">Please enter a 10-digit number</div>
+											</template>
+										</lightning-layout-item>
+	
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+											<lightning-input class="input-element" onchange={handleInputChange}
+												label="Office address" name="motherOfficeAddress" value={student.motherOfficeAddress} required></lightning-input>
+											<template if:true={showMotherOfficeAddressValidation}>
+												<div class="slds-text-color_error">This field is required!</div>
+											</template>
+										</lightning-layout-item>
+	
+										<!-- <lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+											<lightning-input class="input-element" onchange={handleInputChange}
+												label="Floor, building name"
+												name="motherFloorBuildingName" value={student.motherFloorBuildingName}></lightning-input>
+										</lightning-layout-item>
+	
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+											<lightning-input class="input-element" onchange={handleInputChange}
+												label="Street, Locality" name="motherStreetLocality" value={student.motherStreetLocality}></lightning-input>
+										</lightning-layout-item>
+	
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+											<lightning-input class="input-element" onchange={handleInputChange} type="text" max-length="6"
+												label="Pin code" name="motherPinCode" value={student.motherPinCode}></lightning-input>
+										</lightning-layout-item> -->
+	
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+											<lightning-input class="input-element" onchange={handleInputChange}
+												label="Website/LinkedIn Profile"
+												name="motherWebsiteLinkedInProfile" value={student.motherWebsiteLinkedInProfile}></lightning-input>
+										</lightning-layout-item>
+	
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+											<lightning-input class="input-element" onchange={handleInputChange} type="text"
+												label="Annual Income" name="motherAnnualIncome" value={student.motherAnnualIncome}></lightning-input>
+										</lightning-layout-item>
+	
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+											<lightning-combobox
+												label="Covid vaccination status" name="motherCovidVaccinationStatus" value={student.motherCovidVaccinationStatus} 
+												onchange={handleInputChange} options={vaccinationOptions} required>
+											</lightning-combobox>
+											<template if:true={showMotherCovidVaccinationValidation}>
+												<div class="slds-text-color_error">This field is required!</div>
+											</template>
+										</lightning-layout-item>
+
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+											<lightning-combobox
+												label="Are you a Government employee" name="motherGovernmentEmployee" value={student.motherGovernmentEmployee} 
+												onchange={handleInputChange} options={governmentEmployeeOptions} required>
+											</lightning-combobox>
+											<template if:true={showMotherGovernmentEmployee}>
+												<div class="slds-text-color_error">This field is required!</div>
+											</template>
+										</lightning-layout-item>
+
+										<template if:true={isMotherGovernmentEmployee}>
+											<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+												large-device-size="4" class="slds-p-horizontal_small">
+												<lightning-input class="input-element" label="Name of department" type="text"
+													name="motherNameOfDepartment" value={student.motherNameOfDepartment}
+													onchange={handleInputChange} required={isMotherGovernmentEmployee}></lightning-input>
+												<template if:true={showMotherGovNameOfDepartment}>
+													<div class="slds-text-color_error">This field is required!</div>
+												</template>
+											</lightning-layout-item>
+										</template>
+	
+									</lightning-layout>
+								</lightning-accordion-section>
+							</template>
+
+							<lightning-accordion-section class="accordian" name="gaurdianInformation" value={student.gaurdianInformation}
+								label="Guardian Information">
+								<lightning-layout class="topSection" multiple-rows>
+									<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+										large-device-size="4" class="slds-p-horizontal_small">
+										<lightning-input class="input-element" type="checkbox" label="Select if applicant has a legal guardian" checked={student.isGuardian}
+											name="isGuardian" onchange={handleInputChange}></lightning-input>
+									</lightning-layout-item>
+									<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+										large-device-size="4" class="slds-p-horizontal_small"></lightning-layout-item>
+									<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+										large-device-size="4" class="slds-p-horizontal_small"></lightning-layout-item>
+									<template if:true={isGuardian}>
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+											<lightning-input class="input-element" onchange={handleInputChange} type="text"
+												label="Full Name" name="guardianName" value={student.guardianName} required></lightning-input>
+											<template if:true={showGaurdianFullNameValidation}>
+												<div class="slds-text-color_error">This field is required!</div>
+											</template>
+										</lightning-layout-item>
+	
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+												<lightning-input
+													class="input-element"
+													label="Mobile No."
+													name="guardianMobileNo"
+													value={student.guardianMobileNo}
+													onchange={handleInputChange}
+													max-length="10"
+													required>
+												</lightning-input>
+											<template if:true={showGuardianMobileNoValidation}>
+												<div class="slds-text-color_error">Please enter a 10-digit number</div>
+											</template>
+										</lightning-layout-item>
+	
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+											<lightning-input class="input-element" onchange={handleInputChange}
+												label="Email id" name="guardianEmailId" value={student.guardianEmailId} required></lightning-input>
+											<template if:true={showGuardianEmailIdValidation}>
+												<div class="slds-text-color_error">Enter valid Email Address!</div>
+											</template>
+										</lightning-layout-item>
+	
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+											<lightning-input class="input-element" onchange={handleInputChange} type="text"
+												label="Relation with student" name="guardianRelation" value={student.guardianRelation} required></lightning-input>
+											<template if:true={showGuardianRelationValidation}>
+												<div class="slds-text-color_error">This field is required!</div>
+											</template>
+										</lightning-layout-item>
+	
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+											<lightning-input class="input-element" onchange={handleInputChange} type="text"
+												label="City" name="guardianCity" value={student.guardianCity} required></lightning-input>
+											<template if:true={showGuardianCityValidation}>
+												<div class="slds-text-color_error">This field is required!</div>
+											</template>
+										</lightning-layout-item>
+
+										<template if:true={isIndian}>
+											<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+												large-device-size="4" class="slds-p-horizontal_small">
+												<lightning-combobox name="guardianState" value={student.guardianState} label="State"
+													onchange={handleInputChange} options={stateOptions} required></lightning-combobox>
+												<template if:true={showGuardianStateValidation}>
+													<div class="slds-text-color_error">This field is required!</div>
+												</template>
+											</lightning-layout-item>
+										</template>
+										
+										<template if:false={isIndian}>
+											<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+												large-device-size="4" class="slds-p-horizontal_small">
+												<lightning-input class="input-element" onchange={handleInputChange} type="text"
+													label="State" name="guardianState" value={student.guardianState} required></lightning-input>
+												<template if:true={showGuardianStateValidation}>
+													<div class="slds-text-color_error">This field is required!</div>
+												</template>
+											</lightning-layout-item>
+										</template>
+										
+										<lightning-layout-item size="12" small-device-size="12"
+											medium-device-size="6" large-device-size="4"
+											class="slds-p-horizontal_small">
+											<lightning-combobox name="guardianCountry" value={student.guardianCountry}
+												onchange={handleInputChange} options={countryOptions} label="Country" required>
+											</lightning-combobox>
+											<template if:true={showGuardianCountryValidation}>
+												<div class="slds-text-color_error">This field is required!</div>
+											</template>
+										</lightning-layout-item>
+	
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+											<lightning-input class="input-element" onchange={handleInputChange}
+												label="Aadhaar No (Mandatory for Indian Resident)"
+												name="guardianAadhaarNo" value={student.guardianAadhaarNo} max-length="12" required></lightning-input>
+											<template if:true={showGuardianAadharNumberValidation}>
+												<div class="slds-text-color_error">Please enter a 12-digit number</div>
+											</template>
+										</lightning-layout-item>
+	
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+											<lightning-input class="input-element" onchange={handleInputChange}
+												label="PAN (Mandatory for Indian Resident)" max-length="10"
+												name="guardianPAN" value={student.guardianPAN} required></lightning-input>
+											<template if:true={showGuardianPanCardNoValidation}>
+												<div class="slds-text-color_error">Please enter a valid PAN</div>
+											</template>
+										</lightning-layout-item>
+	
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+											<lightning-combobox
+												label="Educational qualification" name="guardianEducationalQualification" value={student.guardianEducationalQualification} 
+												onchange={handleInputChange} options={qualificationOptions} required>
+											</lightning-combobox>
+											<template if:true={showGuardianQualificationValidation}>
+												<div class="slds-text-color_error">This field is required!</div>
+											</template>
+										</lightning-layout-item>
+	
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+											<lightning-input class="input-element" onchange={handleInputChange} type="text"
+												label="Profession" name="guardianProfession" value={student.guardianProfession} required></lightning-input>
+											<template if:true={showGuardianProfessionValidation}>
+												<div class="slds-text-color_error">This field is required!</div>
+											</template>
+										</lightning-layout-item>
+	
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+											<lightning-input class="input-element" onchange={handleInputChange} type="text"
+												label="Name of the organisation"
+												name="guardianNameOfTheOrganisation" value={student.guardianNameOfTheOrganisation} required></lightning-input>
+											<template if:true={showGuardianNameOfOrgValidation}>
+												<div class="slds-text-color_error">This field is required!</div>
+											</template>
+										</lightning-layout-item>
+	
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+											<lightning-input class="input-element" onchange={handleInputChange} type="text"
+												label="Designation" name="guardianDesignation" value={student.guardianDesignation} required></lightning-input>
+											<template if:true={showGuardianDesignationValidation}>
+												<div class="slds-text-color_error">This field is required!</div>
+											</template>
+										</lightning-layout-item>
+	
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+												<lightning-input
+													class="input-element"
+													label="Office contact No."
+													name="guardianOfficeContactNo"
+													value={student.guardianOfficeContactNo}
+													onchange={handleInputChange}
+													max-length="10"
+													required>
+												</lightning-input>
+											<template if:true={showGuardianOfficeContactNoValidation}>
+												<div class="slds-text-color_error">Please enter a 10-digit number</div>
+											</template>
+										</lightning-layout-item>
+	
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+											<lightning-input class="input-element" onchange={handleInputChange}
+												label="Office address" name="guardianOfficeAddress" value={student.guardianOfficeAddress} required></lightning-input>
+											<template if:true={showGuardianOfficeAddressValidation}>
+												<div class="slds-text-color_error">This field is required!</div>
+											</template>
+										</lightning-layout-item>
+	
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+											<lightning-input class="input-element" onchange={handleInputChange}
+												label="Floor, building name"
+												name="guardianFloorBuildingName" value={student.guardianFloorBuildingName} required></lightning-input>
+											<template if:true={showGuardianFloorValidation}>
+												<div class="slds-text-color_error">This field is required!</div>
+											</template>
+										</lightning-layout-item>
+	
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+											<lightning-input class="input-element" onchange={handleInputChange}
+												label="Street, Locality"
+												name="guardianStreetLocality" value={student.guardianStreetLocality} required></lightning-input>
+											<template if:true={showGuardianStreetValidation}>
+												<div class="slds-text-color_error">This field is required!</div>
+											</template>
+										</lightning-layout-item>
+	
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+											<lightning-input class="input-element" onchange={handleInputChange} type="text" max-length="6"
+												label="Pin code" name="guardianPinCode" value={student.guardianPinCode} required></lightning-input>
+											<template if:true={showGuardianPinCodeValidation}>
+												<div class="slds-text-color_error">This field is required!</div>
+											</template>
+										</lightning-layout-item>
+	
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+											<lightning-input class="input-element" onchange={handleInputChange}
+												label="Website/LinkedIn Profile"
+												name="guardianWebsiteLinkedinProfile" value={student.guardianWebsiteLinkedinProfile}></lightning-input>
+										</lightning-layout-item>
+	
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+											<lightning-input class="input-element" onchange={handleInputChange} type="text"
+												label="Annual Income" name="guardianAnnualIncome" value={student.guardianAnnualIncome}></lightning-input>
+										</lightning-layout-item>
+	
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+											<lightning-combobox
+												label="Covid vaccination status" name="guardianCovidVaccinationStatus" value={student.guardianCovidVaccinationStatus} 
+												onchange={handleInputChange} options={vaccinationOptions} required>
+											</lightning-combobox>
+											<template if:true={showGuardianVaccinationValidation}>
+												<div class="slds-text-color_error">This field is required!</div>
+											</template>
+										</lightning-layout-item>
+
+										<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+											large-device-size="4" class="slds-p-horizontal_small">
+											<lightning-combobox
+												label="Are you a Government employee" name="guardianGovernmentEmployee" value={student.guardianGovernmentEmployee} 
+												onchange={handleInputChange} options={governmentEmployeeOptions} required>
+											</lightning-combobox>
+											<template if:true={showGuardianGovernmentEmployee}>
+												<div class="slds-text-color_error">This field is required!</div>
+											</template>
+										</lightning-layout-item>
+
+										<template if:true={isGuardianGovernmentEmployee}>
+											<lightning-layout-item size="12" small-device-size="12" medium-device-size="6"
+												large-device-size="4" class="slds-p-horizontal_small">
+												<lightning-input class="input-element" label="Name of department" type="text"
+													name="guardianNameOfDepartment" value={student.guardianNameOfDepartment}
+													onchange={handleInputChange} required={isGuardianGovernmentEmployee}></lightning-input>
+												<template if:true={showGuardianGovNameOfDepartment}>
+													<div class="slds-text-color_error">This field is required!</div>
+												</template>
+											</lightning-layout-item>
+										</template>
+									</template>
+
+								</lightning-layout>
+							</lightning-accordion-section>
+
+
+						</lightning-accordion>
+					</template>
+				</div>
+
+			</lightning-layout-item>
+			<template if:false={isMobile}>
+				<lightning-layout-item size="1"></lightning-layout-item>
+			</template>
+		</lightning-layout>
+		<div slot="footer">
+			<div class="slds-align_absolute-center" style="display:flex">
+				<lightning-button variant="neutral" label="Previous" onclick={navigateToPrev}></lightning-button>
+				<lightning-button variant="brand" label="Save And Next" class="slds-m-left_xx-small custom-button"
+					onclick={saveDetails}>
+				</lightning-button>
+			</div>
+		</div>
+	</lightning-card>
+</template>

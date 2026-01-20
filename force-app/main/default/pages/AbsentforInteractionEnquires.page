@@ -1,0 +1,14 @@
+<apex:page standardController="Enquiry__c" extensions="AbsentAttachRejectedInteCtrl" action="{!AbsentforInteraction}">
+        <apex:form >
+        <apex:slds /> 
+        <apex:outputPanel id="resultPanel" >
+            <apex:pageMessages >
+            </apex:pageMessages>
+            
+            <br />
+         
+            <center><b><apex:commandButton value="Back" action="{!goBack}"  styleClass="slds-button slds-button_neutral"/></b></center>
+
+       </apex:outputPanel>
+    </apex:form>
+</apex:page>

@@ -1,0 +1,22 @@
+<apex:page standardController="Contact" extensions="SheduleCampusController" action="{!CVDoneEnquiry}">
+<apex:outputpanel >
+        <apex:form >
+            <apex:slds />
+            <apex:pageBlock >
+                <apex:pageMessages />
+                <apex:pageBlockSection title="CV Done" id="eventInformation" collapsible="false" columns="2" rendered="{!error}">
+        
+        
+                </apex:pageBlockSection>
+                <apex:pageBlockSection rendered="{!back}">
+                    <center>
+                        <b>
+                            <apex:commandButton action="{!cancel}" value="Back"  styleClass="slds-button slds-button_neutral"/> 
+                        </b>
+                        
+                    </center> </apex:pageBlockSection> 
+            </apex:pageBlock>
+            
+        </apex:form>
+    </apex:outputpanel>
+</apex:page>

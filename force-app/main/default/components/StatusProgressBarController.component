@@ -1,0 +1,70 @@
+<apex:component controller="StatusProgressBarController" >
+<script>
+    window.onload = function() { 
+        //alert('Please Wait while we are generating Status Progress bar');
+        GenerateStatusBar();
+    } 
+    
+</script>
+<style>
+.container {
+    position: relative;
+    width: 150px;
+    float:left;
+   
+}
+
+.center {
+    position: absolute;
+    
+    top: 30%;
+    width: 130px;
+    text-align: center;
+    font-size: 18px;
+    white-space: pre-wrap;         
+    white-space: -moz-pre-wrap;   
+    white-space: -pre-wrap;       
+    white-space: -o-pre-wrap;   
+    word-wrap: break-word;      
+}
+
+img {
+    width: 150px;
+    height: 80px;    
+}
+.containerdiv{
+    
+}
+</style>
+
+    <apex:attribute Name="objectAPIName" type="String" assignTo="{!selectedObject}" description="Specify the API name of object" required="true"/>
+    <apex:attribute Name="fieldAPIName" type="String" assignTo="{!selectedfield}" description="Specify the API name of field" required="true" />
+    <apex:form id="f1">
+    
+    <!-- {!selectedObject}<br/>    {!selectedField}<br/>-->
+    
+    <div class="containerdiv">
+        <apex:repeat value="{!picklistOptions}" var="opt" >
+            <apex:outputpanel rendered="{!if(currentStatus <>opt,true,false)}">
+                <div class="container">
+                  <apex:image value="{!$Resource.ProgressBar}" style="opacity:0.2"/>
+                  <div class="center">
+                      <apex:outputText value="{!opt}"/>
+                  </div>
+                </div>
+            </apex:outputpanel>
+    
+            <apex:outputpanel rendered="{!if(currentStatus ==opt,true,false)}">
+                <div class="container">
+                  <apex:image value="{!$Resource.ProgressBar}" style="opacity:1"/>
+                  <div class="center">
+                      <apex:outputText value="{!opt}"/>
+                  </div>
+                </div>
+            </apex:outputpanel>
+        </apex:repeat>
+    </div>  
+    <apex:actionFunction name="GenerateStatusBar" action="{!GenerateProgressBar}" id="gsb" reRender="f1"/>
+       
+</apex:form>
+</apex:component>

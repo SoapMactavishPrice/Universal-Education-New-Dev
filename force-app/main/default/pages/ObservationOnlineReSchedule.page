@@ -1,0 +1,25 @@
+<apex:page standardController="Admission_Form__c" extensions="NewEventController" action="{!scheduleobservationfirst}" lightningStylesheets="true" standardStylesheets="true" sidebar="true" showHeader="true">
+    <apex:form >
+        <apex:slds />
+        <apex:pageBlock title="Observation Online Re-Schedule">
+            
+            <apex:pageMessages />
+            <apex:pageBlockSection title="Re-Scheduled" id="eventInformation" collapsible="false" columns="2">
+                <apex:inputfield value="{!ev.Subject}"/>
+                <apex:outputField value="{!af.Name}"/>
+                <apex:inputField value="{!ev.StartDateTime}" showDatePicker="true" required="true"/> 
+                <apex:inputfield value="{!ev.EndDateTime}" showDatePicker="true" required="true"/>
+                
+                <apex:outputfield value="{!af.School_Institution__c}" label="Location"/>
+                <apex:inputField value="{!ev.OwnerId}"/>
+                <apex:inputfield value="{!ev.Description}"/><br/>
+                
+            </apex:pageBlockSection>
+            <apex:pageBlockSection rendered="{!error}" >
+                <center>  <apex:commandButton action="{!ObservationOnlineRescheduled}" value="Submit"  styleClass="slds-button slds-button_brand"/>
+                </center>
+            </apex:pageBlockSection>
+            
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

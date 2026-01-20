@@ -1,0 +1,18 @@
+<apex:page lightningStylesheets="true" standardController="Contact"  extensions="SkipEnquiry" sidebar="false" showHeader="false" standardStylesheets="true">
+    <apex:includeLightning />
+    <div id="lwcPlaceholder"></div>
+    <script>    
+    var AccountId = '{!$CurrentPage.parameters.code}';
+    $Lightning.use("c:DemApp", function(){
+        $Lightning.createComponent
+        ("c:DemoGr",         
+          { "orgcode" : AccountId },        
+         "lwcPlaceholder",         
+         function(cmp) {    
+              
+             //  alert(AccountId);
+             console.log("c:VFPageApp loaded successfully in VF page"+AccountId);             
+         });        
+    });    
+    </script>    
+</apex:page>

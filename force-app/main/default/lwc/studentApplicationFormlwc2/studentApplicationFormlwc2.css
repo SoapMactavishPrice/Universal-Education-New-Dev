@@ -1,0 +1,145 @@
+.initializer {
+    --primary-color: #213A8F;
+    --secondary-color: #95D3E0;
+    --hover-color: #46327C;
+    --section-background: white;
+    --background-overlay: rgba(255, 255, 255, 0.4);
+    --text-color: black;
+    --opacity: 1;
+}
+.ihs {
+    --primary-color: #320000;
+    --secondary-color: #FFBE46;
+    --hover-color: #FFBE46;
+    --section-background: #FFFFB7;
+    --background-overlay: rgba(255, 255, 255, 0.4);
+    --text-color: black;
+    --opacity: 1.5;
+}
+
+.esib {
+    --primary-color: #1D458B;
+    --secondary-color: #0074B8;
+    --hover-color: #0074B8;
+    --section-background: #FFFFFF;
+    --background-overlay: rgba(255, 255, 255, 0.4);
+    --text-color: white;
+    --opacity: 1;
+}
+
+.alpha {
+    --primary-color: #005CAA;
+    --secondary-color: #FFC738;
+    --hover-color: #D5D5D5;
+    --section-background: #FFFFFF;
+    --background-overlay: rgba(255, 255, 255, 0.4);
+    --text-color: black;
+    --opacity: 1;
+}
+
+.primus {
+    --primary-color: #1F5CA9;
+    --secondary-color: #FFCC29;
+    --hover-color: #ED3237;
+    --section-background: #FFFFFF;
+    --background-overlay: rgba(255, 255, 255, 0.4);
+    --text-color: black;
+    --opacity: 0.4;
+}
+
+.universal {
+    --primary-color: #292967;
+    --secondary-color: #FDDF49;
+    --hover-color: #D5D5D5;
+    --section-background: #FFFFFF;
+    --background-overlay: rgba(255, 255, 255, 0.4);
+    --text-color: black;
+    --opacity: 1;
+}
+
+lightning-accordion-section.accordian {
+    --slds-c-accordion-heading-color-background: var(--secondary-color);
+    --slds-c-accordion-heading-text-color: var(--text-color);
+    --slds-c-accordion-summary-color-background: var(--secondary-color);
+    /* --slds-c-accordion-heading-border-radius: 7px; */
+    /* background-color: var(--secondary-color); */
+    margin-bottom: 6px;
+    border-radius: 7px;
+    font-weight: bold;
+    z-index: 999;
+}
+
+lightning-input {
+    font-weight: normal;
+}
+
+lightning-combobox {
+    font-weight: normal;
+}
+
+
+.topSection {
+    margin-left: -1rem;
+    margin-right: -1rem;
+    margin-bottom: -1rem;
+    padding: 1rem;
+    z-index: -1;
+    /* background: var(--section-background); */
+}
+
+.cards {
+    /* --slds-c-card-radius-border: 0.1 rem; */
+    --slds-c-card-color-border: var(--section-background);
+
+    --slds-c-card-color-background: var(--section-background);
+}
+
+.field-padding {
+    padding: 0.75rem;
+}
+
+.watermark {
+    position: absolute;
+    opacity: var(--opacity); /* Adjust transparency */
+    font-size: 50px; /* Adjust size */
+    color: gray; /* Adjust color */
+    
+    /* Position anywhere you want */
+    
+    /* Or use specific pixel values */
+    top: 10vh;                      /* 10% from top of viewport */
+    left: 70vw;                     /* Start at center of page */
+    transform: translateX(-40%);   /* Center it horizontally */
+    
+    z-index: 0; 
+    pointer-events: none; /* Allow clicks through watermark */
+}
+
+.watermarkMobile {
+    position: absolute;
+    opacity: var(--opacity); /* Adjust transparency */
+    font-size: 72px; /* Adjust size */
+    color: gray; /* Adjust color */
+    
+    /* Position anywhere you want */
+    top: 10%;
+    left: 10%;
+    right: 10%;
+    
+    /* Or use specific pixel values */
+    /* top: 100px;
+    left: 50px; */
+    
+    z-index: 0; 
+    pointer-events: none; /* Allow clicks through watermark */
+}
+
+.custom-button {
+    --slds-c-button-brand-color-background: var(--secondary-color);
+    /* background color */
+    --slds-c-button-brand-color-border: var(--secondary-color);
+    /* border color */
+    --slds-c-button-brand-text-color: var(--text-color);
+    /* text color */
+    font-weight: bold;
+}

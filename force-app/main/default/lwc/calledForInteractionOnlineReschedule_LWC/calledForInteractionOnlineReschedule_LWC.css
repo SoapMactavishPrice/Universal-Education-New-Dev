@@ -1,0 +1,16 @@
+/* Increase the width of the combobox */
+.wide-combobox {
+    width: 391px; /* Adjust the size as per your requirement */
+    max-width: 100%; /* Ensure responsiveness */
+    margin-left: 15px;
+}
+.slds-theme_error {
+    background-color: #fbeaea;
+    color: #c23934;
+}
+
+.slds-modal {
+    width: 30%;
+    max-width: 500px;
+    border-radius: 8px;
+}

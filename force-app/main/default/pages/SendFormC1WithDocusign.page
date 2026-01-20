@@ -1,0 +1,41 @@
+<apex:page standardcontroller="Admission_Granted__c" extensions="SendDocumentController" showHeader="false"  action="{!attachPDF1}" showQuickActionVfHeader="false">
+    <apex:slds />
+    <script>
+        window.onload = function () {
+            var hasFather = false;
+            var hasMother = false;
+            var noParentDetails = false;
+            var CRL = '';
+            if ('{!Admission_Granted__c.father_Email_Id__c}' != "" && '{!Admission_Granted__c.father_Email_Id__c}' != null
+                && ('{!Admission_Granted__c.Father_First_Name__c}' || '{!Admission_Granted__c.Father_Last_Name__c}')) {
+                hasFather = true;
+            }
+            if ('{!Admission_Granted__c.mother_Email_Id__c}' != "" && '{!Admission_Granted__c.mother_Email_Id__c}' != null
+                && ('{!Admission_Granted__c.mother_First_Name__c}' || '{!Admission_Granted__c.mother_Last_Name__c}')) {
+                hasMother = true;
+            }
+
+            if (hasFather) {
+                if (hasMother) {
+                    CRL = 'Email~{!Admission_Granted__c.father_Email_Id__c};FirstName~{!Admission_Granted__c.Father_First_Name__c};LastName~{!Admission_Granted__c.Father_Last_Name__c};SignNow~1;RoutingOrder~1;Role~Father,Email~{!Admission_Granted__c.mother_Email_Id__c};FirstName~{!Admission_Granted__c.mother_First_Name__c};LastName~{!Admission_Granted__c.mother_Last_Name__c};SignNow~2;RoutingOrder~1;Role~Mother';
+                } else {
+                    CRL = 'Email~{!Admission_Granted__c.father_Email_Id__c};FirstName~{!Admission_Granted__c.Father_First_Name__c};LastName~{!Admission_Granted__c.Father_Last_Name__c};SignNow~1;RoutingOrder~1;Role~Father';
+                }
+            } else {
+                if (hasMother) {
+                    CRL = 'Email~{!Admission_Granted__c.mother_Email_Id__c};FirstName~{!Admission_Granted__c.mother_First_Name__c};LastName~{!Admission_Granted__c.mother_Last_Name__c};SignNow~1;RoutingOrder~1;Role~Mother';
+                } else {
+                    noParentDetails = true;
+                    alert('Parent details are missing, Please provide Name and Email details for atleast Father or Mother.');
+                }
+            }
+            if (!noParentDetails) {
+                window.location = '{!URLFOR('/apex/dsfs__DocuSign_CreateEnvelope',null,[SourceID=Admission_Granted__c.Id])}&CCRM=Father~Signer1,Mother~Signer2&CCTM=Father~Signer,Mother~Signer&CRL=' + CRL + '&OCO=Send&LF=0';
+            }
+        }
+    </script>
+    <apex:form id="theForm">
+        <apex:pageMessages ></apex:pageMessages>
+    </apex:form>
+
+</apex:page>

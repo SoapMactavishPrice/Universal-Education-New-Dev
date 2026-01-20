@@ -1,0 +1,214 @@
+<apex:page standardController="Application_Form__c" extensions="UE_ApplicationForm" lightningStylesheets="true" sidebar="false" showHeader="true">
+    
+    <p style="background-color:auto; text-align:center; font-size:160%; padding:10px;"><b>Application Process</b></p>
+    <apex:form id="frm"  >
+        <apex:slds />
+        <!-- For Display the Thank-you   -->
+        <center>
+            <apex:pageBlock id="thanks" rendered="{!thanku}">
+                <div style="width:1000px;height:350px;background-color:White;border: 2px solid black;margin-top: 8%"> 
+                    <Head>
+                        <p>
+                            <center>
+                                <apex:image id="theImg" value="{!$Resource.UniversalLogo}" style="margin-top:2%" width="400" height="400" alt="Successfully Application Form submitted"/><br/><br/>
+                                <apex:image id="theImage" value="{!$Resource.CheckIcon}" width="80" height="80" alt="Successfully Enquiry submitted"/><br/><br/>
+                                <font size="5">You Have Already Filled the Application Form.</font><br/><br/>
+                                Your Application No.<br/>
+                                <font size="3"> <b><apex:outputText value="{!appf[0].Name}" ></apex:outputText></b> </font><br/><br/> 
+                                <b>  <font size="1">You will recieve an email notification about admission process in the first week of October.</font><br/></b>
+                            </center>
+                        </p>
+                    </Head>
+                </div>
+            </apex:pageBlock>
+        </center>     
+        <!--::::: FORM DISPLAY ::::: -->
+        <apex:pageBlock id="st" rendered="{!thanku=false}" >  
+            <div style="width:1200px;margin: 0px auto 10px auto;background-color:white;border: 5px solid black;"> 
+                <center> <p style="background-color:white; text-align:left; font-size:120%; padding:2px;"><b>Student Information</b></p>  </center>  
+                <apex:pageMessage summary="Please fill the Information Correct. Otherwise Data will not save" severity="warning" strength="3" />
+                <apex:pageMessage summary="First you have to Verify the Mobile Number Then you will Proceed." severity="warning" strength="3" />
+                <apex:pageMessages id="msg"/>
+                <apex:pageBlock >
+                    <apex:pageBlockSection >
+                        <apex:outputText label="Academic Year" value="{!enq.Academic_Year__c}"  styleClass="slds-input" style="width:300px;height:30px;margin: 10px auto 10px border: 2px solid black;"/><br/>
+                        <apex:outputText value="{!enq.Name}" styleClass="slds-input" style="width:300px;height:30px;margin: 10px auto 10px border: 2px solid black;" ></apex:outputText><br/>
+                        <apex:outputText label="Student's Name" value="{!enq.FirstName__c} {!enq.Last_Name__c}" styleClass="slds-input" style="width:300px;height:30px;margin: 10px auto 10px border: 2px solid black;" /><br/>
+                        <apex:outputText value="{!enq.Seeking_Admission_in_Grade__c}" styleClass="slds-input" style="width:300px;height:30px;margin: 10px auto 10px border: 2px solid black;" ></apex:outputText><br/>
+                        <apex:outputText value="{!enq.Email__c}" styleClass="slds-input" style="width:300px;height:30px;margin: 10px auto 10px border: 2px solid black;" ></apex:outputText><br/>
+                    </apex:pageBlockSection>  
+                    <apex:pageBlockSection id="renderTarget"  columns="2" >
+                        <apex:inputText label="Mobile Number" value="{!enq.Mobile_No__c}" rendered="{!editMode}" styleClass="slds-input" style="width:250px;height:30px;margin: 10px auto 10px border: 2px solid black;" />
+                        <apex:outputText label="Mobile Number" value="{!enq.Mobile_No__c}" rendered="{!NOT(editMode)}" styleClass="slds-input" style="width:250px;height:30px;margin: 10px auto 10px border: 2px solid black;"/>
+                        <apex:actionRegion >
+                            <apex:image id="thelogo" rendered="{!verifySent}" value="{!$Resource.verified}"  width="20px" height="15]px" />            
+                            <apex:commandButton value="Send OTP " action="{!sendOTP}"  /> &nbsp;
+                            <apex:commandButton value="Edit" action="{!toggleEditMode}" reRender="renderTarget" rendered="{!NOT(verifySent)}" /> &nbsp;&nbsp;&nbsp;
+                        </apex:actionRegion>
+                    </apex:pageBlockSection>
+                    <apex:pageBlockSection >
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel for="oid" value="Enter OTP" rendered="{!otpSent}"></apex:outputLabel>
+                            <apex:actionRegion >
+                                <apex:inputText id="oid" label="Enter OTP" value="{!otp}" rendered="{!otpSent}" styleClass="slds-input" style="width:250px;height:30px;margin: 10px auto 10px border: 2px solid black;"/>       &nbsp;         
+                            </apex:actionRegion>
+                        </apex:pageBlockSectionItem>
+                        <apex:pageBlockSectionItem >
+                            <apex:actionRegion >
+                                <apex:commandButton rendered="{!otpSent}" value="Verify OTP " action="{!verifyOtpSms}"/>
+                            </apex:actionRegion>
+                        </apex:pageBlockSectionItem>
+                    </apex:pageBlockSection>
+                </apex:pageBlock>
+            </div>
+        </apex:pageBlock>
+        <!-- rendered="{!verifySent}" -->
+        <apex:pageBlock rendered="{!verifySent}" >
+            <div style="width:1200px;margin: 0px auto 10px auto;background-color:white;border: 5px solid black;">
+                <apex:pageBlock >
+                    <apex:pageBlockSection columns="1" id="Student" > 
+                        <apex:inputField id="bgc" value="{!form.Blood_Group__c}" required="true" styleClass="slds-select" style="width:300px;height:30px;margin: 10px auto 10px border: 2px solid black;"/>
+                        <apex:inputField id="nat" value="{!form.Nationality__c}" required="true" styleClass="slds-input" style="width:300px;height:30px;margin: 10px auto 10px border: 2px solid black;" />
+                        <apex:inputField value="{!form.Category__c}" required="false" styleClass="slds-select" style="width:300px;height:30px;margin: 10px auto 10px border: 2px solid black;" />
+                        <apex:inputField id="mt" value="{!form.Mother_Tongue__c}" required="true"  styleClass="slds-input" style="width:300px;height:30px;margin: 10px auto 10px border: 2px solid black;" />                
+                        <apex:inputField id="acn" value="{!form.Adhaar_Card_No__c}" required="true" styleClass="slds-input" style="width:300px;height:30px;margin: 10px auto 10px border: 2px solid black;" />
+                        <apex:inputField id="reg" value="{!form.Religion__c}" required="false"  styleClass="slds-select" style="width:300px;height:30px;margin: 10px auto 10px border: 2px solid black;" />
+                        <apex:inputField value="{!form.Residence_No__c}" styleClass="slds-input" style="width:300px;height:30px;margin: 10px auto 10px border: 2px solid black;" />
+                        <apex:inputField value="{!form.Birth_Place__c}" styleClass="slds-input" style="width:300px;height:30px;margin: 10px auto 10px border: 2px solid black;" />
+                    </apex:pageBlockSection> 
+                </apex:pageBlock>
+                <apex:pageBlock >
+                    <apex:pageBlockSection id="expdate" columns="1" > 
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel for="passport" value="Passport No" ></apex:outputLabel>
+                            <apex:actionRegion >
+                                <apex:inputField id="passport" value="{!form.Passport_No__c}" styleClass="slds-input" style="width:250px;height:30px;margin: 10px auto 10px border: 2px solid black;" >
+                                    <apex:actionSupport event="onchange" action="{!getpassport}" reRender="expdate" />
+                                </apex:inputField>
+                            </apex:actionRegion>      
+                        </apex:pageBlockSectionItem>
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel for="expdate" value="Expiry Date"  ></apex:outputLabel>     
+                            <apex:actionRegion >    
+                                <apex:inputField id="expdate"  label="Expiry Date" value="{!form.Expiry_Date__c}" styleClass="slds-input" style="width:300px;height:30px;margin: 10px auto 10px border: 2px solid black;" ><br/>
+                                    
+                                </apex:inputField>
+                            </apex:actionRegion>      
+                        </apex:pageBlockSectionItem>
+                    </apex:pageBlockSection> 
+                </apex:pageBlock>
+                <p style="background-color:auto; text-align:left; font-size:120%; padding:2px;"><b>Father Information</b></p>    
+                <apex:pageBlock >                      
+                    <apex:actionRegion > 
+                        <apex:inputfield value="{!form.Father_Datail_captured__c}"  style="width:17px;height:17px;" id="type">Enter Father's Information
+                            <apex:actionSupport event="onchange" rerender="Father,theMessage1,single-parent"/> 
+                        </apex:inputfield><br/>
+                    </apex:actionRegion>                
+                    <apex:outputPanel id="Father">                       
+                        <apex:pageBlockSection columns="2" id="FatherID" collapsible="true" rendered="{!IF(form.Father_Datail_captured__c== true,true, false)}">
+                            <apex:inputField id="fatherfirstname" required="true" value="{!form.Father_First_Name__c}" label="First Name" styleClass="slds-input" style="width:250px;height:30px;margin: 10px auto 10px border: 2px solid black;"/>
+                            <apex:inputField id="fatherLastname" required="true" value="{!form.Father_Last_Name__c}" label="Last Name" styleClass="slds-input" style="width:250px;height:30px;margin: 10px auto 10px border: 2px solid black;" /> 
+                            <apex:inputField id="fathermobno" required="true" value="{!form.Father_Phone__c}" label="Mobile Number" styleClass="slds-input" style="width:250px;height:30px;margin: 10px auto 10px border: 2px solid black;" /><br/>
+                            <apex:inputField id="fatheremail" required="true" value="{!form.Father_Qualification__c}" label="Qualification" styleClass="slds-input" style="width:250px;height:30px;margin: 10px auto 10px border: 2px solid black;" /><br/>
+                            <apex:inputField id="fatherqualification" required="true" value="{!form.Father_Email_Id__c}" label="Email ID" styleClass="slds-input" style="width:250px;height:30px;margin: 10px auto 10px border: 2px solid black;" /><br/>
+                            <apex:inputField id="fatheroccupation" required="true" value="{!form.Father_Occupation__c}" label="Occupation" styleClass="slds-input" style="width:250px;height:30px;margin: 10px auto 10px border: 2px solid black;" /><br/>
+                            <apex:inputField id="fathernameoforga" required="true" value="{!form.Father_Name_of_Organisation__c}" label="Name Of Organization" styleClass="slds-input" style="width:250px;height:30px;margin: 10px auto 10px border: 2px solid black;"/><br/>
+                            <apex:inputField id="fathercontact" required="true" value="{!form.Father_Annual_Income__c}" label="Annual Income" styleClass="slds-input" style="width:250px;height:30px;margin: 10px auto 10px border: 2px solid black;" /><br/>
+                            <apex:inputField id="fatherdesignation" required="true" value="{!form.Father_Business_Contact__c}" label="Business Contact No:" styleClass="slds-input" style="width:250px;height:30px;margin: 10px auto 10px border: 2px solid black;"  /><br/>
+                            <apex:inputField id="fatherincome" required="true" value="{!form.Father_Business_Address__c}" label="Business Address" styleClass="slds-input" style="width:250px;height:30px;margin: 10px auto 10px border: 2px solid black;" />
+                        </apex:pageBlockSection>
+                    </apex:outputPanel>           
+                </apex:pageBlock>
+                
+                <p style="background-color:auto; text-align:left; font-size:120%; padding:2px;"><b>Mother Information</b></p>  
+                <apex:pageBlock id="p">                      
+                    <apex:actionRegion > 
+                        <apex:inputfield value="{!form.Mother_Detail_Captured__c}" style="width:17px;height:17px;" id="type" > 
+                            Enter Mother's Information 
+                            <apex:actionSupport event="onchange" rerender="m-section2,theMessage2,single-parent"/> 
+                        </apex:inputfield><br/>
+                    </apex:actionRegion>
+                    <apex:outputPanel id="m-section2"> 
+                        <apex:outputPanel id="m-section1"> 
+                            <apex:pageBlockSection columns="2" id="MotherID" collapsible="true" rendered="{!IF(form.Mother_Detail_Captured__c== true,true, false)}">
+                                <apex:inputField id="motherfirstname" value="{!form.Mother_First_Name__c}" label="First Name" required="true" styleClass="slds-input" style="width:250px;height:30px;margin: 10px auto 10px border: 2px solid black;"/>
+                                <apex:inputField id="motherlastname" value="{!form.Mother_Last_Name__c}" label="Last Name" required="true" styleClass="slds-input" style="width:250px;height:30px;margin: 10px auto 10px border: 2px solid black;"/>
+                                <apex:inputField id="mothermobno" value="{!form.Mother_Phone__c}" label="Mobile Number" required="true" styleClass="slds-input" style="width:250px;height:30px;margin: 10px auto 10px border: 2px solid black;"/><br/>
+                                <apex:inputField id="motheremail" value="{!form.Mother_Qualification__c}" label="Qualification" required="true" styleClass="slds-input" style="width:250px;height:30px;margin: 10px auto 10px border: 2px solid black;"/><br/>
+                                <apex:inputField id="motherqualification" value="{!form.Mother_Email_Id__c}" label="Email ID" required="true" styleClass="slds-input" style="width:250px;height:30px;margin: 10px auto 10px border: 2px solid black;"/><br/>
+                                <apex:pageBlockSectionItem >
+                                    <apex:outputLabel for="motheroccupation" value="Occupation" ></apex:outputLabel>   
+                                    <apex:actionRegion >
+                                        <apex:actionfunction name="onChangeActMethod" action="{!validateMother}" rerender="m-section"/>
+                                        <apex:inputField id="motheroccupation" value="{!form.Mother_Occupation__c}" onchange="onChangeActMethod(this.value);" label="Occupation" required="false" styleClass="slds-input" style="width:250px;height:30px;margin: 10px auto 10px border: 2px solid black;" /><br/>
+                                    </apex:actionRegion>
+                                </apex:pageBlockSectionItem>
+                            </apex:pageBlockSection>
+                        </apex:outputPanel>
+                        <apex:outputPanel id="m-section"> 
+                            <apex:pageBlockSection columns="1" collapsible="true" rendered="{!IF(form.Mother_Detail_Captured__c== true,true, false) && !mInfo}" >
+                                <apex:inputField id="mothernameoforga" value="{!form.Mother_Name_of_Organisation__c}" label="Name Of Organization" required="true" styleClass="slds-input" style="width:250px;height:30px;margin: 10px auto 10px border: 2px solid black;"/>
+                                <apex:inputField id="mothercontact" value="{!form.Mother_Anual_Income__c}" label="Annual Income" required="true" styleClass="slds-input" style="width:250px;height:30px;margin: 10px auto 10px border: 2px solid black;"/>
+                                <apex:inputField id="motherdesignation" value="{!form.Mother_Business_Contact__c}" label="Business Contact No" required="true" styleClass="slds-input" style="width:250px;height:30px;margin: 10px auto 10px border: 2px solid black;"/>
+                                <apex:inputField id="motherincome" value="{!form.Mother_Business_Address__c}" label="Business Address" required="true" styleClass="slds-input" style="width:250px;height:30px;margin: 10px auto 10px border: 2px solid black;"/>
+                            </apex:pageBlockSection>
+                        </apex:outputPanel>
+                    </apex:outputPanel>
+                </apex:pageBlock>
+                
+                <p style="background-color:auto; text-align:left; font-size:120%; padding:2px;"><b>Guardian Information</b></p>          
+                <apex:pageBlock >
+                    <apex:pageBlockSection columns="1" >
+                        <apex:inputField value="{!form.Guardian_Name__c}" label="Guardian Name" styleClass="slds-input" style="width:300px;height:30px;margin: 10px auto 10px border: 2px solid black;"/>
+                        <apex:inputField value="{!form.Guardian_Mobile_No__c}" label="Phone Number" styleClass="slds-input" style="width:300px;height:30px;margin: 10px auto 10px border: 2px solid black;"/>
+                        <apex:inputField value="{!form.Guardian_Email_ID__c}" label="Email Address" styleClass="slds-input" style="width:300px;height:30px;margin: 10px auto 10px border: 2px solid black;"/>
+                        <apex:inputField value="{!form.Relationship__c}" label="Relationship With The Student" styleClass="slds-input" style="width:300px;height:30px;margin: 10px auto 10px border: 2px solid black;"/>
+                    </apex:pageBlockSection>
+                </apex:pageBlock>
+                <apex:pageBlock id="single-parent" >
+                    <table>
+                        <tr>                             
+                            <td><label><b>Do you have another child studying with us? </b> </label></td>
+                            <td>
+                                <apex:selectRadio value="{!form.Do_have_another_child_with_us__c}" >
+                                    <apex:selectOption itemLabel="Yes" itemvalue="Yes" />
+                                    <apex:selectOption itemLabel="No" itemvalue="No"/>
+                                </apex:selectRadio>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td><label><b>Do you have children from the same joint family studying with us? </b> </label></td>
+                            <td>
+                                <apex:selectRadio value="{!form.Having_Children__c}" >
+                                    <apex:selectOption itemLabel="Yes" itemvalue="Yes" ></apex:selectOption>
+                                    <apex:selectOption itemLabel="No" itemvalue="No"></apex:selectOption>
+                                </apex:selectRadio>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td><label><b>Are you seeking admission for another child at Universal?</b></label></td>
+                            <td>
+                                <apex:selectRadio value="{!form.Seeking_Admission_for_another_Child__c}" >
+                                    <apex:selectOption itemLabel="Yes" itemvalue="Yes" ></apex:selectOption>
+                                    <apex:selectOption itemLabel="No" itemvalue="No"></apex:selectOption>
+                                </apex:selectRadio>
+                            </td>
+                        </tr>
+                    </table>
+                    
+                    <label><b>I wish to admit my child in Universal because</b></label><br/>
+                    <apex:inputField value="{!form.Reason_of_this_School__c}" styleClass="slds-input" style="width:300px;height:50px;"/><br/>
+                    <br/>
+                    <apex:outputLabel rendered="{!NOT(form.Father_Datail_captured__c && form.Mother_Detail_Captured__c)}">
+                        <font size = "1"><apex:inputCheckbox label="" value="{!form.Single_Parent__c}"/>*Are you single Parent ?</font><br/>    
+                    </apex:outputLabel><br/>
+                    <font size = "1"><apex:inputCheckbox value="{!form.Application_Form_Declaration__c}"/>*I certify all information provide as part of this application is true to the best of my knowledege. I understand that the giving false information will result in cancellation of my child/ward.</font>             
+                </apex:pageBlock>
+                
+                <center>    <b>  <apex:commandButton action="{!save}" value="Submit The Application Form"  style="width:250px;height:40px;margin-bottom:3em;background-color:MediumSeaGreen;font-size:16px" styleClass="slds-button slds-button_success"/>                </b> </center> 
+            </div>
+        </apex:pageBlock>   
+    </apex:form>    
+</apex:page>

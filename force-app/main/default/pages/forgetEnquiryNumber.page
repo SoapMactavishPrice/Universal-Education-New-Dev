@@ -1,0 +1,48 @@
+<apex:page standardController="Enquiry__c" extensions="UE_CtrEnquiryForm" lightningStylesheets="true" sidebar="false" showHeader="false" standardStylesheets="true">
+    
+    <apex:form >
+        <apex:slds />
+        <center>   
+            <div style="margin-top: 5%"> 
+                <Head>
+                    <p>
+                        <font size="6"> 
+                            <center><b> Forgot Enquiry Number! </b><br/>
+                            </center>
+                        </font>
+                    </p>
+                    <apex:pageMessage summary="Please fill the Ragistered Mobile Number!!" severity="warning" strength="3"  /><apex:pageMessages />
+                   <apex:pageMessages id="pgError1"></apex:pageMessages>
+                </Head><apex:pageBlock id="pgError" >
+                <apex:panelGrid width="400" border="3"  cellpadding="0" cellspacing="0" bgcolor="white" columns="1">
+                    <apex:panelGroup layout="block" style="margin-left:26em;margin-top:1em;" >
+                        <apex:pageBlockSection >
+                            <apex:pageBlockSectionItem >
+                                <apex:outputLabel for="eid" value="Enter Mobile Number"></apex:outputLabel>
+                            			<apex:inputField id="eid" label="Mobile Number" value="{!enq.Mobile_No__c}" required="false" html-placeholder="eg:9999999999" styleClass="slds-input" ><br/><center><b>OR</b></center>
+                                  		<font size="1.5"><b><p style="color:red;position:left;">{!message}</p></b></font>
+                                      	</apex:inputField>
+                             </apex:pageBlockSectionItem><br/>
+                            <apex:pageBlockSectionItem >
+                                <apex:outputLabel for="email" value="Enter Email ID"></apex:outputLabel>
+                          			<apex:inputField id="email" label="Email ID" value="{!enq.Email__c}" required="false" html-placeholder="username@domain.com" styleClass="slds-input" ><br/>
+                                    </apex:inputField>
+                            </apex:pageBlockSectionItem>
+                        </apex:pageBlockSection>
+                          <apex:commandButton value="Get Enquiry Number" action="{!getEnquiryNumber}" reRender="pgError" style="width:400px;height:35px;margin-left:13em;background-color:MediumSeaGreen;font-size:16px" styleClass="slds-button slds-button_success" /> <br/><br/>
+                        <apex:commandButton action="{!cancle}" value="Cancel" immediate="true" styleClass="slds-button slds-button_destructive" style="width:400px;height:35px;margin-left:13em;margin-bottom:2em;background-color:Tomato;font-size:16px"/>
+                    </apex:panelGroup>
+                </apex:panelGrid>
+              <apex:pageBlockTable id="section" var="e" value="{!enq1}" align="Left" columnsWidth="30%"  width="100%" styleClass="slds-table slds-table--bordered slds-table--striped" >
+                    
+                    <apex:column title="Enquiry Number" value="{!e.Name}"/>
+                    <apex:column value="{!e.Email__c}"/>
+                    <apex:column value="{!e.School_Name__c}"/>
+                    <apex:column value="{!e.CreatedDate}"/>
+                    <apex:column value="{!e.Student_Full_Name__c}"/>
+                </apex:pageBlockTable>
+                </apex:pageBlock>
+            </div></center> 
+        
+    </apex:form>    
+</apex:page>

@@ -1,0 +1,1797 @@
+<apex:page language="en_GB" id="formdata" standardController="Application_Form__c" extensions="UE_ApplicationForm_Site" lightningStylesheets="false" sidebar="false" showHeader="false" action="{!redirectToPaymentPage}" cache="false" docType="html-5.0">
+    <!-- <apex:page standardController="Application_Form__c" extensions="UE_ApplicationForm_Site" lightningStylesheets="true" sidebar="false" showHeader="false" action="{!redirectToPaymentPage}"> -->
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" lang="en">
+        
+        <head>
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+            <script src="https://checkout.razorpay.com/v1/checkout.js"></script> <!--added by shashank-->
+            <meta charset="utf-8" />
+            <meta http-equiv="x-ua-compatible" content="ie=edge" />
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <!-- Import the Design System style sheet -->
+            <apex:includeScript value="{!$Resource.BrowserDetails}" />
+            <apex:includeScript value="{!$Resource.DateJQuery}" />
+            <style>
+                .sldinput{ text-transform: capitalize;}
+                .disabled {pointer-events: none;opacity: 0.4;}
+            </style>
+        </head>
+        <apex:includeLightning />
+        <p style="text-align:center"><apex:image id="thelogo" value="{!logoUrl}" style="margin-top:2%; width: 600px;height: 100px;"  /></p>
+        <p style="background-color:auto; text-align:center; font-size:160%; padding:10px;"><b>Application Form</b></p>
+        <apex:form id="frm"  >
+            
+            <div  style="display:{!IF(ExpiredDays > 89,'block','none')}">
+                <center><b>Your link has been Expired. Please contact to Administration.</b></center>
+            </div>
+            <div  style="display:{!IF(ExpiredDays < 90,'block','none')}">    
+                <apex:slds />
+                <!-- <apex:inputText value="{!form.Device_Details__c}" styleClass="device-details" style="display: none;"/> -->
+                <apex:inputText value="{!form.Browser_Name__c}" styleClass="browser-name" style="display: none;"/>
+                <apex:inputText value="{!form.Browser_Version__c}" styleClass="browser-version" style="display: none;"/>
+                <apex:inputText value="{!form.Platform_Used__c}" styleClass="platform-used" style="display: none;"/>
+                <apex:inputText value="{!form.OS_Name__c}" styleClass="os-name" style="display: none;"/>
+                <apex:inputText value="{!form.OS_Version__c}" styleClass="os-version" style="display: none;"/>
+                <apex:inputText value="{!form.OS_Version_Name__c}" styleClass="os-version-name" style="display: none;"/>
+                <apex:inputText value="{!form.IP_Address__c}" styleClass="ip-address" style="display: none;"/>
+                <!-- For Display the Thank-you   -->
+                <center>
+                    <apex:pageBlock id="thanks" rendered="{!thanku}" >
+                        <div style="width:1000px;height:500px;background-color:White;border: 2px solid black;margin-top: 4%">
+                            <Head>
+                                <p>
+                                    <center>
+                                        <!-- <apex:image id="theImg" value="{!$Resource.UniversalLogo}" style="margin-top:2%" width="400" height="400" alt="Successfully Application Form submitted"/><br/><br/> -->
+                                        <apex:image id="theImage" value="{!$Resource.CheckIcon}" width="80" height="80" alt="Successfully Enquiry submitted"/><br/><br/>
+                                        <font size="5">You Have Already Filled the Application Form.</font><br/><br/>
+                                        Your Application No.<br/>
+                                        <font size="3"> <b><apex:outputText value="{!appf[0].Name}" ></apex:outputText></b> </font><br/><br/>
+                                        <!-- <b>  <font size="1">You will recieve an email notification about admission process in the first week of October.</font><br/></b> -->
+                                    </center>
+                                </p>
+                            </Head>
+                        </div>
+                    </apex:pageBlock>
+                </center>
+                <!--::::: FORM DISPLAY ::::: -->
+                <!--   {!thanku}style="display:{!IF(thanku == true, 'none','block')}"-->
+                <div  style="display:{!IF(thanku == true, 'none','block')}">   
+                    <apex:pageBlock id="st" rendered="{!thanku=false}" >
+                        <div style="width:1200px;margin: 0px auto 10px auto;background-color:white;border: 5px solid black;">
+                            <center> <p style="background-color:white; text-align:left; font-size:120%; padding:2px;"><b>Student Information</b></p>  </center>
+                            <!-- <apex:pageMessage summary="Pleases fill the Information Correct. Otherwise Data will not save" severity="warning" strength="3" />
+<apex:pageMessage summary="First you have to Verify the Mobile Number Then you will Proceed." severity="warning" strength="3" />-->
+                            <!--<apex:pageMessages id="msg" /> -->
+                            <apex:pageBlock id="st1">
+                                <apex:pageBlockSection >
+                                    <apex:outputText label="Academic Year" value="{!enq.Academic_Year__c}"  styleClass="slds-input" style="width:300px;height:30px;"/><br/>
+                                    <apex:outputText value="{!enq.Name}" styleClass="slds-input" style="width:300px;height:30px;"></apex:outputText><br/>
+                                    <apex:outputText id="studentname" label="Student's Name" value="{!enq.FirstName__c} {!enq.Last_Name__c}" styleClass="slds-input sendToAura" style="width:300px;height:30px;" /><br/>
+                                    <apex:outputText label="Gender" value="{!enq.Gender__c}" styleClass="slds-input" style="width:300px;height:30px;" /><br/>
+                                    <!-- Added By Rupesh -->
+                                    <!-- <apex:outputText label="Curriculum" value="{!enq.Curriculum__c}" styleClass="slds-input" style="width:300px;height:30px;margin: 10px auto 10px border:2px solid black;" /><br/> -->
+                                    <!-- <apex:inputText label="Category" value="{!enq.Category__c}" rendered="{!editMode}" styleClass="slds-input" style="width:300px;height:30px;" /> -->
+                                    <apex:outputText label="Curriculum" value="{!enq.Curriculum__c}" rendered="{!IF(enq.Org_code__c == 'EISB',true,false)}" styleClass="slds-input" style="width:300px;height:30px;"/>
+                                    <apex:outputPanel rendered="{!IF(enq.Org_code__c == 'EISB',true,false)}"><br/></apex:outputPanel>
+                                    <apex:outputText label="Category" value="{!enq.Category__c}" rendered="{!IF(enq.Org_code__c == 'EISB',true,false)}" styleClass="slds-input" style="width:300px;height:30px;"/>
+                                    <apex:outputPanel rendered="{!IF(enq.Org_code__c == 'EISB',true,false)}"><br/></apex:outputPanel>
+                                    <!-- Added By Rupesh -->
+                                    <!-- <apex:outputText value="{!enq.Seeking_Admission_in_Grade__c}" styleClass="slds-input" style="width:300px;height:30px;{!IF(enq.Org_code__c != 'EISB' && enq.Org_code__c != 'PRIMUS','float:left','')};" ></apex:outputText><br/> -->
+                                    <apex:outputText label="Grade Applying for" value="{!seekingGradeLabel}" styleClass="slds-input" style="width:300px;height:30px;{!IF(enq.Org_code__c != 'EISB','float:left','')};" ></apex:outputText><br/>
+                                    <apex:outputText label="Email ID" value="{!enq.Email__c}" styleClass="slds-input" style="text-transform: lowercase;width:300px;height:30px;" ></apex:outputText><br/>
+                                    <p/>
+                                    <!-- </apex:pageBlockSection>
+//<apex:pageBlockSection id="renderTarget"  columns="2" >-->
+                                    <apex:inputText label="Mobile Number for SMS" value="{!enq.Mobile_No__c}" rendered="{!editMode}" styleClass="slds-input" style="width:300px;height:30px;" />
+                                    <apex:outputText label="Mobile Number for SMS" value="{!enq.Mobile_No__c}" rendered="{!NOT(editMode)}" styleClass="slds-input" style="width:300px;height:30px;"/>
+                                    <!--<apex:actionRegion >
+<apex:image id="thelogo" rendered="{!verifySent}" value="{!$Resource.verified}"  width="20px" height="15]px" />
+<apex:commandButton value="Send OTP " action="{!sendOTP}" reRender="optSent,renderTarget"/> &nbsp;
+<apex:commandButton value="Edit" action="{!toggleEditMode}" reRender="renderTarget" rendered="{!NOT(verifySent)}" /> &nbsp;&nbsp;&nbsp;
+</apex:actionRegion>-->
+                                </apex:pageBlockSection>
+                                <apex:pageBlockSection id="optSent">
+                                    <apex:pageBlockSectionItem >
+                                        <apex:outputLabel for="oid" value="Enter OTP" rendered="{!otpSent}"></apex:outputLabel>
+                                        <apex:actionRegion rendered="{!otpSent}">
+                                            <input type="text" id="oid" label="Enter OTP"  styleClass="slds-input" style="width:300px;height:30px; " /> &nbsp;<br/>
+                                            <div class="errorMsg"><strong>{!IF(optValidateMessage != null,'Error:','')} </strong>{!optValidateMessage}</div>
+                                            <div style="color:green;"><strong>{!IF(optValidateSuccessMessage != null,optValidateSuccessMessage,'')} </strong></div>
+                                        </apex:actionRegion><!--optValidateMessage-->
+                                    </apex:pageBlockSectionItem>
+                                    <apex:pageBlockSectionItem >
+                                        <apex:actionRegion >
+                                            <apex:commandButton onclick="doSave();return false;" rendered="{!otpSent}" value="Verify OTP " rerender="outputPanelId,optSent,renderTarget,oid"/>
+                                        </apex:actionRegion>
+                                    </apex:pageBlockSectionItem>
+                                </apex:pageBlockSection>
+                            </apex:pageBlock>
+                        </div>
+                    </apex:pageBlock>
+                    <!-- rendered="{!verifySent}" -->
+                    <apex:outputPanel id="outputPanelId">
+                        <!-- <apex:pageBlock > -->
+                        <apex:pageBlock >
+                            <div style="width:1200px;margin: 0px auto 10px auto;background-color:white;border: 5px solid black;">
+                                <!--<apex:outputPanel id="studentBlock">-->
+                                <apex:pageBlock >
+                                    <apex:pageBlockSection columns="1">
+                                        <!--<b style="margin-left: 121px;">Kindly select nationality to proceed further.</b>-->
+                                    </apex:pageBlockSection>
+                                    <apex:pageBlockSection columns="1" id="Student" >
+                                        <apex:pageBlockSectionItem >
+                                            <apex:outputLabel value="Nationality" style="border-right: 3px solid #c00;height: 15px !important;padding: 5px;"/>
+                                            <apex:actionRegion >
+                                                <apex:selectRadio required="false" onchange="OnchangeNationality(this.value);" id="Nationality" value="{!form.Nationality__c}"  styleClass="slds-radio_faux" style="width:300px;height:30px;">
+                                                    <apex:selectOption itemValue="Indian" itemLabel="Indian" />
+                                                    <apex:selectOption itemValue="International" itemLabel="Other" />
+                                                    <apex:actionfunction name="actfunNationality" action="{!FMGResultNationality}"  reRender="pageanID">
+                                                        <apex:param name="paramNationality" value="" assignTo="{!fatherNationalityName}" />
+                                                    </apex:actionfunction>
+                                                </apex:selectRadio>
+                                            </apex:actionRegion>
+                                        </apex:pageBlockSectionItem>
+                                        <!-- <apex:pageBlockSectionItem /> -->
+                                    </apex:pageBlockSection>
+                                </apex:pageBlock>
+                                <div id="mainFormId">
+                                    <div id="InternationalID" style="display:none;">
+                                        <apex:outputPanel styleClass="fixInternational">
+                                            <apex:pageBlockSection columns="2" id="nation21212">
+                                                <apex:inputField id="Citizenship_Country" required="false" value="{!form.Country1__c}" label=" Country"  styleClass="slds-input" style="  width:300px;height:30px;"/>
+                                                <apex:pageBlockSectionItem />
+                                                <apex:inputField id="Passport_No" required="false" value="{!form.Passport_No__c}" label="Passport No."   styleClass="slds-input" style=" width:300px;height:30px;" />
+                                                <apex:pageBlockSectionItem rendered="{!passportDocumentId==NULL}">
+                                                    <apex:outputPanel layout="block" style="margin-left: 1rem;">
+                                                        Upload first and last page of the Passport
+                                                        <input type="file" name="Passport" onchange="saveFileRemote(this)" />
+                                                    </apex:outputPanel>
+                                                </apex:pageBlockSectionItem>
+                                                <!-- <apex:pageBlockSectionItem rendered="{!AND(passportDocumentId!=NULL, form.Nationality__c== 'International')}">
+<apex:outputLink style="padding-left: 80px;" value="{!'/sfc/servlet.shepherd/version/download/' & passportDocumentId}" target="_document">Passport</apex:outputLink> <button style="margin-left: 20px;" type="button" class="slds-button slds-button_text-destructive" onclick="deleteUploadedDoc('{!passportDocumentId}')">Delete</button>
+</apex:pageBlockSectionItem> -->
+                                                <apex:outputPanel rendered="{!AND(passportDocumentId!=NULL, form.Nationality__c== 'International')}">
+                                                    <apex:outputLink style="padding-left: 78px;font-weight: bold;" value="{!'/sfc/servlet.shepherd/version/download/' & passportDocumentId}" target="_document">Passport</apex:outputLink> <button style="margin-left: 20px;" type="button" class="slds-button slds-button_text-destructive" onclick="deleteUploadedDoc('{!passportDocumentId}')">Delete</button>
+                                                </apex:outputPanel>
+                                                <apex:inputField onclick="setDateValuesExpiry();" id="Expiry_Date" required="false" value="{!form.Expiry_Date__c}" label="Expiry Date"  styleClass="slds-input" style=" width:300px;height:30px;" />
+                                                <apex:pageBlockSectionItem />
+                                                <!--<apex:inputField id="OCI" required="false" value="{!form.OCI__c}" label="OCI/Visa" rendered="{!IF(form.Nationality__c=='International',true, false)}" styleClass="slds-input" style=" width:300px;height:30px;" />-->
+                                                <apex:pageBlockSectionItem >
+                                                    <apex:outputLabel value="OCI/Visa" />                         
+                                                    <apex:actionRegion >
+                                                        <apex:selectRadio value="{!form.OCI_VISA__c}" id="OCI" required="false" label="OCI/Visa" styleClass="slds-radio_faux" style="width:300px;height:30px;">
+                                                            <apex:selectoptions value="{!OciVisa}"/>
+                                                            <apex:actionSupport event="onchange" rerender="nation,theMessage1" />
+                                                        </apex:selectRadio>
+                                                    </apex:actionRegion>
+                                                </apex:pageBlockSectionItem>        
+                                                <apex:pageBlockSectionItem rendered="{!AND(ociDocumentId==NULL)}">
+                                                    <apex:outputPanel style="margin-left: 1rem;">
+                                                        Upload Document
+                                                        <input type="file" name="OCI" onchange="saveFileRemote(this)" />
+                                                    </apex:outputPanel>
+                                                </apex:pageBlockSectionItem>
+                                                <!-- <apex:pageBlockSectionItem rendered="{!AND(ociDocumentId!=NULL, form.Nationality__c== 'International')}">
+<apex:outputLink style="padding-left: 80px;" value="{!'/sfc/servlet.shepherd/version/download/' & ociDocumentId}" target="_document">OCI Document</apex:outputLink> <button style="margin-left: 20px;" type="button" class="slds-button slds-button_text-destructive" onclick="deleteUploadedDoc('{!ociDocumentId}')">Delete</button>
+</apex:pageBlockSectionItem> -->
+                                                <apex:outputPanel rendered="{!AND(ociDocumentId!=NULL, form.Nationality__c== 'International')}">
+                                                    <apex:outputLink style="padding-left: 37px;font-weight: bold;" value="{!'/sfc/servlet.shepherd/version/download/' & ociDocumentId}" target="_document">OCI Document</apex:outputLink> <button style="margin-left: 20px;" type="button" class="slds-button slds-button_text-destructive" onclick="deleteUploadedDoc('{!ociDocumentId}')">Delete</button>
+                                                </apex:outputPanel>
+                                                <br/>
+                                                <apex:inputField id="ociSpecify" required="false" value="{!form.Please_specify_OCI_VISA__c}" label="Please Specify" rendered="{!IF(form.OCI_VISA__c== 'Later',false, false)}" styleClass="slds-input" style=" width:300px;height:30px;"/>                               
+                                            </apex:pageBlockSection>
+                                        </apex:outputPanel>
+                                    </div>
+                                    <!-- </apex:pageBlock>
+<apex:pageBlock> -->
+                                    <b style="margin-left: 15px;"><apex:outputLabel value="Residential Address"/></b>
+                                    <apex:pageBlockSection columns="2">
+                                        <apex:inputField label="Flat No./ House No." required="true" onkeypress="return inputLimiter(event,'NameCharactersAndNumbers');" value="{!form.Student_Flat_No_House_No__c}" styleClass="slds-input sendToAura" style=" width:300px;height:30px;" />
+                                        <apex:pageBlockSection id="residentialAddressSection">                        
+                                            <apex:pageBlockSectionItem rendered="{!residentialAddressProofId==NULL}">
+                                                <div>
+                                                    Upload current Residential Address Proof clearly showing your name(any 1 document) 
+                                                    Passport/Voter ID/Latest Electricity Bill/Latest Society Maintenance Bill/Lease agreement/Aadhaar Card
+                                                    <input type="file" name="ResidentialAddressProof" onchange="saveFileRemote(this)" />
+                                                </div>
+                                            </apex:pageBlockSectionItem>
+                                            <apex:pageBlockSectionItem rendered="{!residentialAddressProofId!=NULL}">
+                                                <apex:outputLink value="{!'/sfc/servlet.shepherd/version/download/' & residentialAddressProofId}" target="_document">Residential Address Proof</apex:outputLink> <button type="button" class="slds-button slds-button_text-destructive" onclick="deleteUploadedDoc('{!residentialAddressProofId}')">Delete</button>
+                                            </apex:pageBlockSectionItem>
+                                            <apex:outputPanel id="errorResidentialAddress">
+                                                <div class="errorMsg">
+                                                    <apex:outputPanel rendered="{!errorResidentialAddress != null}">
+                                                        <strong>Error: </strong>&nbsp;{!errorResidentialAddress}
+                                                    </apex:outputPanel>
+                                                </div>
+                                            </apex:outputPanel>                                                   
+                                        </apex:pageBlockSection>               
+                                        <apex:inputField onkeypress="return inputLimiter(event,'NameCharacters');" label="Building / Apartment Name"  required="true" value="{!form.Student_Building_Apartment_Name__c}" styleClass="slds-input sendToAura" style=" width:300px;height:30px;" /><br/>
+                                        <apex:inputField onkeypress="return inputLimiter(event,'NameCharacters');" label="Street" required="true" value="{!form.Student_Street__c}" styleClass="slds-input sendToAura" style=" width:300px;height:30px;" /> <br/>
+                                        <apex:inputField label="Landmark" onkeypress="return inputLimiter(event,'NameCharacters');"  value="{!form.Student_Landmark__c }" styleClass="slds-input sendToAura" style=" width:300px;height:30px;" /><br/>
+                                        <apex:inputField onkeypress="return inputLimiter(event,'NameCharacters');" label="Area" required="true" value="{!form.Student_Area__c}" styleClass="slds-input sendToAura" style=" width:300px;height:30px;" /><br/>
+                                        <apex:inputField onkeypress="return inputLimiter(event,'NameCharacters');" label="City" required="true" value="{!form.City__c}" styleClass="slds-input sendToAura" style=" width:300px;height:30px;" /><br/>
+                                        <apex:inputField onkeypress="return inputLimiter(event,'NameCharacters');" label="State" required="true" value="{!form.State__c}" styleClass="slds-input sendToAura" style=" width:300px;height:30px;" /><br/>
+                                        <apex:inputField onkeypress="return inputLimiter(event,'Numbers');" label="Pin Code" value="{!form.Pincode__c}" required="true" styleClass="slds-input sendToAura" style="width:300px;height:30px;" /><br/>
+                                        <!-- <apex:pageBlockSection columns="2"> -->
+                                        <apex:inputfield label="Date of Birth" required="true" html-placeholder="DD/MM/YYYY" onclick="setDateValues();" id="dob" value="{!form.Date_of_Birth__c}" styleClass="slds-select" style="width:300px;height:30px;"/>
+                                        <apex:pageBlockSection id="studentBirthCertificateSection">
+                                            <apex:pageBlockSectionItem >
+                                                <div>
+                                                    Upload Birth Certificate
+                                                    <input type="file" name="StudentBirthCertificate" onchange="saveFileRemote(this)" />
+                                                </div>
+                                                
+                                            </apex:pageBlockSectionItem>
+                                            <apex:pageBlockSectionItem rendered="{!studentBirthCertificateId!=NULL}">
+                                                <apex:outputLink value="{!'/sfc/servlet.shepherd/version/download/' & studentBirthCertificateId}" target="_document">Student Birth Certificate</apex:outputLink>
+                                                <button type="button" class="slds-button slds-button_text-destructive" onclick="deleteUploadedDoc('{!studentBirthCertificateId}')">Delete</button>
+                                            </apex:pageBlockSectionItem>
+                                            <apex:outputPanel id="errorBirthCert">
+                                                <div class="errorMsg">
+                                                    <apex:outputPanel rendered="{!NOT(ISBLANK(errorBirthCert))}">
+                                                        <strong>Error: </strong>&nbsp;{!errorBirthCert}
+                                                    </apex:outputPanel>
+                                                    
+                                                </div>
+                                            </apex:outputPanel>
+                                            
+                                        </apex:pageBlockSection>
+                                        <apex:inputField value="{!form.Birth_Place__c}" required="true" styleClass="slds-input" style=" width:300px;height:30px;" /><br/>
+                                        <!--<apex:inputField id="bgc" value="{!form.Blood_Group__c}" label="Blood Group (*)" styleClass="slds-select" style="width:300px;height:30px;margin:10px auto 10px border: 2px solid black;"/>   -->
+                                        <!-- <apex:inputField id="nat" value="{!form.Nationality__c}"  styleClass="slds-input" style="width:300px;height:30px;" /> --><br/>
+                                        <apex:inputField id="reg" value="{!form.Religion__c}" required="true"   styleClass="slds-select" style=" width:300px;height:30px;margin:10px auto 10px border: 2px solid black;" /><br/>
+                                        <apex:inputField id="caste" value="{!form.Caste__c}" required="true"   styleClass="slds-select" style=" width:300px;height:30px;" />
+                                        <apex:pageBlockSection id="studentCasteCertificateSection">
+                                            
+                                            <!--rendered="{((!studentCasteCertificateId==NULL || !studentCasteCertificateId =='') && (!NOT(form.Caste__c == 'Gen')))}"-->
+                                            <apex:pageBlockSectionItem >
+                                                <div>
+                                                    Upload Caste Certificate (NA for General category)
+                                                    <input type="file" name="StudentCasteCertificate" onchange="saveFileRemote(this)"/>
+                                                </div>
+                                            </apex:pageBlockSectionItem>
+                                            <apex:pageBlockSectionItem rendered="{!studentCasteCertificateId!=NULL}">
+                                                <apex:outputLink value="{!'/sfc/servlet.shepherd/version/download/' & studentCasteCertificateId}" target="_document">Student Case Certificate</apex:outputLink>
+                                                <button type="button" class="slds-button slds-button_text-destructive" onclick="deleteUploadedDoc('{!studentCasteCertificateId}')">Delete</button>
+                                            </apex:pageBlockSectionItem>
+                                        </apex:pageBlockSection>
+                                        <apex:inputField id="mt" value="{!form.Mother_Tongue__c}"  label="Mother Tongue"  styleClass="slds-input" style=" width:300px;height:30px;" /> <br/>
+                                        <apex:inputField id="hl" value="{!form.Language_s_spoken_at_home__c}"  label="Home Language"  styleClass="slds-input" style=" width:300px;height:30px;" /> <br/>
+                                        <apex:inputField id="acn" value="{!form.Adhaar_Card_No__c}" label="Student Aadhaar No." styleClass="slds-input" style="width:300px;height:30px;" />
+                                        <apex:pageBlockSection id="studentAadhaarCardSection">
+                                            <apex:pageBlockSectionItem rendered="{!studentAadhaarCardId==NULL}">
+                                                <div>
+                                                    Upload Aadhaar Card
+                                                    <input type="file" name="StudentAadhaarCard" onchange="saveFileRemote(this)" />
+                                                </div>
+                                            </apex:pageBlockSectionItem>
+                                            <apex:pageBlockSectionItem rendered="{!studentAadhaarCardId!=NULL}">
+                                                <apex:outputLink value="{!'/sfc/servlet.shepherd/version/download/' & studentAadhaarCardId}" target="_document">Student Aadhar Card</apex:outputLink>
+                                                <button type="button" class="slds-button slds-button_text-destructive" onclick="deleteUploadedDoc('{!studentAadhaarCardId}')">Delete</button>
+                                            </apex:pageBlockSectionItem>
+                                        </apex:pageBlockSection>
+                                        <apex:inputField value="{!form.Student_UDISE_No__c}" label="Student UDISE No.( Grade 2 onwards)" required="false" styleClass="slds-select" style="width:300px;height:30px;" /><br/> 
+                                        <apex:pageBlockSectionItem rendered="{! (!udise ) && (!enrNo) && (!emisNo) }" ></apex:pageBlockSectionItem>
+                                        <!--   <apex:inputField id="udise" value="{!form.Student_UDISE_No__c}" required="false"  styleClass="slds-input" rendered="{!udise}" style="width:300px;height:30px;" />  ---->
+                                        <!-- <br/> -->
+                                        <apex:inputField id="enrol" value="{!form.Enrollment_No__c}" required="false" styleClass="slds-input" rendered="{!enrNo}" style="width:300px;height:30px;" />
+                                        <!-- <br/>                             -->
+                                        <apex:inputField id="emis" value="{!form.EMIS_No__c}" required="false" rendered="{!emisNo}" styleClass="slds-input"  style="width:300px;height:30px;" />
+                                        <!-- <br/>   -->
+                                        <!-- <apex:pageBlockSectionItem /> -->
+                                        <apex:pageBlockSectionItem />
+                                        <!-- <apex:pageBlockSectionItem /> -->
+                                        <!--  <apex:inputField onkeypress="return event.charCode >= 48 && event.charCode <= 57" id="emerg" value="{!form.Emergency_Contact_No__c}" required="false" styleClass="slds-input" style="width:300px;height:30px;" />
+<br/>-->
+                                    </apex:pageBlockSection>
+                                    
+                                    <!--</apex:outputPanel>-->
+                                    
+                                    <p style="background-color:auto; text-align:left; font-size:120%; padding:2px;"><b>Alternate Contact Details When Parents Are Not Reachable</b></p>
+                                    <apex:pageBlock id="emergencyDetails">
+                                        <apex:pageBlocksection >
+                                            <apex:inputField id="emgName" required="true" value="{!form.Name_of_the_person__c}"  label="Name of the person"  styleClass="slds-input" style=" width:300px;height:30px;" />
+                                            <br/>
+                                            <apex:inputField type="tel" required="true" onkeypress="return event.charCode >= 48 && event.charCode <= 57" id="emgPhone" value="{!form.Emergency_Contact_No__c}"   label="Mobile No."  styleClass="slds-input" style="width:300px;height:30px;" />
+                                            <br/>
+                                            <apex:inputField id="emgRel" required="true" value="{!form.Relationship_with_the_Student__c }"  label="Relationship with the Student"  styleClass="slds-input" style=" width:300px;height:30px;" />
+                                            <br/>
+                                        </apex:pageBlocksection>
+                                    </apex:pageBlock>
+                                    <p style="background-color:auto; text-align:left; font-size:120%; padding:2px;"><b>Currently Studying</b></p>
+                                    <apex:pageBlock id="currentlystudying">
+                                        <apex:pageBlockSection >
+                                            <apex:inputField id="studgrade" value="{!form.Grade__c}" required="false" styleClass="slds-input" style="text-transform:uppercase;width:300px;height:30px;" />
+                                            <apex:pageBlockSection id="studentLatestMarksheetSection">
+                                                <apex:pageBlockSectionItem rendered="{!studentLatestMarksheetId==NULL}">
+                                                    <div> Upload latest marksheet <input type="file" name="StudentLatestMarksheet" onchange="saveFileRemote(this)" /></div>
+                                                </apex:pageBlockSectionItem>
+                                                <apex:pageBlockSectionItem rendered="{!studentLatestMarksheetId!=NULL}">
+                                                    <apex:outputLink value="{!'/sfc/servlet.shepherd/version/download/' & studentLatestMarksheetId}" target="_document">Student Latest Marksheet</apex:outputLink>
+                                                    <button type="button" class="slds-button slds-button_text-destructive" onclick="deleteUploadedDoc('{!studentLatestMarksheetId}')">Delete</button>
+                                                </apex:pageBlockSectionItem>
+                                            </apex:pageBlockSection>
+                                            <apex:inputField id="curriculum" label="Curriculum" value="{!form.Curriculum__c}" required="false" styleClass="slds-input" style="text-transform:uppercase;width:300px;height:30px;" /><br/>
+                                            <apex:inputField id="studschool" label=" School / Institution" value="{!form.Past_School_Institute__c}" required="false" styleClass="slds-input" style="text-transform:uppercase;width:300px;height:30px;" />
+                                            <apex:pageBlockSection id="studentLeavingCertificateSection">
+                                                <apex:pageBlockSectionItem rendered="{(!studentLeavingCertificateId==NULL|| !studentLeavingCertificateId=='') && !NOT(ISBLANK(errorLeavingCertificateId)) }">
+                                                    <div>Upload Leaving Certificate<input type="file" name="StudentLeavingCertificate" onchange="saveFileRemote(this)" required="false" /></div>
+                                                </apex:pageBlockSectionItem>
+                                                <apex:pageBlockSectionItem rendered="{!studentLeavingCertificateId!=NULL}">
+                                                    <apex:outputLink value="{!'/sfc/servlet.shepherd/version/download/' & studentLeavingCertificateId}" target="_document">Student Leaving Certificate</apex:outputLink>
+                                                    <button type="button" class="slds-button slds-button_text-destructive" onclick="deleteUploadedDoc('{!studentLeavingCertificateId}')">Delete</button>
+                                                </apex:pageBlockSectionItem>
+                                            </apex:pageBlockSection>
+                                            <apex:inputField id="preschool" value="{!form.If_you_attended_more_than_one_school__c}" required="false" styleClass="slds-input" style="text-transform:uppercase;width:300px;height:30px;" />
+                                            <apex:inputField id="preplace" value="{!form.Past_School_Place__c}" required="false" styleClass="slds-input" style="text-transform:uppercase;width:300px;height:30px;" />
+                                        </apex:pageBlockSection>
+                                    </apex:pageBlock>
+                                    <!--<apex:pageBlock>
+<apex:pageBlockSection id="expdate" columns="1" >
+<apex:pageBlockSectionItem>
+<apex:outputLabel for="passport" value="Passport No" ></apex:outputLabel>
+<apex:actionRegion >
+<apex:inputField id="passport" value="{!form.Passport_No__c}" styleClass="slds-input" style="width:300px;height:30px;" >
+<apex:actionSupport event="onchange" action="{!getpassport}" reRender="expdate" />
+</apex:inputField>
+</apex:actionRegion>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem>
+<apex:outputLabel for="expdate" value="Expiry Date"  ></apex:outputLabel>
+<apex:actionRegion >
+<apex:inputField id="expdate"  label="Expiry Date" value="{!form.Expiry_Date__c}" styleClass="slds-input" style="width:300px;height:30px;" ><br/>
+</apex:inputField>
+</apex:actionRegion>
+</apex:pageBlockSectionItem>
+</apex:pageBlockSection>
+</apex:pageBlock> -->
+                                    <apex:pageBlock id="OnchangeRelationId">
+                                        <apex:inputCheckbox id="checkbox2" value="{!form.Single_Parent__c}" onchange="HideMsgSingleParent(this);"/> <b>Are you a Single Parent? </b><br/>
+                                        <apex:actionfunction name="actfunSingleParent" action="{!FMGSingleParentInformationtrue}"  reRender="pageahjkhjnID5">
+                                            <apex:param name="paramSingleParent" value="" assignTo="{!SingleParentInformation}" />
+                                        </apex:actionfunction>
+                                        <span>(Tick if you are a single parent)</span>
+                                        <div class="showp" style="display: none" id="SingleParentmsg">
+                                            <apex:pageBlockSection columns="2">
+                                                <apex:pageBlockSectionItem >
+                                                    <span>Relation </span>
+                                                    <apex:selectList label="Relation" size="1"
+                                                                     style="border-left: 3px solid #c00;width:300px;height:30px;border-radius: 4px;"
+                                                                     value="{!Application_Form_Relation}" id="Relation" onchange="OnchangeRelation(this.value);">
+                                                        <apex:selectOptions id="selectedvalueId" value="{!ApplicationFormRelation}"/>
+                                                        <apex:actionfunction name="actfun" action="{!FMGResult}" reRender="pageFMGghjghjuardianID">
+                                                            <apex:param name="paramfather" value="" assignTo="{!fatherIDName}" />
+                                                        </apex:actionfunction>
+                                                    </apex:selectList>
+                                                </apex:pageBlockSectionItem>
+                                                <apex:pageBlockSectionItem >
+                                                    <apex:outputPanel id="singleParDoc" >
+                                                        <apex:pageBlockSection columns="1" >Upload evidence/Affidivait for legal guardianship<input type="file"   name="SingleParentDoc" onchange="saveFileRemote(this)"/>
+                                                        </apex:pageBlockSection>
+                                                    </apex:outputPanel>
+                                                </apex:pageBlockSectionItem>
+                                            </apex:pageBlockSection>   
+                                        </div>
+                                    </apex:pageBlock>
+                                    
+                                    
+                                    
+                                    <apex:outputPanel id="fatherMotherError">
+                                        <div class="errorMsg"><strong>{!IF(isFatherMotherGaurdianChecked != null,'Error:','')} </strong>{!isFatherMotherGaurdianChecked}</div>
+                                    </apex:outputPanel>
+                                    <p style="background-color:auto; text-align:left; font-size:120%; padding:2px;"></p>
+                                    <apex:outputPanel id="pageFMGuardianID">
+                                        <!--=={!fatherMotherGuardianIdName}-->
+                                    </apex:outputPanel>
+                                    <div Id="MotherValueId" class="">
+                                        <apex:pageBlock id="p">
+                                            <apex:inputCheckbox id="checkboxMother"  onchange="HideMsgMother(this);"/> <b>Mother Information</b><br/>
+                                            <apex:actionfunction name="actfunMother" action="{!FMGMotherIdInformationtrue}"  reRender="pageanID3">
+                                                <apex:param name="paramMother" value="" assignTo="{!MotherIdInformation}" />
+                                            </apex:actionfunction>
+                                            <span>Fields marked with <span style="border-right: 3px solid #c00;margin-right: 4px;padding:1px;"></span> are Mandatory.</span>
+                                            <div class="showp1" style="display: block;" id="Mothermsg">
+                                                <!--<apex:actionRegion >
+<apex:inputfield value="{!form.Mother_Detail_Captured__c}" style="width:17px;height:17px;" id="type" >       <b>Mother Information</b>
+<apex:actionSupport event="onchange"  reRender="m-section2,theMessage2,single-parent"/>
+</apex:inputfield><br/>
+</apex:actionRegion>-->
+                                                <apex:outputPanel id="m-section2" style="">
+                                                    <apex:pageBlockSection columns="2" id="MotherID" collapsible="true" >
+                                                        <apex:inputField id="motherfirstname" value="{!form.Mother_First_Name__c}" label="First Name "  styleClass=" sendToAura slds-input" style="border-left: 3px solid #c00; width:300px;height:30px;"/>
+                                                        
+                                                        <apex:inputField id="motherlastname" value="{!form.Mother_Last_Name__c}"  label="Last Name " styleClass=" sendToAura slds-input" style=" border-left: 3px solid #c00;width:300px;height:30px;"/>
+                                                        
+                                                        
+                                                        <apex:inputField id="mothermobno"  onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="{!form.Mother_Phone__c}"  label="Mobile No."  styleClass="slds-input" style="border-left: 3px solid #c00;width:300px;height:30px;"/><br/>
+                                                        <apex:inputField id="motherPrimarymobno"  onkeypress="return event.charCode >= 48 && event.charCode <= 57"  label="Make this the primary number for communication? This will be the first number that the school will call when required." value="{!form.Primary_number_for_communication__c}"  styleClass="slds-input" style="border-left: 3px solid #c00;width:300px;height:30px;"/><br/>
+                                                        
+                                                        <apex:inputField id="motherqualification" value="{!form.Mother_Email_Id__c}"  label="Email ID "  styleClass="slds-input" style="text-transform: lowercase;border-left: 3px solid #c00;width:300px;height:30px;"/><br/>    
+                                                        
+                                                        <apex:inputField id="motheradhar" value="{!form.Mother_Adhaar_Card_No__c}" label="Aadhaar No (Mandatory for Indian Resident)" styleClass="slds-input" style="width:300px;height:30px;"/>
+                                                        <apex:pageBlockSection id="motherAadhaarCardSection">
+                                                            <apex:pageBlockSectionItem >
+                                                                <div>
+                                                                    Upload Aadhaar Card <input type="file" name="MotherAadhaarCard" onchange="saveFileRemote(this)" />
+                                                                </div>
+                                                            </apex:pageBlockSectionItem>
+                                                            <apex:pageBlockSectionItem rendered="{!motherAadhaarCardId!=NULL}">
+                                                                <apex:outputLink value="{!'/sfc/servlet.shepherd/version/download/' & motherAadhaarCardId}" target="_document">Mother's Aadhar Card</apex:outputLink>
+                                                                <button type="button" class="slds-button slds-button_text-destructive" onclick="deleteUploadedDoc('{!motherAadhaarCardId}')">Delete</button>
+                                                            </apex:pageBlockSectionItem>
+                                                        </apex:pageBlockSection>
+                                                        <apex:inputField id="motherpan" value="{!form.Mother_Pan_Card_No__c}" label="PAN (Mandatory for Indian Resident)"  styleClass="slds-input" style="width:300px;height:30px;"/>
+                                                        <apex:pageBlockSection id="motherPanCardSection">
+                                                            <apex:pageBlockSectionItem rendered="{!motherPanCardId==NULL}">
+                                                                <div>
+                                                                    Upload Pan Card
+                                                                    <input type="file" name="MotherPanCard" onchange="saveFileRemote(this)" />
+                                                                </div>
+                                                            </apex:pageBlockSectionItem>
+                                                            <apex:pageBlockSectionItem rendered="{!motherPanCardId!=NULL}">
+                                                                <apex:outputLink value="{!'/sfc/servlet.shepherd/version/download/' & motherPanCardId}" target="_document">Mother's PAN Card</apex:outputLink>
+                                                                <button type="button" class="slds-button slds-button_text-destructive" onclick="deleteUploadedDoc('{!motherPanCardId}')">Delete</button>
+                                                            </apex:pageBlockSectionItem>
+                                                        </apex:pageBlockSection>
+                                                        
+                                                        <apex:inputField id="motheremail" value="{!form.Mother_Qualification__c}"  label="Educational Qualification" styleClass="slds-input mother-input" style="border-left: 3px solid #c00;width:300px;height:30px;"/><br/>      
+                                                        
+                                                        <apex:pageBlockSectionItem >
+                                                            <apex:outputLabel for="motheroccupation" value="Profession" ></apex:outputLabel>                                              
+                                                            <apex:actionRegion >
+                                                                
+                                                                <apex:actionfunction name="onChangeActMethod" action="{!validateMother}" rerender="m-section"/>
+                                                                <apex:inputField id="motheroccupation" value="{!form.Mother_Occupation__c}" onchange="onChangeActMethod(this.value);"  label="Occupation" styleClass="slds-input mother-input" style="border-left: 3px solid #c00;width:300px;height:30px;"/> <br/>
+                                                            </apex:actionRegion>
+                                                            
+                                                        </apex:pageBlockSectionItem>
+                                                        
+                                                    </apex:pageBlockSection>
+                                                </apex:outputPanel>    
+                                                <apex:outputPanel id="m-section">
+                                                    
+                                                    <apex:pageBlockSection columns="1" collapsible="true" >
+                                                        
+                                                        <apex:inputField id="mothernameoforga" value="{!form.Mother_Name_of_Organisation__c}"  label="Name Of the Organization" styleClass="slds-input mother-input" style="border-left: 3px solid #c00; width:300px;height:30px;"/> 
+                                                        
+                                                        <apex:inputField value="{!form.Mother_Designation__c}" label="Designation" styleClass="slds-input mother-input" style="border-left: 3px solid #c00;width:300px;height:30px;"/>   
+                                                        
+                                                        <apex:inputField type="tel"  onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="{!form.Mother_Office_Contact_No__c}"  label="Office Contact No. " styleClass="slds-input mother-input" style="border-left: 3px solid #c00;width:300px;height:30px;"/>
+                                                        
+                                                        <apex:inputField onkeypress="return (event.charCode > 64 && event.charCode < 91) || (event.charCode > 96 && event.charCode < 123)|| (event.charCode==32)" value="{!form.Mother_Office_Address__c}"  label="Office Address" styleClass="slds-input mother-input" style="border-left: 3px solid #c00;width:300px;height:30px;"/>
+                                                        
+                                                        <apex:inputField type="text" value="{!form.Mother_Website_url_LinkedIn_profile__c}" label="Website/LinkedIn Profile" styleClass="slds-input" style="width:300px;height:30px;" />
+                                                        
+                                                        <apex:inputField type="text" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="{!form.Mother_Annual_Income__c}"  label="Annual Income" styleClass="slds-input" style="width:300px;height:30px;" />
+                                                        
+                                                        
+                                                        <apex:pageBlockSectionItem >
+                                                            <apex:outputText value="Are you a Government Employee?" style="font-size: 12px;" styleClass="labelCol vfLabelColTextWrap" />
+                                                            <apex:outputPanel >
+                                                                
+                                                                
+                                                                <apex:actionRegion >
+                                                                    
+                                                                    
+                                                                    <apex:inputField id="GE" value="{!form.Is_Mother_Government_Employee__c}" label="Are you a Government Employee?  " styleClass="slds-input" style="width:300px;height:30px;">
+                                                                        <apex:actionSupport event="onchange" rerender="mothergov,theMessage1" />
+                                                                    </apex:inputfield>
+                                                                </apex:actionRegion>
+                                                            </apex:outputPanel>
+                                                        </apex:pageBlockSectionItem>
+                                                        <!--/apex:pageBlockSectionItem-->
+                                                        
+                                                        <apex:pageBlockSection id="mothergov" columns="1">
+                                                            
+                                                            <apex:inputField value="{!form.Mother_Name_of_Department__c}" label="Department" rendered="{!IF(form.Is_Mother_Government_Employee__c== 'Yes',true, false)}"
+                                                                             styleClass="slds-input" style=" width:300px;height:30px;" />         
+                                                            
+                                                        </apex:pageBlockSection>
+                                                        <!-- upto here -->
+                                                    </apex:pageBlockSection>
+                                                    <apex:pageBlockSection columns="1" >
+                                                        <apex:inputField type="text"  value="{!form.Mother_Covid_vaccination_status__c}"  label="Covid Vaccination Status " styleClass="slds-input mother-input" style="border-left: 3px solid #c00;width:300px;height:30px;"/>
+                                                    </apex:pageBlockSection>
+                                                    
+                                                </apex:outputPanel>
+                                            </div>
+                                        </apex:pageBlock>
+                                    </div>
+                                    <p style="background-color:auto; text-align:left; font-size:120%; padding:2px;"></p>
+                                    <div Id="FaterValueId" class="">
+                                        <apex:pageBlock id="pageBlockID">
+                                            <apex:inputCheckbox id="checkboxFather"  onchange="HideMsgFather(this);"/> <b>Father Information</b><br/>
+                                            <apex:actionfunction name="actfunFather" action="{!FMGFatherIdInformationtrue}"  reRender="pageanID4">
+                                                <apex:param name="paramFather" value="" assignTo="{!FatherIdInformation}" />
+                                            </apex:actionfunction>
+                                            <span>Fields marked with <span style="border-right: 3px solid #c00;    margin-right: 4px;padding:1px;"></span> are Mandatory.</span>
+                                            <div class="showp" style="display: block;" id="Fathermsg">
+                                                <!--<apex:actionRegion >
+<apex:inputfield value="{!form.Father_Datail_captured__c}"  style="width:14px;height:14px;" id="type"> <b>Father Information</b>                                  
+<apex:actionSupport event="onchange" reRender="fatherMotherError,Father,theMessage1,single-parent,fatherSectionDetail"/>
+</apex:inputfield><br/>
+</apex:actionRegion>-->
+                                                
+                                                <apex:outputPanel id="Father" style="">
+                                                    <apex:pageBlockSection columns="2" id="FatherID" collapsible="true" >
+                                                        <apex:inputField id="fatherfirstname" label="First Name" value="{!form.Father_First_Name__c}" styleClass="slds-input sendToAura father-input" style="border-left: 3px solid #c00; width:300px;height:30px;" />
+                                                        <apex:inputField id="fatherLastname"  label="Last Name" value="{!form.Father_Last_Name__c}" styleClass="slds-input sendToAura" style="border-left: 3px solid #c00; width:300px;height:30px;" />
+                                                        <apex:inputField id="fathermobno"  onkeypress="return event.charCode >= 48 && event.charCode <= 57"  label="Mobile No." value="{!form.Father_Phone__c}"  styleClass="slds-input father-input" style="border-left: 3px solid #c00;width:300px;height:30px;"/><br/>
+                                                        <apex:inputField id="fatherPrimarymobno"  onkeypress="return event.charCode >= 48 && event.charCode <= 57"  label="Make this the primary number for communication? This will be the first number that the school will call when required." value="{!form.Primary_number_for_communication__c}"  styleClass="slds-input father-input" style="border-left: 3px solid #c00;width:300px;height:30px;"/><br/>
+                                                        <apex:inputField id="fatherqualification"  label="Email ID " value="{!form.Father_Email_Id__c}"  styleClass="slds-input father-input" style="border-left: 3px solid #c00;text-transform: lowercase;width:300px;height:30px;"/><br/>      
+                                                        <apex:inputField id="fatheradhaar" label="Aadhaar No (Mandatory for Indian Resident)" value="{!form.Father_Aadhar_Card__c}" styleClass="slds-input" style="width:300px;height:30px;" />
+                                                        <apex:pageBlockSection id="fatherAadhaarCardSection">
+                                                            <apex:pageBlockSectionItem >
+                                                               <div>Upload Aadhaar Card<input type="file" name="FatherAadhaarCard" onchange="saveFileRemote(this)"/></div>
+                                                            </apex:pageBlockSectionItem>
+                                                            <apex:pageBlockSectionItem rendered="{!fatherAadhaarCardId!=NULL}">
+                                                                <apex:outputLink value="{!'/sfc/servlet.shepherd/version/download/' & fatherAadhaarCardId}" target="_document">Father's Aadhar Card</apex:outputLink>
+                                                                <button type="button" class="slds-button slds-button_text-destructive" onclick="deleteUploadedDoc('{!fatherAadhaarCardId}')">Delete</button>
+                                                            </apex:pageBlockSectionItem>
+                                                        </apex:pageBlockSection>    
+                                                        <apex:inputField id="fatherpan" label="PAN (Mandatory for Indian Resident)" value="{!form.Father_Pan_Card_No__c}" styleClass="slds-input" style="width:300px;height:30px;" />
+                                                        <apex:pageBlockSection id="fatherPanCardSection">
+                                                            <apex:pageBlockSectionItem rendered="{!fatherPanCardId==NULL}">
+                                                                <div> Upload Pan Card<input type="file" name="FatherPanCard" onchange="saveFileRemote(this)" /></div>
+                                                            </apex:pageBlockSectionItem>
+                                                            <apex:pageBlockSectionItem rendered="{!fatherPanCardId!=NULL}">
+                                                                <apex:outputLink value="{!'/sfc/servlet.shepherd/version/download/' & fatherPanCardId}" target="_document">Father's PAN Card</apex:outputLink>
+                                                                <button type="button" class="slds-button slds-button_text-destructive" onclick="deleteUploadedDoc('{!fatherPanCardId}')">Delete</button>
+                                                            </apex:pageBlockSectionItem>
+                                                        </apex:pageBlockSection>   
+                                                        <apex:inputField id="fatheremail"  label="Educational Qualification" value="{!form.Father_Qualification__c}" styleClass="slds-input father-input" style="border-left: 3px solid #c00;width:300px;height:30px;"/><br/>          
+                                                        <apex:pageBlockSectionItem >
+                                                            <apex:outputLabel for="fatheroccupation" value="Profession" ></apex:outputLabel>  
+                                                            <apex:actionRegion >   
+                                                                <apex:actionfunction name="onChangeActMethod2" action="{!validateFatherOccup}" rerender="fatherSectionDetail"/>
+                                                                <apex:inputField id="fatheroccupation" label="Profession" value="{!form.Father_Occupation__c}" onchange="onChangeActMethod2(this.value);" styleClass="slds-input father-input" style="border-left: 3px solid #c00;text-transform:uppercase;width:300px;height:30px;"/>
+                                                            </apex:actionRegion>
+                                                        </apex:pageBlockSectionItem>
+                                                    </apex:pageBlockSection>   
+                                                    <apex:pageBlockSection columns="1" collapsible="true"  >
+                                                        <apex:inputField value="{!form.Father_Name_of_Organisation__c}"   label="Name of the Organisation" styleClass="slds-input father-input" style="border-left: 3px solid #c00; width:300px;height:30px;" /> 
+                                                        <apex:inputField value="{!form.Father_Designation__c}"  label="Designation" styleClass="slds-input father-input" style="border-left: 3px solid #c00; width:300px;height:30px;" />
+                                                        <apex:inputField type="tel" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="{!form.Father_Office_Contact_No__c}"  label="Office Contact No." styleClass="slds-input father-input" style="border-left: 3px solid #c00;width:300px;height:30px;" />
+                                                        <apex:inputField onkeypress="return (event.charCode > 64 && event.charCode < 91) || (event.charCode > 96 && event.charCode < 123) || (event.charCode==32)" value="{!form.Father_Office_Address__c}"  label="Office Address" styleClass="slds-input father-input" style="border-left: 3px solid #c00;width:300px;height:30px;" />
+                                                        <apex:inputField type="text" value="{!form.Father_Website_url_linkedIn_profile__c}" label="Website/LinkedIn Profile" styleClass="slds-input" style="text-transform: lowercase;width:300px;height:30px;" />
+                                                        <apex:inputField type="text" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="{!form.Father_Annual_Income__c}"  label="Annual Income  "  styleClass="slds-input" style="width:300px;height:30px;" />
+                                                        <apex:pageBlockSectionItem >
+                                                            <apex:outputText value="Are you a Government Employee?" style="font-size: 12px;" styleClass="labelCol vfLabelColTextWrap" />
+                                                            <apex:actionRegion >
+                                                                <apex:inputField id="GE"  value="{!form.Is_Father_Government_Employee__c}" label="Are you a Government Employee? " styleClass="slds-input" style="width:300px;height:30px;"/>
+                                                                <apex:actionSupport event="onchange" rerender="fathergov,theMessage1" />
+                                                            </apex:actionRegion>
+                                                        </apex:pageBlockSectionItem>
+                                                        <apex:pageBlockSection columns="1" id="fathergov">
+                                                            <apex:inputField value="{!form.Father_Name_of_Department__c}" label=" Department" rendered="{!IF(form.Is_Father_Government_Employee__c== 'Yes',true, false)}" styleClass="slds-input" style=" width:300px;height:30px;" />
+                                                        </apex:pageBlockSection>
+                                                    </apex:pageBlockSection>
+                                                    <apex:pageBlockSection columns="1" collapsible="true">
+                                                        <apex:inputField type="text" value="{!form.Father_Covid_vaccination_status__c}"  label="Covid Vaccination Status" styleClass="slds-input father-input" style="border-left: 3px solid #c00;width:300px;height:30px;" />
+                                                    </apex:pageBlockSection>
+                                                </apex:outputpanel>
+                                            </div>
+                                        </apex:pageBlock> 
+                                    </div>
+                                    
+                                    <p style="background-color:auto; text-align:left; font-size:120%; padding:2px;"></p>
+                                    <div Id="GuardianValueId">
+                                       <apex:pageBlock id="checkboxGuardianID">
+                                            <apex:inputCheckbox id="checkboxGuardian" onchange="HideMsgGuardian(this);"/> <b>Guardian Information</b><br/>
+                                            <apex:actionfunction name="actfunGuardian" action="{!FMGGuardiantrue}"  reRender="pageanID2">
+                                                <apex:param name="paramGuardian" value="" assignTo="{!GuardianIdName}" />
+                                            </apex:actionfunction>
+                                            <span>Fields marked with <span style="border-right: 3px solid #c00;margin-right: 4px;padding:1px;"></span> are Mandatory.</span>
+                                            <div class="showp" style="display: none" id="Guardianmsg">
+                                                <!--<apex:actionRegion >
+<apex:inputfield value="{!form.Guardian_Detail_Captured__c}"  style="width:17px;height:17px;" id="type">    <b>Guardian Information (only if the custody of the child is with a Guardian)</b>                 
+<apex:actionSupport event="onchange" reRender="guardian,theMessage1"/>
+</apex:inputfield><br/>
+</apex:actionRegion>-->.
+                                                <apex:outputPanel id="guardian" >
+                                                    <apex:outputPanel >
+                                                        <apex:pageBlockSection id="GuardianForm"  columns="2" >
+                                                            <apex:inputField id="guardianname" value="{!form.Guardian_Name__c}"  label="Full Name " styleClass="slds-input sendToAura" style=" border-left: 3px solid #c00;width:300px;height:30px;"/>
+                                                            <apex:pageBlockSectionItem />
+                                                            <apex:inputField value="{!form.Relationship__c}"  label="Relationship with the Student" styleClass="slds-input Guardian-input" style="border-left: 3px solid #c00; width:300px;height:30px;" />
+                                                            
+                                                            <apex:pageBlockSection id="relationWithGaurdianProofSection">
+                                                                <apex:pageBlockSectionItem rendered="{!relationWithGaurdianId==NULL}">
+                                                                    <div>
+                                                                        Upload Affidavit
+                                                                        <input type="file" name="Affidavit" onchange="saveFileRemote(this)" />
+                                                                    </div>
+                                                                </apex:pageBlockSectionItem>
+                                                                <apex:pageBlockSectionItem rendered="{!relationWithGaurdianId!=NULL}">
+                                                                    <apex:outputLink value="{!'/sfc/servlet.shepherd/version/download/' & relationWithGaurdianId}" target="_document">Affidavit</apex:outputLink>
+                                                                    <button type="button" class="slds-button slds-button_text-destructive" onclick="deleteUploadedDoc('{!relationWithGaurdianId}')">Delete</button>
+                                                                </apex:pageBlockSectionItem>
+                                                            </apex:pageBlockSection>
+                                                            
+                                                            <apex:inputField onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="{!form.Guardian_Mobile_No__c}"  label="Mobile No." styleClass="slds-input Guardian-input" style="border-left: 3px solid #c00;width:300px;height:30px;"/>
+                                                            <apex:pageBlockSectionItem />
+                                                            <apex:inputField value="{!form.Guardian_Email_ID__c}"  label="Email ID " styleClass="slds-input Guardian-input" style="border-left: 3px solid #c00;text-transform: lowercase;width:300px;height:30px;"/>
+                                                            <apex:pageBlockSectionItem />
+                                                            
+                                                            
+                                                            
+                                                            <!--        <apex:inputField value="{!form.Guardian_Residential_Address__c}"  label="Residential Address" styleClass="slds-input" style=" width:300px;height:30px;"/>
+<apex:pageBlockSection id="guardianResidentialAddressProofSection">
+
+<apex:pageBlockSectionItem rendered="{!guardianResidentialAddressProofId==NULL}">
+<div>
+Residential Address Proof (Aadhaar Card/Electricity Bill/Lease agreement)
+<input type="file" name="GuardianResidentialAddressProof" onchange="saveFileRemote(this)" />
+</div>
+</apex:pageBlockSectionItem>
+
+
+
+
+<apex:pageBlockSectionItem rendered="{!guardianResidentialAddressProofId!=NULL}">
+<apex:outputLink value="{!'/sfc/servlet.shepherd/version/download/' & guardianResidentialAddressProofId}" target="_document">Guardian's Residential Address Proof</apex:outputLink>
+<button type="button" class="slds-button slds-button_text-destructive" onclick="deleteUploadedDoc('{!guardianResidentialAddressProofId}')">Delete</button>
+</apex:pageBlockSectionItem>
+</apex:pageBlockSection>   -->
+                                                            <apex:inputField value="{!form.Guardian_Flat_No_House_No__c}"  onkeypress="return inputLimiter(event,'NameCharactersAndNumbers');" label="Flat No./House No." styleClass="slds-input Guardian-input" style="border-left: 3px solid #c00; width:300px;height:30px;"/>
+                                                            <br/> 
+                                                            <apex:inputField value="{!form.Guardian_Building_Apartment_Name__c}"  onkeypress="return inputLimiter(event,'NameCharacters');"  label="Building /Apartment Name" styleClass="slds-input Guardian-input" style=" border-left: 3px solid #c00;width:300px;height:30px;"/>
+                                                            <br/>
+                                                            <apex:inputField value="{!form.Guardian_Street__c}"  onkeypress="return inputLimiter(event,'NameCharacters');" label="Street" styleClass="slds-input Guardian-input" style=" width:300px;height:30px;border-left: 3px solid #c00;"/>
+                                                            <br/> 
+                                                            <apex:inputField value="{!form.Guardian_Landmark__c}" label="Landmark" onkeypress="return inputLimiter(event,'NameCharacters');" styleClass="slds-input" style=" width:300px;height:30px;"/>
+                                                            <br/>
+                                                            <apex:inputField value="{!form.Guardian_Area__c}"  label="Area" onkeypress="return inputLimiter(event,'NameCharacters');" styleClass="slds-input Guardian-input" style="border-left: 3px solid #c00; width:300px;height:30px;"/>
+                                                            <br/>
+                                                            <apex:inputField value="{!form.Guardian_City__c}"  label="City" onkeypress="return inputLimiter(event,'NameCharacters');" styleClass="slds-input Guardian-input" style="border-left: 3px solid #c00; width:300px;height:30px;"/>
+                                                            <br/>
+                                                            <apex:inputField value="{!form.Guardian_state__c}"  label="State" onkeypress="return inputLimiter(event,'NameCharacters');" styleClass="slds-input Guardian-input" style=" border-left: 3px solid #c00;width:300px;height:30px;"/>
+                                                            <br/> 
+                                                            <apex:inputField value="{!form.Guardian_Pin_Code__c}"  label="Pin Code" onkeypress="return inputLimiter(event,'Numbers');" styleClass="slds-input Guardian-input" style="width:300px;height:30px;border-left: 3px solid #c00;"/>
+                                                            <br/>
+                                                            <apex:inputField value="{!form.Guardian_Country__c}"  label="Country" onkeypress="return inputLimiter(event,'NameCharacters');" styleClass="slds-input Guardian-input" style="border-left: 3px solid #c00; width:300px;height:30px;"/>
+                                                            <br/> 
+                                                            
+                                                            
+                                                            <apex:inputField value="{!form.Guardian_Aadhaar_Card_No__c}" label="Aadhaar No  (Mandatory for Indian Resident)" styleClass="slds-input" style="width:300px;height:30px;"/>
+                                                            <apex:pageBlockSection id="guardianAadhaarCardSection">
+                                                                <apex:pageBlockSectionItem rendered="{!guardianAadhaarCardId==NULL}">
+                                                                    <div>
+                                                                        Upload Aadhaar Card
+                                                                        <input type="file" name="GuardianAadhaarCard" onchange="saveFileRemote(this)" />
+                                                                    </div>
+                                                                </apex:pageBlockSectionItem>
+                                                                <apex:pageBlockSectionItem rendered="{!guardianAadhaarCardId!=NULL}">
+                                                                    <apex:outputLink value="{!'/sfc/servlet.shepherd/version/download/' & guardianAadhaarCardId}" target="_document">Guardian's Aadhar Card</apex:outputLink>
+                                                                    <button type="button" class="slds-button slds-button_text-destructive" onclick="deleteUploadedDoc('{!guardianAadhaarCardId}')">Delete</button>
+                                                                </apex:pageBlockSectionItem>
+                                                            </apex:pageBlockSection>
+                                                            <apex:inputField value="{!form.Guardian_Pan_Card_No__c}" label="PAN (Mandatory for Indian Resident)" styleClass="slds-input" style="width:300px;height:30px;"/>
+                                                            <apex:pageBlockSection id="guardianPanCardSection">
+                                                                <apex:pageBlockSectionItem rendered="{!guardianPanCardId==NULL}">
+                                                                    <div>
+                                                                        Upload Pan Card
+                                                                        <input type="file" name="GuardianPanCard" onchange="saveFileRemote(this)" />
+                                                                    </div>
+                                                                </apex:pageBlockSectionItem>
+                                                                <apex:pageBlockSectionItem rendered="{!guardianPanCardId!=NULL}">
+                                                                    <apex:outputLink value="{!'/sfc/servlet.shepherd/version/download/' & guardianPanCardId}" target="_document">Guardian's PAN Card</apex:outputLink>
+                                                                    <button type="button" class="slds-button slds-button_text-destructive" onclick="deleteUploadedDoc('{!guardianPanCardId}')">Delete</button>
+                                                                </apex:pageBlockSectionItem>
+                                                            </apex:pageBlockSection>
+                                                            <apex:inputField value="{!form.Guardian_Qualification1__c}"  label="Educational Qualification" styleClass="slds-input Guardian-input" style="border-left: 3px solid #c00; width:300px;height:30px;"/>
+                                                            
+                                                            <apex:pageBlockSectionItem />
+                                                            
+                                                            <apex:pageBlockSectionItem >
+                                                                <apex:outputLabel for="guardoccup" value="Profession"></apex:outputLabel>
+                                                                
+                                                                <apex:actionRegion >
+                                                                    <apex:actionfunction name="onChangeActMethod1" action="{!validateMother2}" rerender="g-section" />
+                                                                    <apex:inputField id="motheroccupation"  value="{!form.Guardian_Profession__c}" onchange="onChangeActMethod1(this.value);"  label="Occupation" styleClass="slds-input Guardian-input" style="border-left: 3px solid #c00;text-transform:uppercase;width:300px;height:30px;"/>
+                                                                </apex:actionRegion>
+                                                                
+                                                            </apex:pageBlockSectionItem>  
+                                                            
+                                                        </apex:pageBlockSection>
+                                                    </apex:outputPanel>
+                                                    
+                                                    
+                                                    <!-- <apex:inputField value="{!form.Guardian_Profession__c}" label="Relationship with the Student" styleClass="slds-input"
+
+style=" width:300px;height:30px;"/> -->
+                                                    <!-- add from here -->
+                                                    
+                                                    
+                                                    <apex:outputPanel id="g-section">
+                                                        <!-- {!renderGuardian} -->
+                                                        <apex:pageBlockSection columns="1" collapsible="true"  >
+                                                            
+                                                            <apex:inputField value="{!form.Name_of_the_Organisation__c}"  label="Name of the Organisation" styleClass="slds-input Guardian-input" style="border-left: 3px solid #c00; width:300px;height:30px;"/>
+                                                            <apex:inputField value="{!form.Guardian_Designation__c}"  label="Designation" styleClass="slds-input Guardian-input" style="border-left: 3px solid #c00; width:300px;height:30px;"/>
+                                                            
+                                                            <apex:inputField type="tel" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="{!form.Office_Contact_No__c}"  label="Office Contact No. "  styleClass="slds-input Guardian-input" style="border-left: 3px solid #c00;width:300px;height:30px;"/>
+                                                            
+                                                            <apex:inputField onkeypress="return (event.charCode > 64 && event.charCode < 91) || (event.charCode > 96 && event.charCode < 123)|| (event.charCode =32)"  value="{!form.Office_Address__c}"  label="Office Address" styleClass="slds-input Guardian-input" style="border-left: 3px solid #c00;width:300px;height:30px;"/>
+                                                            
+                                                            <apex:inputField type="text" value="{!form.Guardian_Website_url_linkedIn_profile__c}" label="Website/LinkedIn Profile"  styleClass="slds-input" style="text-transform:lowercase;width:300px;height:30px;" />
+                                                            
+                                                            <apex:inputField type="text" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="{!form.Annual_Income__c}"  label="Annual Income " styleClass="slds-input" style="width:300px;height:30px;" />
+                                                            
+                                                            <apex:pageBlockSectionItem >
+                                                                <apex:outputText value="Are you a Government Employee?" style="font-size: 12px;" styleClass="labelCol vfLabelColTextWrap" />
+                                                                <apex:outputPanel >
+                                                                    <apex:actionRegion >
+                                                                        <apex:inputField id="GE"  value="{!form.Is_Guardian_Government_Employee__c}"
+                                                                                         styleClass="slds-input" style="width:300px;height:30px;">
+                                                                            <apex:actionSupport event="onchange" rerender="guardgov,theMessage1" />
+                                                                            
+                                                                        </apex:inputfield>
+                                                                    </apex:actionRegion>
+                                                                </apex:outputPanel>
+                                                            </apex:pageBlockSectionItem>
+                                                            
+                                                                                                                        
+                                                            
+                                                            <apex:pageBlockSection id="guardgov" columns="1">
+                                                                
+                                                                <apex:inputField value="{!form.Name_of_Department__c}"  label="Department" rendered="{!IF(form.Is_Guardian_Government_Employee__c== 'Yes',true, false)}" styleClass="slds-input" style=" border-left: 3px solid #c00;width:300px;height:30px;" />
+                                                                
+                                                                <!-- upto here -->
+                                                            </apex:pageBlockSection>
+                                                        </apex:pageBlockSection>
+                                                        <apex:pageBlockSection columns="1" collapsible="true"  >
+                                                            <apex:inputField type="text"  value="{!form.Guardian_Covid_vaccination_status__c}"  label="Covid Vaccination Status" styleClass="slds-input Guardian-input" style="border-left: 3px solid #c00;width:300px;height:30px;" />
+                                                            <br/>
+                                                        </apex:pageBlockSection>
+                                                    </apex:outputPanel>
+                                                    
+                                                </apex:outputPanel>
+                                            </div>
+                                        </apex:pageBlock>         
+                                    </div>
+                                    
+                                    
+                                    <p style="background-color:auto; text-align:left; font-size:120%; padding:2px;"></p>
+                                    <apex:pageBlock >
+                                        <apex:inputCheckbox id="checkbox3" onchange="HideMsgSibling(this);"/> <b>Sibling Information</b>
+                                        <apex:actionfunction name="actfunSibling" action="{!FMGSiblingIdInformationtrue}"  reRender="pageanID1">
+                                            <apex:param name="paramSibling" value="{!SiblingIdInformation}" assignTo="{!SiblingIdInformation}" />
+                                        </apex:actionfunction>
+                                        <div class="showp" style="display: none;" id="Siblingmsg">
+                                            <!--<apex:actionRegion >
+<apex:inputfield value="{!form.Sibling_Detail_Captured__c}"  style="width:17px;height:17px;" id="type3"> <b>Sibling Information</b>                                  
+<apex:actionSupport event="onchange" reRender="siblingData,theMessage1"/>
+</apex:inputfield><br/>
+</apex:actionRegion>-->
+                                            <apex:outputPanel id="siblingData" >
+                                                <apex:pageBlockSection columns="2" id="siblingID" collapsible="true">
+                                                    <apex:actionRegion >
+                                                        <apex:outputText value="Sibling Status" style="font-size: 12px;" styleClass="labelCol vfLabelColTextWrap" />
+                                                        <apex:inputfield value="{!form.Sibling_Status__c}"  style="width:300px;height:30px;" id="typeSib">                                  
+                                                            <apex:actionSupport event="onchange" rerender="siblingSec1,siblingSec2,siblingSec3,theMessage1"/>
+                                                        </apex:inputfield><br/>
+                                                    </apex:actionRegion>        
+                                                    <!-- upto here -->
+                                                    <br/>
+                                                </apex:pageBlockSection>
+                                                <apex:outputPanel id="siblingSec1">
+                                                    <apex:pageBlockSection columns="2" id="siblingSec1Pg" collapsible="true" rendered="{!IF(form.Sibling_Status__c== 'Applying for admissions in our school',true, false)}">
+                                                        <apex:inputField id="siblingfirstname" label="First Name" value="{!form.Sibling_First_Name__c}" styleClass="slds-input sendToAura" style="text-transform:uppercase;width:300px;height:30px;"/>
+                                                        
+                                                        <apex:inputField id="siblingLastname" label="Last Name" value="{!form.Sibling_Last_Name__c}" styleClass="slds-input sendToAura" style="text-transform:uppercase;width:300px;height:30px;" />
+                                                        
+                                                        <apex:inputField type="text" value="{!form.Sibling_Gender__c}" label="Gender" styleClass="slds-input" style="text-transform:uppercase;width:300px;height:30px;" />
+                                                        <apex:inputfield html-placeholder="DD/MM/YYYY" onclick="setDateValues();" id="sibdob" value="{!form.Sibling_Date_of_Birth__c}" styleClass="slds-select" style="width:300px;height:30px;"/>
+                                                        
+                                                        <apex:inputField type="text" value="{!form.Sibling_Grade_applying_for__c}" label="Grade Applying for" styleClass="slds-input" style="text-transform:uppercase;width:300px;height:30px;" />
+                                                    </apex:pageBlockSection>
+                                                </apex:outputPanel>
+                                                <apex:outputPanel id="siblingSec2">
+                                                    <apex:pageBlockSection columns="2" id="siblingSec1Pg1" collapsible="true" rendered="{!IF(form.Sibling_Status__c== 'Currently studying in our school',true, false)}">
+                                                        
+                                                        <apex:inputField id="siblingfirstname1" label="First Name" value="{!form.Sibling_First_Name__c}" styleClass="slds-input sendToAura" style=" width:300px;height:30px;"/>
+                                                        <apex:inputField id="siblingLastname1"  label="Last Name" value="{!form.Sibling_Last_Name__c}" styleClass="slds-input sendToAura" style=" width:300px;height:30px;" />
+                                                        <apex:inputField type="text" value="{!form.Sibling_Grade_applying_for__c}" label="Current Grade"
+                                                                         styleClass="slds-input" style=" width:300px;height:30px;" />    
+                                                        <apex:inputField type="text" value="{!form.Sibling_Gender__c}" label="Gender" styleClass="slds-input" style="width:300px;height:30px;" />
+                                                        <!--  <apex:inputfield html-placeholder="DD/MM/YYYY" onclick="setDateValues();" id="sibdob" value="{!form.Sibling_Date_of_Birth__c}" styleClass="slds-select" style="width:300px;height:30px;"/>
+-->
+                                                        <apex:inputField type="text" value="{!form.Sibling_Enrollment_Number__c}" label="Student Code/Enrollment No."
+                                                                         styleClass="slds-input" style=" width:300px;height:30px;" />
+                                                    </apex:pageBlockSection>
+                                                </apex:outputPanel>
+                                                <apex:outputPanel id="siblingSec3">
+                                                    <apex:pageBlockSection columns="2" id="siblingSec1Pg2" collapsible="true" rendered="{!IF(form.Sibling_Status__c== 'Other',true, false)}">
+                                                        
+                                                        <apex:inputField id="siblingfirstname2" label="First Name" value="{!form.Sibling_First_Name__c}" styleClass="slds-input sendToAura" style=" width:300px;height:30px;"/>
+                                                        <apex:inputField id="siblingLastname2" label="Last Name" value="{!form.Sibling_Last_Name__c}" styleClass="slds-input sendToAura" style=" width:300px;height:30px;" />
+                                                        
+                                                        <apex:inputField type="text" value="{!form.Sibling_Gender__c}" label="Gender" styleClass="slds-input" style="width:300px;height:30px;" />
+                                                        <apex:inputfield html-placeholder="DD/MM/YYYY" onclick="setDateValues();" id="sibdob" value="{!form.Sibling_Date_of_Birth__c}" styleClass="slds-select" style="width:300px;height:30px;"/>
+                                                        
+                                                        <apex:inputField type="text" value="{!form.Sibling_School_Name__c}" label="Current school*"
+                                                                         styleClass="slds-input" style=" width:300px;height:30px;" />
+                                                    </apex:pageBlockSection>
+                                                </apex:outputPanel>        
+                                            </apex:outputPanel>
+                                        </div>
+                                    </apex:pageBlock>
+                                    <!--<apex:pageBlock >
+<!-- <apex:pageBlock>
+
+<!-- <table style="border-collapse:separate;"> 
+
+<!--   <apex:pageBlockSection columns="2" id="Student">
+<apex:pageBlockSectionItem dataStyleClass="anotherchildsectionitem">
+<apex:actionRegion >
+<label style="vertical-align: super;">
+<b>Do you have another child studying with us? </b>
+</label>
+<apex:selectRadio styleClass="setRadio" value="{!form.Do_have_another_child_with_us__c}" style="margin-left: 1rem;margin-top: 1rem;">
+<apex:actionSupport event="onchange" rerender="anotherChild" />
+<apex:selectOption itemLabel="Yes" itemvalue="Yes" />
+<apex:selectOption itemLabel="No" itemvalue="No" />
+</apex:selectRadio>
+</apex:actionRegion>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem />
+</apex:pageBlockSection>-->
+                                    
+                                    <!--rendered="{!IF(form.Do_have_another_child_with_us__c== 'Yes',true, false)}"-->
+                                    <!--<apex:outputPanel id="anotherChild">
+<apex:pageBlockSection id="singleParent"  columns="1">
+<label>
+<b>Child 1</b>
+</label>
+<br/>
+<apex:inputField value="{!form.Name_of_child_1__c}" label="Name of child"   styleClass="slds-input" style=" width:300px;height:30px;" />
+<apex:inputField value="{!form.Class_1__c}" label="Class"  styleClass="slds-input" style="width:300px;height:30px;" />
+<apex:inputField value="{!form.Student_Code_1__c}" label="Student Code" styleClass="slds-input" style=" width:300px;height:30px;" />
+<label>
+<b>Child 2</b>
+</label>
+<br/>
+<apex:inputField value="{!form.Name_of_child_2__c}" label="Name of child"  styleClass="slds-input" style=" width:300px;height:30px;" />
+<apex:inputField value="{!form.Class_2__c}" label="Class"  styleClass="slds-input" style=" width:300px;height:30px;" />
+<apex:inputField value="{!form.Student_Code_2__c}" label="Student Code" styleClass="slds-input" style=" width:300px;height:30px;" />
+
+</apex:pageBlockSection>
+</apex:outputPanel>
+</apex:pageBlock>
+
+</apex:pageBlock>
+<!--  <apex:pageBlock >
+<label><b>Reason/s for choosing this school</b></label>
+<apex:inputField value="{!form.Reason_of_this_School__c}" styleClass="slds-input" style="width: 843px; height: 50px; margin-left: 23px;"/><br/>
+<br/>
+</apex:pageBlock>-->
+                                    <p style="background-color:auto; text-align:left; font-size:120%; padding:2px;"></p>
+                                    <apex:pageBlock >
+                                        <apex:inputCheckbox id="checkbox4" selected="true" disabled="true" onchange="HideMsgFormB(this);"/> <b>Form B - Student Health  Information</b>
+                                        <div class="showp" id="FormBmsg">
+                                            <!--<apex:actionRegion >
+<apex:inputfield value="{!form.Form_B_captured__c}" style="width:17px;height:17px;" id="type"><b>&nbsp;Form B - Student Health Information
+</b>
+<apex:actionSupport event="onchange" reRender="FormB,FormB1,FormB2,FormB3,FormB4,theMessage1" />
+</apex:inputfield>
+<br/>
+</apex:actionRegion>-->
+                                            
+                                            <apex:outputPanel id="FormB">
+                                                <apex:pageBlockSection columns="1" id="FormBID" collapsible="true" >
+                                                    <apex:inputField value="{!form.Blood_Group__c}" required="true" label="Blood Group" styleClass="slds-input" style="width:300px;height:17px;"/><br/>
+                                                    
+                                                </apex:pageBlockSection>
+                                            </apex:outputPanel>
+                                            <apex:outputPanel id="FormB1">
+                                                <apex:pageBlockSection columns="1" id="FormBID1" collapsible="true" >
+                                                    
+                                                    <apex:actionRegion >  
+                                                        <apex:outputText value="Is the child taking any medication ?" style="font-size: 12px;" styleClass="labelCol vfLabelColTextWrap" />
+                                                        
+                                                        <apex:inputField id="Is_the_child_taking_any_medication__c" value="{!form.Is_the_child_taking_any_medication__c}" label="Is the child taking any medication?" styleClass="slds-input" style="width:300px;height:17px;">
+                                                            <apex:actionSupport event="onchange" rerender="FormB1,theMessage1,medicationReq" />                                                                                                                
+                                                        </apex:inputField>                                                                                                               
+                                                    </apex:actionRegion>
+                                                    
+                                                    <apex:outputPanel id="medicationReq" rendered="{!IF(form.Is_the_child_taking_any_medication__c== 'Yes',true, false)}">
+                                                        <apex:pageBlockSection columns="1">                                                                                                                   
+                                                            <apex:inputField styleClass="slds-input" style=" width:300px" label="Please Specify" value="{!form.Please_specify_any_medication__c}"/> 
+                                                        </apex:pageBlockSection>                                                                                                                   
+                                                    </apex:outputPanel> 
+                                                </apex:pageBlockSection>
+                                            </apex:outputPanel> 
+                                            
+                                            <apex:outputPanel id="FormB2">
+                                                <apex:pageBlockSection columns="1" id="FormBID2" collapsible="true">
+                                                    
+                                                    <apex:actionRegion >  
+                                                        <apex:outputText value="Does the child have any allergies ?" style="font-size: 12px;" styleClass="labelCol vfLabelColTextWrap" />
+                                                        
+                                                        <apex:inputField id="Allergies__c" value="{!form.Allergies__c}"  label="*Does child have any allergies" styleClass="slds-input" style="width:300px;height:17px;">
+                                                            <apex:actionSupport event="onchange" rerender="FormB2,theMessage1,allergiesReq" />                                                                                                                
+                                                        </apex:inputField>                                                                                                               
+                                                    </apex:actionRegion>
+                                                    
+                                                    <apex:outputPanel id="allergiesReq" rendered="{!IF(form.Allergies__c== 'Yes',true, false)}">
+                                                        <apex:pageBlockSection columns="1">                                                                                                                   
+                                                            <apex:inputField styleClass="slds-input" style=" width:300px" required="false" label="Please Specify" value="{!form.Share_the_Allergies__c}"/> 
+                                                        </apex:pageBlockSection>                                                                                                                   
+                                                    </apex:outputPanel> 
+                                                </apex:pageBlockSection>
+                                            </apex:outputPanel>
+                                            <apex:outputPanel id="FormB4">
+                                                <apex:pageBlockSection columns="1" id="FormBID4" collapsible="true" >
+                                                    <apex:actionRegion >      
+                                                        <apex:outputText value="Please outline any physical, academic, behavioural, emotional or physical issues that have been identified with the child.
+                                                                                " style="font-size: 12px; display:inline-block" styleClass="labelCol vfLabelColTextWrap" />
+                                                        <apex:inputField styleClass="slds-input"  label="Any medical/mental/physical health problem the child may have? (This information is needed in order for us to meet the needs of the child)
+                                                                                                         " value="{!form.Any_mental_physical_problem__c}" style="width:300px;height:17px;"> 
+                                                            
+                                                            <apex:actionSupport event="onchange" rerender="FormB4,theMessage1,mentalReq" />                                                                                                                
+                                                        </apex:inputField>                                                                                                         
+                                                    </apex:actionRegion>
+                                                    <apex:outputPanel id="mentalReq" rendered="{!IF(form.Any_mental_physical_problem__c== 'Yes',true, false)}">
+                                                        <apex:pageBlockSection columns="2">                                                                                                                   
+                                                            <apex:inputField styleClass="slds-input" style=" width:300px" required="false" label="Please Specify" value="{!form.Mental_Problem_Please_Specify__c}"/> 
+                                                        </apex:pageBlockSection>                                                                                                                  
+                                                    </apex:outputPanel> 
+                                                       
+                                                    <apex:actionRegion >      
+                                                        <apex:outputText value="Does your child receive any support services for the same?" 
+                                                                         style="font-size: 12px; display:inline-block" 
+                                                                         styleClass="labelCol vfLabelColTextWrap" />
+                                                        <apex:inputField styleClass="slds-input"  label=" Does your child receive any support services for the same?
+                                                                                                         " value="{!form.Does_child_receive_any_support__c}" style="width:300px;height:17px;"> 
+                                                            
+                                                            <apex:actionSupport event="onchange" rerender="FormB4,theMessage1,mentalReq" />                                                                                                                
+                                                        </apex:inputField>
+                                                      <!--  <apex:selectRadio value="{!form.Does_child_receive_any_support__c}">
+                                                            <apex:selectOption itemValue="Yes" itemLabel="Yes" />
+                                                            <apex:selectOption itemValue="No" itemLabel="No" />
+                                                            
+                                                        </apex:selectRadio> -->
+                                                        
+                                                        <apex:actionSupport event="onchange" rerender="FormB4,theMessage1,mentalReq" /> 
+                                                    </apex:actionRegion>
+                                                    
+                                                    <apex:outputPanel id="mentalReq1" rendered="{!IF(form.Does_child_receive_any_support__c== 'Yes',true, false)}">
+                                                        <apex:pageBlockSection id="supportdocumentsorreportSection">
+                                                                <apex:pageBlockSectionItem rendered="{!supportdocumentsorreportsId==NULL}">
+                                                                    <div style="margin-left: 100%; width: 100%;">
+                                                                        Please attach any relevant documents or reports, if available.
+                                                                        <input type="file" name="supportdocumentsorreport" onchange="saveFileRemote(this)" />
+                                                                    </div>
+                                                                </apex:pageBlockSectionItem>
+                                                                <apex:pageBlockSectionItem rendered="{!supportdocumentsorreportsId!=NULL}">
+                                                                    <apex:outputLink value="{!'/sfc/servlet.shepherd/version/download/' & supportdocumentsorreportsId}" target="_document">Guardian's PAN Card</apex:outputLink>
+                                                                    <button type="button" class="slds-button slds-button_text-destructive" onclick="deleteUploadedDoc('{!supportdocumentsorreportsId}')">Delete</button>
+                                                                </apex:pageBlockSectionItem>
+                                                        </apex:pageBlockSection>
+                                                        <apex:pageBlockSection columns="1">                                                                                                                   
+                                                            <apex:inputField styleClass="slds-input" style=" width:300px" required="false" label="Please Specify" value="{!form.Support_services_Please_Specify__c}"/> 
+                                                        </apex:pageBlockSection>                                                                                                                  
+                                                    </apex:outputPanel>                 
+                           
+                                                    
+                                                </apex:pageBlockSection>
+                                            </apex:outputPanel>
+                                            
+                                            
+                                            
+                                            <apex:pageBlockSection columns="1" id="FormBID3" collapsible="true" >
+                                                
+                                                <br/>
+                                                <p><b>Contact details of Medical Practitioner</b></p>    
+                                                <apex:inputField styleClass="slds-input"  label="Name"  required="true" value="{!form.Practitioner_Name__c}" style=" width:300px;height:17px;"/> 
+                                                
+                                                <apex:inputField styleClass="slds-input"  label="Address"   required="true" value="{!form.Practitioner_Address__c}" style=" width:300px;height:17px;"/> 
+                                                
+                                                <apex:inputField styleClass="slds-input" onkeypress="return event.charCode >= 48 && event.charCode <= 57" label="Clinic Phone" value="{!form.Practitioner_Clinic_Phone__c}" style=" width:300px;height:17px;"/> 
+                                                
+                                                <apex:inputField styleClass="slds-input" onkeypress="return event.charCode >= 48 && event.charCode <= 57" label="Mobile"  required="true" value="{!form.Practitioner_Mobile__c}" style=" width:300px;height:17px;"/> 
+                                                
+                                                
+                                            </apex:pageBlockSection>
+                                            
+                                        </div>
+                                    </apex:pageBlock>
+                                    <p style="background-color:auto; text-align:left; font-size:120%; padding:2px;">
+                                        <b>Photographs and Signatures</b>
+                                    </p>
+                                    
+                                    <apex:pageBlock >
+                                        <!-- <p style="background-color:auto; text-align:left; font-size:120%; padding:2px;"> -->
+                                        <!-- Upload Photographs and Signatures<br/> -->
+                                        <ul style="list-style-type:disc;margin-left:4px;">
+                                            <li>Kindly upload recent colour photo on a white background</li>
+                                            <li>The face must fill approximately 75% of the photo</li>
+                                            <li>Do not upload casual photos/with sunglasses/caps/face mask/headgears</li>                                                                                                                  
+                                            <li>Max size: 1 MB </li>
+                                            
+                                        </ul>
+                                        <!-- </p> -->
+                                    </apex:pageBlock>
+                                    <apex:pageBlock >
+                                        <!--<apex:pageBlockSection >
+
+<div id="myDivId"></div>
+<font size="2" style="padding-left:10px;font-weight:700;">
+Kindly click on the forms to proceed further.<br/>
+</font>
+</apex:pageBlockSection> -->
+                                        <div id="myDivId">
+                                        </div>
+                                        
+                                        
+                                        
+                                        <!-- add from here -->
+                                        
+                                    </apex:pageBlock>
+                                    <apex:pageBlockSection >
+                                        
+                                        
+                                        <br/>           
+                                        <font size="2" style="padding-left:10px;font-weight:700">
+                                            Kindly click on the forms to proceed further.<br/>
+                                        </font>
+                                    </apex:pageBlockSection>                        
+                                    
+                                    <div id="myDivId2">
+                                    </div>
+                                    <br/>
+                                    <!-- upto here -->
+                                    <apex:pageBlock id="ApplFormDeclarationId">
+                                        <apex:pageBlockSection columns="1">
+                                            <!--<b style="margin-left: -10px;">Kindly tick all the agreements to enable the Submit button.</b>-->
+                                        </apex:pageBlockSection>
+                                        <apex:inputCheckbox styleClass="disabled" selected="true" id="ApplicationFormDeclaration" value="{!form.Application_Form_Declaration__c}"/>
+                                        <font size="2">
+                                            *I hereby confirm that all the information provided is true and correct to the best of my knowledge.
+                                        </font>
+                                    </apex:pageBlock>                    
+                                </div>
+                                <!--<b><apex:commandButton oncomplete="alert('Your data has been saved');"  rerender="dum12k" action="{!saveForLater}" value="Save For Later"  style="width:300px;height:40px;margin-bottom:3em;background-color:MediumSeaGreen;font-size:16px" styleClass="slds-button slds-button_success"/>                </b>-->
+                              <!--  <div class="" id="paymentId">
+                                    <center>
+                                        <b><apex:commandButton style="width:300px;height:40px;margin-bottom:3em;background-color:MediumSeaGreen;font-size:16px"
+                                                               styleClass="slds-button slds-button_success" value="Pay" onclick="openRazorpayCheckout();" /></b>
+                                    </center>
+                                </div> -->
+                                
+                                <apex:pageMessages id="messages" /> 
+                                <div class="" id="Submitid">
+                                    <center>
+                                        <b><apex:commandButton action="{!save}" value="Submit"
+                                                               style="width:300px;height:40px;margin-bottom:3em;background-color:MediumSeaGreen;font-size:16px"
+                                                               styleClass="slds-button slds-button_success" reRender="messages" />
+                                        </b> 
+                                    </center>
+                                </div>
+                            </div>
+                        </apex:pageBlock>
+                    </apex:outputPanel>
+                    
+                    <apex:actionFunction oncomplete="createAuraComp();return false;" name="paraFunction" action="{!verifyOtpSms}" rerender="outputPanelId,optSent,renderTarget">
+                        <apex:param id="anode" name="node" value="test" />
+                    </apex:actionFunction>
+                    <apex:actionFunction immediate="true" name="saveFinal" action="{!saveMedicalHistory}" rerender="anydummyval">
+                        <!-- <apex:param id="disabilities" name="disabilities" value="" /> -->
+                        <apex:param id="medicalHistorySelected" name="medicalHistorySelected" value="" />
+                        <!-- <apex:param id="selectedLearnings" name="selectedLearnings" value="" /> -->
+                    </apex:actionFunction>
+                    <apex:actionFunction immediate="true" name="setBFormAcknowledegementAF" action="{!saveBFormAck}" rerender="anydummyval">
+                        <apex:param id="data" name="data" value="" />
+                    </apex:actionFunction>
+                    <apex:actionFunction name="deleteUploadedDoc" action="{!deleteUploadedDoc}" reRender="residentialAddressSection,studentBirthCertificateSection,studentCasteCertificateSection,studentAadhaarCardSection,studentLatestMarksheetSection,studentLeavingCertificateSection,fatherAadhaarCardSection,fatherPanCardSection,motherAadhaarCardSection,motherPanCardSection,guardianResidentialAddressProofSection,guardianAadhaarCardSection,relationWithGaurdianProofSection">
+                        <apex:param name="docToDeleteId" assignTo="{!docToDeleteId}" value=""/>
+                    </apex:actionFunction>
+                </div>
+            </div>   
+            
+        </apex:form>
+        <script>
+        //start-added by shashank on 11 oct
+        function openRazorpayCheckout() {
+            // Calling the Apex method using Visualforce.remoting.Manager
+            Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.UE_ApplicationForm_Site.createRazorpayOrder}',
+                "{!registrationFees}", // Example amount in paisa (50000 = Rs 500)
+                "{!enqId_payment}",
+                function (result, event) {
+                    if (event.status) {
+                        console.log('payment details ',result);
+                        var orderId = result;
+                        var options = {
+                            "key": "rzp_test_LLNJl9JK0zShRA",  // Replace with Razorpay Key ID
+                            "amount": "{!registrationFees}",  // Amount in paisa (smallest unit)
+                            "currency": "INR",
+                            "name": "Universal education",
+                            "description": "Payment for Universal education",
+                            "order_id": orderId,  // Order ID created by Razorpay
+                            "handler": function (response) {
+                                console.log('Payment successful:', response);
+                                // Handle payment success here
+                                // window.location.reload();  // Refresh the page on successful payment
+                                updatePaymentStatus(response.razorpay_payment_id, 'success',orderId);
+                                // toggleVisibility();
+                            },
+                            "prefill": {
+                                "name": "Customer Name",
+                                "email": "{!paymentEmail}",
+                                "contact": "{!paymentPhone}"
+                            },
+                            "theme": {
+                                "color": "#3399cc"
+                            },
+                            "modal": {
+                                "ondismiss": function() {
+                                    // Payment Failure handler
+                                    console.log('Payment was not completed.');
+                                    updatePaymentStatus(null, 'failed',orderId);
+                                    // toggleVisibility();
+                                }
+                            }
+                        };
+                        
+                        var rzp = new Razorpay(options);
+                        rzp.open();
+                    } else {
+                        console.error('Order creation failed:', event.message);
+                    }
+                },
+                { escape: true }  // Optional parameters
+            );
+        }
+        // Function to call Apex method and update payment status in Salesforce
+        function updatePaymentStatus(paymentId, status,orderId) {
+            Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.UE_ApplicationForm_Site.updatePaymentDetails}',
+                paymentId, status,"{!enqId_payment}",orderId,  // Payment ID and status
+                function(result, event) {
+                    if (event.status) {
+                        console.log('Payment details updated successfully in Salesforce.');
+                    } else {
+                        console.error('Failed to update payment details:', event.message);
+                    }
+                },
+                { escape: true }
+            );
+        }
+        // Function to toggle visibility
+        function toggleVisibility() {
+            var content = document.getElementById('Submitid');
+            var paymentContent = document.getElementById('paymentId');
+            
+            if (content.style.display === 'none') {
+                content.style.display = 'block'; // Show the content
+            } else {
+                content.style.display = 'none'; // Hide the content
+            }
+            
+            paymentContent.style.display='none';
+            
+        }
+        //end-added by shashank on 11 oct
+        function validateAndSubmit() {
+            // Call the validateForm function
+            if (validateForm()) {
+                // If validation passes, trigger the command button action
+                document.getElementById('{!$Component.submitButton}').click();
+                return false; // Prevent default button action
+            } else {
+                // Validation failed, do not submit
+                return false; // Prevent form submission
+                console.log('Validation failed, do not submit');
+            }
+        }
+        
+        //onclick="return validateAndSubmit();"                          
+        
+        function validateForm() {
+            var valid = true;
+            if (document.querySelector('[id$=":checkbox2"]').checked) {
+                var fatherElements = document.querySelectorAll(".father-input");
+                var motherElements = document.querySelectorAll(".mother-input");
+                
+                if (document.querySelector('[id$=":Relation"]').value == 'Father') {
+                    
+                    for (var i = 0; i < fatherElements.length; i++) {
+                        if (!fatherElements[i].value) {
+                            valid = false;
+                        }
+                    }
+                    
+                } else if (document.querySelector('[id$=":Relation"]').value == 'Mother') {
+                    for (var i = 0; i < motherElements.length; i++) {
+                        if (!motherElements[i].value) {
+                            valid = false;
+                        }
+                    }
+                }
+            } else {
+                var fatherElements = document.querySelectorAll(".father-input");
+                var motherElements = document.querySelectorAll(".mother-input");
+                
+                for (var i = 0; i < fatherElements.length; i++) {
+                    if (!fatherElements[i].value) {
+                        valid = false;
+                    }
+                }
+                for (var i = 0; i < motherElements.length; i++) {
+                    if (!motherElements[i].value) {
+                        valid = false;
+                    }
+                }
+                
+            }
+            /* if (!valid) {
+                alert('Please fill all the fields');
+            }
+            return valid;
+            */
+        }
+        
+        /*function ApplicationFormDeclaration(istrue){
+            //alert(istrue.checked);
+            if(istrue.checked){
+                var checkval = document.getElementById("Submitid").className = '';
+            }else{
+                var checkval = document.getElementById("Submitid").className = 'disabled';
+            }
+        }*/
+        /*function validatedatafirst(){
+              var SingleParent = document.getElementById("j_id0:frm:j_id54:OnchangeRelationId:checkbox2");
+              alert('SingleParent' + SingleParent);
+             if(SingleParent == true){
+                var SingleParentRelation = document.getElementById("j_id0:frm:j_id54:OnchangeRelationId:j_id171:j_id172:Relation");
+                 alert('SingleParentRelation' + SingleParentRelation);
+             }
+         }*/
+        function OnchangeNationality(OnchangeNationality){
+            actfunNationality(OnchangeNationality);
+            if(OnchangeNationality == "International"){
+                var checkval1 = document.getElementById("InternationalID").style.display='block';
+            }else if(OnchangeNationality == "Indian"){
+                var checkval3 = document.getElementById("InternationalID").style.display='none';
+            }
+        }
+        /* function OnchangeRelation(value){
+            //actfun(value,value,value);  
+            if(value == "Father"){
+                var checkval1 = document.getElementById("FaterValueId").className = '';
+                var checkval3 = document.getElementById("MotherValueId").className = 'disabled';
+                
+            actfun(value);    
+            }else if(value == "Mother"){
+                var checkval1 = document.getElementById("MotherValueId").className = '';
+                var checkval3 = document.getElementById("FaterValueId").className = 'disabled';
+            actfun(value);  
+            }else{
+                var checkval2 = document.getElementById("FaterValueId").className = '';
+                var checkval3 = document.getElementById("MotherValueId").className = '';
+            }
+        }*/
+        function OnchangeRelation(value) {
+            
+            // var selectList = document.querySelector('[id$=":Relation"]'); // Selects element ending with ":Relation"
+            // if (selectList) {
+            //     var selectedValue = selectList.value; // Get the selected value
+            //     alert('Selected Value: ' + document.querySelector('[id$=":Relation"]').value);
+            // } else {
+            //     alert('Select list not found.');
+            // }
+            
+            var fatherElements = document.querySelectorAll(".father-input");
+            var motherElements = document.querySelectorAll(".mother-input");
+            if (value == "Father") {
+                document.getElementById("FaterValueId").className = '';
+                document.getElementById("MotherValueId").className = 'disabled';
+                // toggleInputs(fatherElements, true);
+                // toggleInputs(motherElements, false);
+            } else if (value == "Mother") {
+                document.getElementById("MotherValueId").className = '';
+                document.getElementById("FaterValueId").className = 'disabled';
+                // toggleInputs(fatherElements, false);
+                // toggleInputs(motherElements, true);
+            }/*else if (value == "None"){
+                document.getElementById("FaterValueId").className = '';
+                document.getElementById("MotherValueId").className = '';
+                 toggleInputs(fatherElements, true);
+                 toggleInputs(motherElements, true);
+            }else{
+                document.getElementById("FaterValueId").className = '';
+                document.getElementById("MotherValueId").className = '';
+                 toggleInputs(fatherElements, true);
+                 toggleInputs(motherElements, true);
+            }*/
+             
+             // Calling Apex Remote Action to check parent status
+             UE_ApplicationForm_Site.checkParentStatus(true, value, function(result, event) {
+                 console.log("inside UE_ApplicationForm_Site: ");
+                 if (event.status) {
+                     // Result from Apex Method
+                     /*var fateherPhotoFlag = result.fatherPhotoFlag;
+                    var fateherSignatureFlag = result.fatherSignatureFlag;
+
+                    console.log("Father Photo Flag: " + fateherPhotoFlag);
+                    console.log("Father Signature Flag: " + fateherSignatureFlag);
+                    
+                    if (!fatherPhotoFlag) {
+                        document.getElementById("fatherPhotoDiv").style = 'Display:none;'; // Show the photo
+                    } else {
+                        document.getElementById("fatherPhotoDiv").style = 'Display:none;'; // Hide the photo
+                    }
+                    // You can perform further actions based on these flags here
+                    actfun(value, fateherPhotoFlag, fateherSignatureFlag);
+                    */
+                    
+                    var a = document.getElementById('myDivId');
+                    console.log('a',a);
+                    if (a) {
+                        a.innerHTML = '';
+                        console.log("{!enq.School_Name__c}");
+                        // debugger;
+                        var Id = "{!$CurrentPage.parameters.eid}";
+                        $Lightning.use("c:UploadApp", function () {
+                            $Lightning.createComponent(
+                                "c:FileUploadBundle",
+                                {
+                                    parentId: Id , stdPhoto: 'true',
+                                    fateherPhoto: `${result.fatherPhotoFlag}`,
+                                motherPhoto: `${result.motherPhotoFlag}`,
+                                fateherSignature: `${result.fatherSignatureFlag}`,
+                                motherSignature: `${result.motherSignatureFlag}`,
+                                data : fillData()
+                        }, "myDivId",
+                                       function (cmp) {
+                                           console.log('component created');
+                                           console.log(cmp);
+                                       });
+                    });
+                    createAuraComp2();
+                }
+                  
+              } else {
+                                                        console.error(event.message);
+         }
+        });
+        // createAuraComp();
+        //
+        }
+        
+        
+        
+        function actfun(value, fatherPhotoFlag, fatherSignatureFlag) {
+            // Add your logic to handle further actions based on the flags
+            console.log('Value:', value, 'Photo Flag:', fatherPhotoFlag, 'Signature Flag:', fatherSignatureFlag);
+        }
+        
+        
+        function fatherrequired(){
+            var checkval = document.getElementById("fatherfirstname");
+            console.log(checkval);
+        }
+        function HideMsgFather(istrue)
+        {
+            console.log('istrue' + istrue +'-----'+ istrue.checked);
+            actfunFather(istrue.checked);
+            var checkval = document.getElementById("Fathermsg");
+            if(istrue.checked){var checkval = document.getElementById("Fathermsg").style.display='block';}
+            else{var checkval = document.getElementById("Fathermsg").style.display='none';}
+        }
+        function HideMsgMother(istrue)
+        {   console.log('istrue' + istrue +'-----'+ istrue.checked);
+         actfunMother(istrue.checked);
+         var checkval = document.getElementById("Mothermsg");console.log('checkval'+checkval);
+         if(istrue.checked){console.log('checkval'+ istrue.checked);var checkval = document.getElementById("Mothermsg").style.display='block';}
+         else{console.log('checkval'+ istrue.checked);var checkval = document.getElementById("Mothermsg").style.display='none';}
+        }
+        /*function HideMsgGuardian(istrue)
+        {
+            console.log('istrue' + istrue +'-----'+ istrue.checked);
+            actfunGuardian(istrue.checked);
+            var checkval = document.getElementById("Guardianmsg");
+            if(istrue.checked){var checkval = document.getElementById("Guardianmsg").style.display='block';}
+            else{var checkval = document.getElementById("Guardianmsg").style.display='none';}
+        }*/
+        function HideMsgGuardian(istrue)
+        {
+            console.log('istrue' + istrue +'-----'+ istrue.checked);
+            actfunGuardian(istrue.checked);
+            var GuardianElements = document.getElementsByClassName("Guardian-input");
+            var checkval = document.getElementById("Guardianmsg");
+            if(istrue.checked){
+                var checkval = document.getElementById("Guardianmsg").style.display='block';
+                toggleInputs(GuardianElements, true);
+            }
+            else{
+                toggleInputs(GuardianElements, false);
+                var checkval = document.getElementById("Guardianmsg").style.display='none';
+                
+            }
+            
+            
+            
+        }
+        function toggleInputs(elements, enable) {
+            for (var i = 0; i < elements.length; i++) {
+                if (enable) {
+                    elements[i].setAttribute('required', 'true'); // Add the required attribute
+                } else {
+                    elements[i].removeAttribute('required'); // Remove the required attribute
+                }
+            }
+        }
+        /* function toggleInputs(elements, enable) {
+            for (var i = 0; i < elements.length; i++) {
+                if (enable) {
+                    elements[i].setAttribute('required', 'true'); // Add the required attribute
+                } else {
+                    elements[i].setAttribute('required','false'); // Remove the required attribute
+                }
+            }
+        }*/
+        function HideMsgSingleParent(istrue)
+        {
+            // alert(document.querySelector('[id$=":checkbox2"]').checked);
+            console.log('istrue' + istrue +'-----'+ istrue.checked);
+            actfunSingleParent(istrue.checked);
+            var checkval = document.getElementById("SingleParentmsg");
+            if(istrue.checked){
+                var checkval = document.getElementById("SingleParentmsg").style.display='block';
+            } else{
+                var checkval = document.getElementById("SingleParentmsg").style.display='none'; 
+                var checkval2 = document.getElementById("FaterValueId").className = '';
+                var checkval3 = document.getElementById("MotherValueId").className = '';
+                
+                var a = document.getElementById('myDivId');
+                console.log('a',a);
+                if (a) {
+                    a.innerHTML = '';
+                    console.log("{!enq.School_Name__c}");
+                    // debugger;
+                    var Id = "{!$CurrentPage.parameters.eid}";
+                    $Lightning.use("c:UploadApp", function () {
+                        $Lightning.createComponent(
+                            "c:FileUploadBundle",
+                            {
+                                parentId: Id , stdPhoto: 'true',
+                                fateherPhoto: 'true',
+                                motherPhoto: 'true',
+                                fateherSignature: 'true',
+                                motherSignature: 'true',
+                                data : fillData()
+                            }, "myDivId",
+                            function (cmp) {
+                                console.log('component created');
+                                console.log(cmp);
+                            });
+                    });
+                    createAuraComp2();
+                }
+                
+            }
+        }
+        function HideMsgSibling(istrue)
+        {
+            console.log('istrue Sibling -----'+ istrue.checked);
+            actfunSibling(istrue.checked);
+            var checkval = document.getElementById("Siblingmsg");
+            if(istrue.checked){var checkval = document.getElementById("Siblingmsg").style.display='block';}
+            else{var checkval = document.getElementById("Siblingmsg").style.display='none';}
+        }
+        /*function HideMsgFormB(istrue)
+        {
+            var checkval = document.getElementById("FormBmsg");
+            if(istrue.checked){var checkval = document.getElementById("FormBmsg").style.display='block';}
+            else{var checkval = document.getElementById("FormBmsg").style.display='none';}
+        }*/
+        function checkboxSelection() {
+            // debugger
+            if (event.target.checked) {
+                for (var i of document.querySelectorAll('input[name="medicalHistory"]:checked')) {
+                    i.checked = false;
+                }
+            }
+        }
+        
+        function deselectOtherCheckboxes() {
+            // debugger
+            if (event.target.checked) {
+                for (var i of document.querySelectorAll('input[name="medicalHistory"]:checked')) {
+                    i.checked = false;
+                }
+            }
+        }
+        function deselectNoneOfAboveCheckboxes() {
+            // debugger
+            var medicalHistories = '';
+            if (event.target.checked) {
+                for (var i of document.querySelectorAll('input[name="medicalHistoryDonotTake"]:checked')) {
+                    i.checked = false;
+                }
+                for (var i of document.querySelectorAll('input[name="medicalHistory"]:checked')) {
+                    medicalHistories += i.value + ';';
+                }
+                console.log(medicalHistories);
+                saveFinal(medicalHistories);
+            }
+        }
+        function saveNewFields() {
+            //Saving Physical Disabilities
+            console.log('in save fields');
+            var seperatedDisabilities = '';
+            var medicalHistories = '';
+            var learnings = '';
+            for (var i of document.querySelectorAll('input[name="physicalDisabilities"]:checked')) {
+                seperatedDisabilities += i.value + ';';
+            }
+            for (var i of document.querySelectorAll('input[name="medicalHistory"]:checked')) {
+                medicalHistories += i.value + ';';
+            }
+            for (var i of document.querySelectorAll('input[name="personalizedLearning"]:checked')) {
+                learnings += i.value + ';';
+            }
+            console.log(medicalHistories)
+            
+            saveFinal(seperatedDisabilities, medicalHistories, learnings);
+        }
+        
+        function saveFileRemote(obj_inpf) {
+            // debugger
+            var acc = obj_inpf.files[0];
+            var reader = new FileReader();
+            reader.readAsDataURL(acc);
+            var parentId = "{!$CurrentPage.parameters.eid}";
+            reader.onloadend = function(){
+                imgData = reader.result;
+                Visualforce.remoting.Manager.invokeAction(
+                    '{!$RemoteAction.UE_ApplicationForm_Site.saveFile}',
+                    imgData, obj_inpf.name, acc.name,parentId,
+                    function(result, event){
+                        // alert(event.status)
+                        if (event.status) {
+                            //  alert('Response '+result);
+                        } else if (event.type === 'exception') {
+                            // event.message + "<br/>\n<pre>" + event.where + "</pre>";
+                            console.log('excp');
+                        } else {
+                            console.log('err');
+                        }
+                    },
+                    {escape: true}
+                );
+            }
+        }
+        function doSave(node) {
+            console.log('in doSave  node ');
+            // debugger
+            paraFunction(document.getElementById('oid').value);
+        }
+        
+        createAuraComp();
+        function fillData() {
+            var data = {};
+            data.NameSchool = "{!enq.School_Name__c}";
+            var allvals = document.getElementsByClassName('sendToAura');
+            console.log('createAuraComp called', allvals);
+            for (var i of allvals) {
+                if (i.id.includes('studentname')) {
+                    data.NameStudent = i.innerText
+                }
+                if (i.id.includes('fatherfirstname')) {
+                    data.FirstNameFather = i.value
+                }
+                else if (i.id.includes('fatherLastname')) {
+                    data.LastNameFather = i.value
+                }
+                
+                    else if (i.id.includes('motherfirstname')) {
+                        data.FirstNameMother = i.value
+                    }
+                        else if (i.id.includes('motherlastname')) {
+                            data.LastNameMother = i.value
+                        }
+                
+                
+                
+                            else if (i.id.includes('guardianname')) {
+                                data.NameGuardian = i.value
+                                
+                            }
+            }
+            return data;
+        }
+        function createAuraComp2() {
+            // debugger;
+            
+            var a = document.getElementById('myDivId2');
+            if(a) {
+                a.innerHTML = '';
+                let dataForCheckboxes = {
+                    E2 : '{!enq.Form_E2_Checked__c}',
+                    E1 : '{!enq.Form_E1_Checked__c}',
+                    D : '{!enq.Form_D_Checked__c}',
+                    C : '{!enq.Form_C_Checked__c}',
+                }
+                // console.log('value of enq' ,s);
+                // console.log("{!enq.School_Name__c}");
+                var myDom = document.getElementById('myDivId2');
+                console.log(myDom, 'mydom');
+                console.log('CHECKK:>>>', "{!stdPhotoFlag}");
+                console.log('CHECKK:>>>', "{!fateherPhotoFlag}");
+                console.log('CHECKK:>>>', "{!motherPhotoFlag}");
+                if (myDom) {
+                    var Id = "{!$CurrentPage.parameters.eid}";
+                    $Lightning.use("c:UploadApp", function () {
+                        $Lightning.createComponent(
+                            "c:FileUploadBundle",
+                            {
+                                enquiryObj : dataForCheckboxes,
+                                showForm :true, parentId: Id,
+                                data: fillData()
+                            },
+                            "myDivId2",
+                            function (cmp) {
+                                console.log('component created myDivId2 i.e checklist');
+                                console.log(cmp);
+                            });
+                    });
+                }
+            }
+        }
+        function createAuraComp() {
+            var a = document.getElementById('myDivId');
+            console.log('a',a);
+            if (a) {
+                a.innerHTML = '';
+                console.log("{!enq.School_Name__c}");
+                // debugger;
+                var Id = "{!$CurrentPage.parameters.eid}";
+                $Lightning.use("c:UploadApp", function () {
+                    $Lightning.createComponent(
+                        "c:FileUploadBundle",
+                        {
+                            parentId: Id , stdPhoto: '{!stdPhotoFlag}',
+                            fateherPhoto: '{!fateherPhotoFlag}',
+                            motherPhoto: '{!motherPhotoFlag}',
+                            fateherSignature: '{!fateherSignatureFlag}',
+                            motherSignature: '{!motherSignatureFlag}',
+                            data : fillData()
+                        }, "myDivId",
+                        function (cmp) {
+                            console.log('component created');
+                            console.log(cmp);
+                        });
+                });
+                createAuraComp2();
+            }
+            
+        }
+        
+        function setDateValues() {
+            console.log('in set date');
+            // debugger;
+            var startYear = 1980;
+            var endYear = new Date().getFullYear();
+            //let currentYear = new Date().getFullYear();
+            var optionsString = '';
+            if (startYear < endYear) {
+                for (i = startYear; i < endYear + 1; i++) {
+                    optionsString += "<option value=\"" + i + "\">" + i + "</option>";
+                }
+                $('#calYearPicker').html(optionsString);
+            }
+        }
+        function setDateValuesExpiry() {
+            console.log('in set date');
+            // debugger;
+            var startYear = 2020;
+            var endYear = 2050;
+            var optionsString = '';
+            if (startYear < endYear) {
+                for (i = startYear; i < endYear + 1; i++) {
+                    optionsString += "<option value=\"" + i + "\">" + i + "</option>";
+                }
+                $('#calYearPicker').html(optionsString);
+            }
+        }
+        
+        window.addEventListener("load", function() {
+            console.log('in onload');
+            $.getJSON('https://api.ipify.org?format=jsonp&callback=?', function(data) {
+                console.log(JSON.stringify(data, null, 2));
+                // PARSE USER AGENT
+                var result = bowser.getParser(navigator.userAgent).getResult();
+                
+                //var deviceDetails = 'Browser Name: '+result.browser.name + ' ; ' + 'Browser Version: '+ result.browser.version + ' ; '+ 'Platform Used: '+ result.platform.type + ' ; ' + 'OS Name: '+result.os.name + ' ; '+ 'OS Version: '+ result.os.version + ' ; '+ 'OS Version Name: '+ result.os.versionName + ' ; ' + 'IP Address: ' + data.ip;
+                // alert('Browser Details are '+ deviceDetails);
+                //console.log('bowser.result', result);
+                //console.log('Browser Details are '+ deviceDetails);
+                //$('.device-details').val(deviceDetails);
+                
+                
+                var browserName = result.browser.name;
+                var browserVersion = result.browser.version;
+                var platform = result.platform.type;
+                var osVersionName = result.os.versionName;
+                var osName = result.os.name;
+                var osVersion = result.os.version;
+                var ipAddress = data.ip;
+                
+                
+                $('.browser-name').val(browserName);
+                $('.browser-version').val(browserVersion);
+                $('.platform-used').val(platform);
+                $('.os-name').val(osName);
+                $('.os-version').val(osVersion);
+                $('.os-version-name').val(osVersionName);
+                $('.ip-address').val(ipAddress);
+                
+            });
+            
+        });
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.UE_ApplicationForm_Site.loadMedHistory}',
+            '{!medHistoryLoad}',
+            function (result, event) {
+                // alert(event.status)
+                console.log('result from loadMod remoting' , result);
+                if (event.status) {
+                    for(var r of result) {
+                        var str = 'input[value="' + r +'"]';
+                        console.log(str);
+                        //document.querySelector('input[value="Whooping Cough"]').checked = true
+                        var sel = document.querySelector(str);
+                        if(sel) {
+                            sel.checked = true
+                        }
+                    }
+                } else if (event.type === 'exception') {
+                    // event.message + "<br/>\n<pre>" + event.where + "</pre>";
+                    console.log('excp');
+                } else {
+                    console.log('err');
+                }
+            },
+            { escape: true }
+        );
+        
+        function setBFormAcknowledegement(value) {
+            console.log('setting ack of Form B', value);
+            setBFormAcknowledegementAF(value.checked);
+        }
+        function inputLimiter(e,allow) {
+            var AllowableCharacters = '';
+            
+            if (allow == 'Letters'){AllowableCharacters=' ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';}
+            if (allow == 'Numbers'){AllowableCharacters='1234567890';}
+            if (allow == 'NameCharacters'){AllowableCharacters=' ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';}
+            if (allow == 'NameCharactersAndNumbers'){AllowableCharacters='1234567890 ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';}
+            if (allow == 'Currency'){AllowableCharacters='1234567890.';}
+            
+            var k = document.all?parseInt(e.keyCode): parseInt(e.which);
+            if (k!=13 && k!=8 && k!=0){
+                if ((e.ctrlKey==false) && (e.altKey==false)) {
+                    return (AllowableCharacters.indexOf(String.fromCharCode(k))!=-1);
+                } else {
+                    return true;
+                }
+            } else {
+                return true;
+            }
+        } 
+        </script>
+        <style type="/text/css">
+            .dateFormat{
+            visibility:hidden;
+            }
+            .anotherchildsectionitem fieldset {
+            display: inline-block;
+            }
+        </style>
+    </html>
+</apex:page>

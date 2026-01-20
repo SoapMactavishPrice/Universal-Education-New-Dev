@@ -1,0 +1,26 @@
+<apex:page standardController="Enquiry__c" extensions="UE_ShowEnq_Number" lightningStylesheets="true" sidebar="false" showHeader="false" standardStylesheets="true" >
+    
+    <apex:form >
+        <apex:slds />
+        <center>   
+            <apex:pageBlock >
+                <div style="width:1000px;height:350px;background-color:lightgrey;border: 2px solid black;margin-top: 8%"> 
+                    <Head>
+                        <p>
+                            <center>
+                                <apex:image id="theImg" value="{!$Resource[Sname]}" style="margin-top:2%" width="400" height="400" alt="Successfully Enquiry submitted"/><br/><br/>
+                                <apex:image id="theImage" value="{!$Resource.CheckIcon}" width="100" height="100" alt="Successfully Enquiry submitted"/><br/><br/>
+                               <!-- <font size="5">Thank You for Enquiring with us.</font><br/><br/> --> 
+                                Your Enquiry No.<br/>
+                               
+                                <font size="3"> <b><apex:outputText label="Your Enquiry No. is: " value="{!enq.Name}" ></apex:outputText></b> </font><br/><br/>
+                               <!-- <b>  <font size="1">You will recieve an email notification about admission process soon.</font><br/></b> --> 
+                                
+                            </center>
+                        </p>
+                    </Head>
+                </div>
+            </apex:pageBlock>
+        </center>
+    </apex:form>
+</apex:page>

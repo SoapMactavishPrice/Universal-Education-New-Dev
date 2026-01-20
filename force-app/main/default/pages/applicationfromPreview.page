@@ -1,0 +1,405 @@
+<apex:page standardController="Application_Form__c" extensions="UE_applicationPreview" lightningStylesheets="true" sidebar="false" showHeader="false"  >
+<apex:form >
+  <div style="width:1200px;margin: 0px auto 10px auto;background-color:white;border: 3px solid black;">
+
+    <h1 style="margin-bottom:0px; margin-top:0px;"><b><p  style="text-align:center; margin: 0 !important">
+        FORM A
+        </p></b></h1>
+    <p style="text-align:center; margin-top:0px; margin-bottom:0px;">Application for Admission 2019-2020</p>
+    <apex:outputPanel >
+     <table   style="  border: 1px solid #D3D3D3; border-collapse: collapse" width="100%" >
+            <tr style=" border: 1px solid #D3D3D3; width:100px; height:30px;">
+             <td rowspan="3" style="padding:23px; border: 1px solid #D3D3D3;"><apex:image id="thelogo" value="{!$Resource.logo}" style="margin-top:2%" width="90px" height="70px" /> </td>
+                <td rowspan="3" style="padding-top:0px; border: 1px solid #D3D3D3; "><p style="margin:0px; font-size:14px"><b>{!acc.Name}</b><br/>{!acc.BillingStreet},{!acc.BillingCity},{!acc.BillingState},{!acc.BillingCountry}<br />
+                    {!acc.BillingPostalCode}<br/>{!acc.School_Email__c}</p>
+   </td>
+                <td height="37" width="40%" style="border: 1px solid #D3D3D3;font-size:14px;">Date:</td>
+             <!--   <td height="37" width="65%" style="border: 1px solid #D3D3D3;font-size:14px;">{!Afd[0].CreatedDate}</td> -->
+                <td height="37" width="65%" style="border: 1px solid #D3D3D3;font-size:14px;"><apex:outputText value="{0,date,dd.MM.yyyy}"><apex:param value="{!Afd[0].CreatedDate}"/></apex:outputText></td>
+            </tr>
+            <tr style="border: 1px solid #D3D3D3;">
+             <td height="37" style="border: 1px solid #D3D3D3;font-size:14px;">Enq. No.:</td>
+                <td height="37" style="border: 1px solid #D3D3D3;font-size:14px;" >{!Afd[0].Enquiry_Number__c}</td>
+            </tr>
+            <tr style="border: 1px solid #D3D3D3;" >
+             <td height="20" style="border: 1px solid #D3D3D3;font-size:14px;">Appl. No.: </td>
+                <td height="20" style="border: 1px solid #D3D3D3;font-size:14px;">{!Afd[0].Name}</td>
+            </tr>
+            <tr style="border: 1px solid #D3D3D3;">
+                <td colspan="4" style="border: 1px solid #D3D3D3;font-size:14px;"><span>This application is for Grade:&nbsp;</span><b> <apex:outputField value="{!Afd[0].Seeking_Admission_in_Grade__c}"/></b></td>
+            </tr>
+            <tr style="background-color:#D3D3D3; border: 1px solid #D3D3D3;font-size:14px;">
+                <td colspan="4" style="border: 1px solid #D3D3D3;"><b> 1. Student Information</b></td>
+            </tr>
+            <tr style="border: 1px solid #D3D3D3;font-size:14px;">
+             <td style="border: 1px solid #D3D3D3;font-size:14px;">Name:</td>
+             <td style="border: 1px solid #D3D3D3;font-size:14px;"></td>
+             <td style="border: 1px solid #D3D3D3;font-size:14px;"></td>
+                <td style="border: 1px solid #D3D3D3;font-size:14px;"></td>
+            </tr>
+            <tr style="border: 1px solid #D3D3D3;font-size:14px;">
+                <td style="border: 1px solid #D3D3D3;font-size:14px;"><b>{!enq.Last_Name__c}</b></td>
+             <td style="border: 1px solid #D3D3D3;font-size:14px;"><b>{!enq.FirstName__c}</b></td>
+             <td style="border: 1px solid #D3D3D3;font-size:14px;"><b>{!Afd[0].Father_First_Name__c}</b></td>
+                <td style="border: 1px solid #D3D3D3;font-size:14px;"><b>{!Afd[0].Mother_First_Name__c}</b></td>
+            </tr>
+            <tr style="border: 1px solid #D3D3D3;font-size:14px;">
+                <td style="border: 1px solid #D3D3D3;font-size:14px;">(Surname)</td>
+             <td style="border: 1px solid #D3D3D3;font-size:14px;">(First Name) </td>
+             <td style="border: 1px solid #D3D3D3;font-size:14px;">(Fathers Name)</td>
+                <td style="border: 1px solid #D3D3D3;font-size:14px;">(Mothers name )</td>
+            </tr>
+            <tr style="border: 1px solid #D3D3D3;font-size:14px;">
+                <td style="border: 1px solid #D3D3D3;font-size:14px;">Date of Birth:</td>
+                <td style="border: 1px solid #D3D3D3;font-size:14px;"><b><apex:outputText value="{0,date,dd.MM.yyyy}"><apex:param value="{!enq.Date_of_Birth__c}"/></apex:outputText></b> </td>
+             <td style="border: 1px solid #D3D3D3;font-size:14px;">Gender:</td>
+                <td style="border: 1px solid #D3D3D3;font-size:14px;"><b>{!enq.Gender__c}</b></td>
+            </tr>
+            <tr style="border: 1px solid #D3D3D3;font-size:14px;">
+                <td style="border: 1px solid #D3D3D3;font-size:14px;">Blood Group:</td>
+             <td style="border: 1px solid #D3D3D3;font-size:14px;"><b>{!Afd[0].Blood_Group__c}</b> </td>
+             <td style="border: 1px solid #D3D3D3;font-size:14px;">Birth Place:</td>
+                <td style="border: 1px solid #D3D3D3;font-size:14px;">{!Afd[0].Birth_Place__c}</td>
+            </tr>
+            <tr style="border: 1px solid #D3D3D3;font-size:14px;">
+                <td style="border: 1px solid #D3D3D3;font-size:14px;">Mobile No:</td>
+             <td style="border: 1px solid #D3D3D3;font-size:14px;"><b>{!Afd[0].Mobile_Number__c}</b> </td>
+             <td style="border: 1px solid #D3D3D3;font-size:14px;">Residence No.:</td>
+                <td style="border: 1px solid #D3D3D3;font-size:14px;"><b>{!Afd[0].Residence_No__c}</b></td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #D3D3D3;font-size:14px;">UDISE No.:</td>
+                <td style="border: 1px solid #D3D3D3;font-size:14px;"><b>{!Afd[0].Student_UDISE_No__c}</b></td>
+            </tr>
+            <tr style="border: 1px solid #D3D3D3;font-size:14px;">
+                <td style="border: 1px solid #D3D3D3;font-size:14px;">Nationality:</td>
+             <td style="border: 1px solid #D3D3D3;font-size:14px;"><b>{!Afd[0].Nationality__c}</b> </td>
+             <td style="border: 1px solid #D3D3D3;font-size:14px;">Caste:</td>
+                <td style="border: 1px solid #D3D3D3;font-size:14px;"><b>{!Afd[0].Category__c}</b></td>
+            </tr>
+            <tr style="border: 1px solid #D3D3D3;font-size:14px;">
+                <td style="border: 1px solid #D3D3D3;font-size:14px;">Sub Caste:</td>
+             <td style="border: 1px solid #D3D3D3;font-size:14px;"></td>
+             <td style="border: 1px solid #D3D3D3;font-size:14px;">Religion:</td>
+                <td style="border: 1px solid #D3D3D3;font-size:14px;"><b>{!Afd[0].Religion__c}</b></td>
+            </tr>
+            <tr style="border: 1px solid #D3D3D3;font-size:14px;">
+                <td style="border: 1px solid #D3D3D3font-size:14px;;">Mother Tongue:</td>
+             <td style="border: 1px solid #D3D3D3;font-size:14px;"><b>{!Afd[0].Mother_Tongue__c}</b> </td>
+             <td style="border: 1px solid #D3D3D3;font-size:14px;">Aadhaar Card No.</td>
+                <td style="border: 1px solid #D3D3D3;font-size:14px;">{!Afd[0].Adhaar_Card_No__c}</td>
+            </tr>
+            <tr style="border: 1px solid #D3D3D3;font-size:14px;">
+                <td style="border: 1px solid #D3D3D3;font-size:14px;">Passport No:</td>
+             <td style="border: 1px solid #D3D3D3;font-size:14px;"><b>{!Afd[0].Passport_No__c}</b></td>
+             <td style="border: 1px solid #D3D3D3;font-size:14px;">Expiry Date:</td>
+                <td style="border: 1px solid #D3D3D3;font-size:14px;"><apex:outputText value="{0,date,dd.MM.yyyy}"><apex:param value="{!Afd[0].Expiry_Date__c}"/></apex:outputText></td>
+            </tr>
+            <tr style="background-color:#D3D3D3; border: 1px solid #D3D3D3;font-size:14px;">
+                <td colspan="4" style="border: 1px solid #D3D3D3;font-size:14px;" ><b> 2. Currently Studying</b></td>
+            </tr>
+            <tr style="border: 1px solid #D3D3D3;font-size:14px;">
+             <td style="border: 1px solid #D3D3D3;font-size:14px;">Grade:</td>
+             <td style="border: 1px solid #D3D3D3;font-size:14px;"><b>{!enq.Grade__c}</b></td>
+             <td style="border: 1px solid #D3D3D3;font-size:14px;">School / Institution:</td>
+                <td style="border: 1px solid #D3D3D3;font-size:14px;"><b>{!enq.Enq_School_Institute__c}</b></td>
+            </tr>
+            <tr style="border: 1px solid #D3D3D3;font-size:14px;">
+                <td style="border: 1px solid #D3D3D3;font-size:14px;">Place:</td>
+             <td style="border: 1px solid #D3D3D3;font-size:14px;"></td>
+                <td colspan="2" style="border: 1px solid #D3D3D3;font-size:14px;"></td>
+            </tr>
+            <tr style="background-color:#D3D3D3; border: 1px solid #D3D3D3;font-size:14px;">
+                <td colspan="4" style="border: 1px solid #D3D3D3; border: 1px solid #D3D3D3;font-size:14px;"><b> 3. Address Information</b></td>
+            </tr>
+           <tr style="border: 1px solid #D3D3D3;font-size:14px;">
+                <td style="border: 1px solid #D3D3D3;font-size:14px;">Address:</td>
+             <td style="border: 1px solid #D3D3D3;font-size:14px;"> <b>{!Afd[0].Address__c}</b></td>
+             <td style="border: 1px solid #D3D3D3;font-size:14px;">Area:</td>
+                <td style="border: 1px solid #D3D3D3;font-size:14px;"></td>
+            </tr>
+            <tr style="border: 1px solid #D3D3D3;font-size:14px;">
+                <td style="border: 1px solid #D3D3D3;font-size:14px;">City:</td>
+             <td style="border: 1px solid #D3D3D3;font-size:14px;"><b>{!Afd[0].City__c}</b> </td>
+             <td style="border: 1px solid #D3D3D3;font-size:14px;">State:</td>
+                <td style="border: 1px solid #D3D3D3;font-size:14px;"><b>{!Afd[0].State__c}</b></td>
+            </tr>
+            <tr style="border: 1px solid #D3D3D3;font-size:14px;">
+                <td style="border: 1px solid #D3D3D3;font-size:14px;">Pincode:</td>
+             <td style="border: 1px solid #D3D3D3;font-size:14px;"><b><apex:outputField value="{!Afd[0].Pincode__c}"/></b></td>
+             <td style="border: 1px solid #D3D3D3;font-size:14px;">Country:</td>
+                <td style="border: 1px solid #D3D3D3;font-size:14px;"><b><apex:outputField value="{!Afd[0].Country__c}"/></b></td>
+            </tr>
+            <tr style="background-color:#D3D3D3;border: 1px solid #D3D3D3;font-size:14px;">
+                <td colspan="4" style="border: 1px solid #D3D3D3;font-size:14px;"><b> 4. Father Information</b></td>
+            </tr>
+           <tr style="border: 1px solid #D3D3D3;font-size:14px;">
+                <td style="border: 1px solid #D3D3D3;font-size:14px;">Name: </td>
+             <td colspan="3" style="border: 1px solid #D3D3D3;font-size:14px;"> <b>{!Afd[0].Father_First_Name__c} &nbsp; {!Afd[0].Father_Last_Name__c}</b></td>
+
+            </tr>
+            <tr style="border: 1px solid #D3D3D3;font-size:14px;">
+                <td style="border: 1px solid #D3D3D3;font-size:14px;">Mobile No:</td>
+             <td style="border: 1px solid #D3D3D3;font-size:14px;"><b>{!Afd[0].Father_Phone__c}</b> </td>
+             <td style="border: 1px solid #D3D3D3;font-size:14px;">Email Address:</td>
+                <td style="border: 1px solid #D3D3D3;font-size:14px;"><b>{!Afd[0].Father_Email_Id__c}</b></td>
+            </tr>
+            <tr style="border: 1px solid #D3D3D3;font-size:14px;">
+                <td style="border: 1px solid #D3D3D3;font-size:14px;">Qualification:</td>
+             <td style="border: 1px solid #D3D3D3;font-size:14px;"><b>{!Afd[0].Father_Qualification__c}</b></td>
+             <td style="border: 1px solid #D3D3D3;font-size:14px;">Occupation:</td>
+                <td style="border: 1px solid #D3D3D3;font-size:14px;"><b>{!Afd[0].Father_Occupation__c}</b></td>
+            </tr>
+            <tr style="border: 1px solid #D3D3D3;font-size:14px;">
+                <td style="border: 1px solid #D3D3D3;font-size:14px;">Name of Organisation:</td>
+                <td style="border: 1px solid #D3D3D3;font-size:14px;"><b>{!Afd[0].Father_Name_of_Organisation__c}</b> </td>
+             <td style="border: 1px solid #D3D3D3;font-size:14px;">Business Contact No.:</td>
+                <td style="border: 1px solid #D3D3D3;font-size:14px;"><b>{!Afd[0].Father_Business_Contact__c}</b></td>
+            </tr>
+            <tr style="border: 1px solid #D3D3D3;font-size:14px;">
+                <td style="border: 1px solid #D3D3D3;font-size:14px;">Designation:</td>
+             <td style="border: 1px solid #D3D3D3;font-size:14px;"> <b></b></td>
+             <td style="border: 1px solid #D3D3D3;font-size:14px;">Annual Income(Rs.):</td>
+                <td style="border: 1px solid #D3D3D3;font-size:14px;"><b>{!Afd[0].Father_Annual_Income__c}(in lakhs)</b></td>
+            </tr>
+             <tr style="border: 1px solid #D3D3D3;font-size:14px;">
+                <td style="border: 1px solid #D3D3D3;font-size:14px;">Business Address:</td>
+             <td  style="border: 1px solid #D3D3D3;font-size:14px;"><b>{!Afd[0].Father_Business_Address__c}</b> </td>
+                <td style="border: 1px solid #D3D3D3;font-size:14px;"></td>
+         <td style="border: 1px solid #D3D3D3;font-size:14px;"></td>
+         <tr style="border: 1px solid #D3D3D3;font-size:14px;">
+                <td style="border: 1px solid #D3D3D3;font-size:14px;">Aadhar Card No.:</td>
+                <td style="border: 1px solid #D3D3D3;font-size:14px;"> <b></b>{!Afd[0].Father_Aadhar_Card__c}</td>
+                <td style="border: 1px solid #D3D3D3;font-size:14px;">Pan Card No.:</td>
+                <td style="border: 1px solid #D3D3D3;font-size:14px;"><b>{!Afd[0].Father_Pan_Card_No__c}</b></td>
+            </tr>
+         </tr>
+            <tr style="border: 1px solid #D3D3D3;font-size:14px;">
+             <td style="border: 1px solid #D3D3D3;font-size:14px;">Signature of  Father</td>
+                <td rowspan="2" style="border: 2px solid #A9A9A9;font-size:14px;"></td>
+            </tr>
+            <td height="14" style="border: 1px solid #D3D3D3;font-size:14px;"></td>
+         <tr style="background-color:#D3D3D3; border: 1px solid #D3D3D3;font-size:14px;">
+                <td colspan="4" style="border: 1px solid #D3D3D3;font-size:14px;" ><b> 5. Mother Information</b></td>
+            </tr>
+           <tr style="border: 1px solid #D3D3D3;font-size:14px;">
+                <td style="border: 1px solid #D3D3D3;font-size:14px;">Name: </td>
+             <td colspan="3" style="border: 1px solid #D3D3D3;font-size:14px;"> <b>{!Afd[0].Mother_First_Name__c}&nbsp;{!Afd[0].Mother_Last_Name__c}</b></td>
+
+            </tr>
+            <tr style="border: 1px solid #D3D3D3;font-size:14px;">
+                <td style="border: 1px solid #D3D3D3;font-size:14px;">Mobile No:</td>
+             <td style="border: 1px solid #D3D3D3;font-size:14px;"><b>{!Afd[0].Mother_Phone__c}</b> </td>
+             <td style="border: 1px solid #D3D3D3;font-size:14px;">Email Address:</td>
+                <td style="border: 1px solid #D3D3D3;font-size:14px;"><b>{!Afd[0].Mother_Email_Id__c}</b></td>
+            </tr>
+            <tr style="border: 1px solid #D3D3D3;font-size:14px;">
+                <td style="border: 1px solid #D3D3D3;font-size:14px;">Qualification:</td>
+             <td style="border: 1px solid #D3D3D3;font-size:14px;"><b>{!Afd[0].Mother_Qualification__c}</b></td>
+             <td style="border: 1px solid #D3D3D3;font-size:14px;">Occupation:</td>
+                <td style="border: 1px solid #D3D3D3;font-size:14px;"><b>{!Afd[0].Mother_Occupation__c}</b></td>
+            </tr>
+            <tr style="border: 1px solid #D3D3D3;font-size:14px;">
+                <td style="border: 1px solid #D3D3D3;font-size:14px;">Name of Organisation:</td>
+             <td style="border: 1px solid #D3D3D3;font-size:14px;"><b>{!Afd[0].Mother_Name_of_Organisation__c}</b> </td>
+             <td style="border: 1px solid #D3D3D3;font-size:14px;">Business Contact No.:</td>
+                <td style="border: 1px solid #D3D3D3;font-size:14px;"><b>{!Afd[0].Mother_Business_Contact__c}</b></td>
+            </tr>
+            <tr style="border: 1px solid #D3D3D3;font-size:14px;">
+                <td style="border: 1px solid #D3D3D3;font-size:14px;">Designation:</td>
+             <td style="border: 1px solid #D3D3D3;font-size:14px;"><b></b></td>
+             <td style="border: 1px solid #D3D3D3;font-size:14px;">Annual Income(Rs.):</td>
+                <td style="border: 1px solid #D3D3D3;font-size:14px;"><b>{!Afd[0].Mother_Anual_Income__c}(in lakhs)</b></td>
+            </tr>
+             <tr style="border: 1px solid #D3D3D3;font-size:14px;">
+                <td style="border: 1px solid #D3D3D3;font-size:14px;">Business Address:</td>
+             <td style="border: 1px solid #D3D3D3;font-size:14px;"><b>{!Afd[0].Mother_Business_Address__c}</b> </td>
+                <td style="border: 1px solid #D3D3D3;font-size:14px;"></td>
+         	<td style="border: 1px solid #D3D3D3;font-size:14px;"></td>
+         </tr>
+         <tr style="border: 1px solid #D3D3D3;font-size:14px;">
+                <td style="border: 1px solid #D3D3D3;font-size:14px;">Aadhar Card No.:</td>
+                <td style="border: 1px solid #D3D3D3;font-size:14px;"> <b></b>{!Afd[0].Mother_Adhaar_Card_No__c}</td>
+                <td style="border: 1px solid #D3D3D3;font-size:14px;">Pan Card No.:</td>
+                <td style="border: 1px solid #D3D3D3;font-size:14px;"><b>{!Afd[0].Mother_Pan_Card_No__c}</b></td>
+            </tr>
+            <tr style="border: 1px solid #D3D3D3;font-size:14px;">
+             <td style="border: 1px solid #D3D3D3;font-size:14px;">Signature of Mother</td>
+                <td rowspan="2" style="border: 2px solid #A9A9A9;font-size:14px;"></td>
+            </tr>
+            <td height="14" style="border: 1px solid #D3D3D3;font-size:14px;"></td>
+            <tr style="background-color:#D3D3D3; border: 1px solid #D3D3D3;font-size:14px;">
+                <td colspan="4" style="border: 1px solid #D3D3D3;font-size:14px;" ><b> 6. Guardian Information</b></td>
+            </tr>
+           <tr style="border: 1px solid #D3D3D3;font-size:14px;">
+                <td style="border: 1px solid #D3D3D3;font-size:14px;">Name: </td>
+             <td colspan="3" style="border: 1px solid #D3D3D3;font-size:14px;"> <b>{!Afd[0].Guardian_Name__c}</b></td>
+
+            </tr>
+            <tr style="border: 1px solid #D3D3D3;font-size:14px;">
+                <td style="border: 1px solid #D3D3D3;font-size:14px;">Mobile No.:</td>
+             <td style="border: 1px solid #D3D3D3;font-size:14px;"><b>{!Afd[0].Guardian_Mobile_No__c}</b></td>
+             <td style="border: 1px solid #D3D3D3;font-size:14px;">Email Address:</td>
+                <td style="border: 1px solid #D3D3D3;font-size:14px;"><b>{!Afd[0].Guardian_Email_ID__c}</b></td>
+            </tr>
+            <tr style="border: 1px solid #D3D3D3;font-size:14px;">
+                <td style="border: 1px solid #D3D3D3;font-size:14px;">Relationship:</td>
+                <td style="border: 1px solid #D3D3D3;font-size:14px;"><b>{!Afd[0].Relationship__c}</b></td>
+             <td style="border: 1px solid #D3D3D3;font-size:14px;"></td>
+                <td style="border: 1px solid #D3D3D3;font-size:14px;"></td>
+            </tr>
+  <tr style="border: 1px solid #D3D3D3;font-size:14px;">
+             <td style="border: 1px solid #D3D3D3;font-size:14px;">Signature of Guardian</td>
+                <td rowspan="2" style="border: 2px solid #A9A9A9;font-size:14px;"></td>
+            </tr>
+   <td height="14" style="border: 1px solid #D3D3D3;font-size:14px;"></td>
+
+        </table>
+    </apex:outputPanel>
+     <h1 ><center><b>FORM A</b></center> </h1>
+    <center> Application for Admission 2019-2020</center><br style="line-height:0px;"/>
+    <apex:outputPanel >
+     <table   style="  border: 1px solid #D3D3D3; border-collapse: collapse" width="100%" >
+            <tr style="  border: 1px solid #D3D3D3;font-size:14px;">
+             <td style="  border: 1px solid #D3D3D3;font-size:14px;" >Do you have another child studying with us? :</td>
+                <td style="  border: 1px solid #D3D3D3;font-size:14px; width:35%"><b>{!Afd[0].Do_have_another_child_with_us__c}</b></td>
+            </tr>
+            <tr style="  border: 1px solid #D3D3D3;font-size:14px;">
+             <td style="  border: 1px solid #D3D3D3;font-size:14px;">Do you have children from the same joint family studying with us?</td>
+                <td style="  border: 1px solid #D3D3D3;font-size:14px;"><b>{!Afd[0].Having_Children__c}</b></td>
+            </tr>
+            <tr style="  border: 1px solid #D3D3D3;font-size:14px;">
+             <td style="  border: 1px solid #D3D3D3;font-size:14px; ">Are you seeking admission for another child at Universal? </td>
+                <td style="  border: 1px solid #D3D3D3;font-size:14px; "><b>{!Afd[0].Seeking_Admission_for_another_Child__c}</b></td>
+            </tr>
+            <tr style="  border: 1px solid #D3D3D3;font-size:14px;">
+             <td style="  border: 1px solid #D3D3D3;font-size:14px; ">I wish to admit my child in Universal because  </td>
+                <td style="  border: 1px solid #D3D3D3;font-size:14px; "><b>{!Afd[0].Reason_of_this_School__c}</b></td>
+            </tr>
+        </table><br/><br/><br/>
+        <table  style="  border: 1px solid #D3D3D3; border-collapse: collapse" width="100%">
+            <tr style="  border: 1px solid #D3D3D3;font-size:14px;">
+             <td style="  border: 1px solid #D3D3D3;font-size:14px;font-size:14px;">
+                 <b>Kindly paste recent photo only<br/>(Schengen visa specification required)</b><br/><br/>
+                    <li style="margin-left:2em;font-size:14px;" > Coloured photo on a white background </li>
+                    <li style="margin-left:2em;font-size:14px;" > Size: 3.5cms wide X 4.5cms high</li>
+                    <li style="margin-left:2em;font-size:14px;" >The face must fill approximately 75% of the photo</li>
+                 <p style="margin-top:8px;margin-left:2em;font-size:14px;"> Any other small photo or passport-sizes photo will not be accepted.</p>
+                </td>
+              <Center> <td width="25%" style="  border: 1px solid #D3D3D3;font-size:14px;"><apex:image id="image" value="{!$Resource.student}" style="margin-left:3em;margin-top:5%;margin-bottom:5%" width="220px" height="180px" /> </td></Center>
+            </tr>
+        </table><br/><br/>
+        <center><b>Photos for ID Card</b></center><br/>
+        <div style="height: inherit; text-align: center;">
+
+            <div style="    background: pink;    width: 200px;    display: inline-block;    height: 200px;">
+                <apex:outputPanel rendered="{!studentPhoto != null}">
+                    <img height="200px" width="200px" src="{!studentPhoto}" />
+                </apex:outputPanel>
+                <apex:outputPanel rendered="{!studentPhoto == null}">
+                    <img height="200px" width="200px" src="{!$Resource.NoImage}" />
+                </apex:outputPanel>
+
+                <div style="margin-top:2px;border: 1px solid #D3D3D3; text-align:center;font-size:14px; height: 20px;">
+                    Student Photo
+
+                </div>
+            </div>
+
+            <div style="margin-left: 20px;    margin-right: 20px;    background: pink;    width: 200px;    display: inline-block;    height: 200px;">
+                <apex:outputPanel rendered="{!fatherPhoto != null}">
+                    <img height="200px" width="200px" src="{!fatherPhoto}" />
+                </apex:outputPanel>
+                <apex:outputPanel rendered="{!fatherPhoto == null}">
+                    <img height="200px" width="200px" src="{!$Resource.NoImage}" />
+                </apex:outputPanel>
+                <div style="margin-top:2px;border: 1px solid #D3D3D3; text-align:center;font-size:14px; height: 20px;">
+                    Father / Guardian Photo
+
+                </div>
+            </div>
+
+            <div style="    background: pink;    width: 200px;    display: inline-block;    height: 200px;">
+
+                <apex:outputPanel rendered="{!motherPhoto != null}">
+                    <img height="200px" width="200px" src="{!motherPhoto}" />
+                </apex:outputPanel>
+
+                <apex:outputPanel rendered="{!motherPhoto == null}">
+                    <img height="200px" width="200px" src="{!$Resource.NoImage}" />
+                </apex:outputPanel>
+                <div style="margin-top:2px;border: 1px solid #D3D3D3; text-align:center;font-size:14px; height: 20px;">
+                    Mother / Guardian Photo
+
+                </div>
+            </div>
+
+        </div>
+        <br/><br/><br/>
+
+        <table style="  border: 1px solid #D3D3D3; border-collapse: collapse; "  width="100%">
+            <tr style="height:200px;  border: 1px solid #D3D3D3;">
+                <td style="border: 1px solid #D3D3D3; padding: 20px; width:20%;height:200px"></td>
+                <td style="border: 1px solid #D3D3D3;font-size:14px; padding: 20px;width:20%; height:200px"></td>
+                <td style="border: 1px solid #D3D3D3;font-size:14px; padding: 20px;width:30%; height:200px">
+                    <apex:outputPanel rendered="{!fatherSignaturePhoto != null}">
+                        <img height="200px" width="200px" src="{!fatherSignaturePhoto}" />
+                    </apex:outputPanel>
+                    <apex:outputPanel rendered="{!fatherSignaturePhoto == null}">
+                        <img height="200px" width="200px" src="{!$Resource.NoImage}" />
+                    </apex:outputPanel>
+                </td>
+                <td style="border: 1px solid #D3D3D3; font-size:14px;padding: 20px;width:30%; height:200px">
+                    <apex:outputPanel rendered="{!motherSignaturePhoto != null}">
+                        <img height="200px" width="200px" src="{!motherSignaturePhoto}" />
+                    </apex:outputPanel>
+                    <apex:outputPanel rendered="{!motherSignaturePhoto == null}">
+                        <img height="200px" width="200px" src="{!$Resource.NoImage}" />
+                    </apex:outputPanel>
+
+                </td>
+            </tr>
+            <tr style="border: 1px solid #D3D3D3;">
+                <td style="border: 1px solid #D3D3D3;font-size:14px;">Place</td>
+                <td style="border: 1px solid #D3D3D3;font-size:14px; ">Date</td>
+                <td style="border: 1px solid #D3D3D3;font-size:14px; ">Signature of Father / Guardian </td>
+                <td style="border: 1px solid #D3D3D3;font-size:14px; ">Signature of Mother / Guardian</td>
+            </tr>
+        </table>
+        <hr/><br/>
+        <center><b>FOR OFFICE USE ONLY</b></center><br/>
+        <table style="  border: 1px solid #D3D3D3; border-collapse: collapse; "  width="100%">
+            <tr style="  border: 1px solid #D3D3D3;font-size:14px;">
+             <td style="border: 1px solid #D3D3D3;font-size:14px;">Form Received by</td>
+                <td style="border: 1px solid #D3D3D3;font-size:14px; " width="25%"></td>
+                <td style="border: 1px solid #D3D3D3;font-size:14px; ">Form Verified By</td>
+                <td style="border: 1px solid #D3D3D3;font-size:14px; " width="25%"></td>
+            </tr>
+        </table><br/><br/>
+        <table style="  border: 1px solid #D3D3D3; border-collapse: collapse; "  width="100%">
+            <tr style="  border: 1px solid #D3D3D3;">
+             <td style="border: 1px solid #D3D3D3;padding: 10px;"></td>
+                <td style="border: 1px solid #D3D3D3;font-size:14px; " ></td>
+                <td style="border: 1px solid #D3D3D3;font-size:14px; "></td>
+                <td style="border: 1px solid #D3D3D3;font-size:14px; "></td>
+                <td style="border: 1px solid #D3D3D3;font-size:14px; "></td>
+                <td style="border: 1px solid #D3D3D3;font-size:14px; "></td>
+            </tr>
+            <tr style="  border: 1px solid #D3D3D3;">
+             <td style="border: 1px solid #D3D3D3;">Date</td>
+                <td style="border: 1px solid #D3D3D3;font-size:14px;" >Student ID </td>
+                <td style="border: 1px solid #D3D3D3;font-size:14px;">Grade</td>
+                <td style="border: 1px solid #D3D3D3;font-size:14px; ">Div:</td>
+                <td style="border: 1px solid #D3D3D3;font-size:14px; ">House</td>
+                <td style="border: 1px solid #D3D3D3;font-size:14px;">Shift (if applicable)</td>
+            </tr>
+        </table>
+    </apex:outputPanel>
+       </div>
+        <apex:pageBlock >
+  <center>   <b><apex:commandButton action="{!finalSubmit}" value="Submit The Application Form" onclick="validate()" style="width:250px;height:40px;margin-top:1em;margin-bottom:1em;background-color:MediumSeaGreen;font-size:16px" styleClass="slds-button slds-button_success"/>
+      			<apex:commandButton action="{!editApplication}" value="Change" onclick="validate()" style="width:250px;height:40px;margin-top:1em;margin-bottom:1em;background-color:Grey;font-size:16px" styleClass="slds-button slds-button_success"/></b> </center>
+     </apex:pageBlock>
+
+    </apex:form>
+</apex:page>

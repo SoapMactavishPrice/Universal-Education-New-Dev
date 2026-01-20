@@ -1,0 +1,73 @@
+<apex:page controller="CCAvenuePaymentGateway_Cntl" showHeader="false" standardStylesheets="false" sidebar="false" applyHtmlTag="false" applyBodyTag="false" docType="html-5.0">
+
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" lang="en">
+        <head>
+            <meta charset="utf-8" />
+            <meta http-equiv="x-ua-compatible" content="ie=edge" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <!-- Import the Design System style sheet -->
+            <apex:slds />  
+            <style>
+                .main_div {
+                    background-color: White;
+                    border: 2px solid black;
+                    max-width: 720px;
+                    margin: 8% auto;
+                    padding: 30px 0;
+                }
+                .main_div h2 {
+                    font-weight: bold !important;
+                    text-align: center;
+                    padding: 0 5%;
+                    line-height: 35px !important;
+                }
+                
+                .main_div h3 {
+                    padding: 0 5%;
+                }
+                                
+                pre.pre_style {
+                    white-space: pre-wrap;
+                    margin: 0 auto;
+                    margin-top: 35px;
+                    font-family: 'Salesforce Sans',Arial,sans-serif;
+                    max-width: 90%;
+                    font-size: 14px;
+                    color: black;
+                }
+                
+                h4.fee_app {
+                    margin: 20px auto;
+                    max-width: 90%;
+                    margin-bottom: 40px;
+                    font-size: 14px;
+                    color: black;
+                }
+                
+                @media(max-width:1023px) {                    
+                    .main_div {
+                        width: 90% !important;
+                        margin: 20px auto !important;
+                    }
+                }
+            </style>         
+        </head>
+        <body>
+        
+        <apex:form >
+            <!-- REQUIRED SLDS WRAPPER -->
+            <div class="slds-scope">    
+                <div class="main_div">    
+                
+                <h2 class="slds-align_absolute-center slds-text-heading_large">{!schoolName}</h2>
+                <h3 class="slds-align_absolute-center slds-text-heading_medium" >Online Application Form</h3>
+                <pre class="pre_style">{!schoolText}</pre>
+                <h4 class="fee_app" >Registration fee: Rs: {!amt}{!IF(amt != null,'/-','')}</h4>
+                <apex:commandButton styleClass="slds-align_absolute-center" value="Pay Now" action="{!payNow}" /> <!--styleClass="slds-button slds-button_brand slds-align_absolute-center"-->
+                </div>
+            </div>
+            <!-- / REQUIRED SLDS WRAPPER -->            
+        </apex:form>
+        </body>
+    </html>    
+</apex:page>

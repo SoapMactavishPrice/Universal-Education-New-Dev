@@ -1,0 +1,53 @@
+<aura:component>
+    <aura:attribute name="parentId" type="Id" default="" />
+    <aura:attribute name="data" type="Object" />
+    <aura:attribute name="enquiryObj" type="Object" />
+    <aura:attribute name="showForm" type="Boolean" />
+    <aura:attribute name="stdPhoto" type="Boolean" default="false" />
+    <aura:attribute name="fateherPhoto" type="Boolean" default="false" />
+    <aura:attribute name="motherPhoto" type="Boolean" default="false" />
+    <aura:attribute name="fateherSignature" type="Boolean" default="false" />
+    <aura:attribute name="motherSignature" type="Boolean" default="false" />
+    <!-- {!v.showForm} -->
+    <aura:if isTrue="{!!v.showForm}">
+        <lightning:card>
+            <div class="slds-grid slds-gutters">
+                <div class="slds-col">
+                    <aura:if isTrue="{!v.stdPhoto}">
+                        <span> <c:FileUpload photoName="StudentPhoto" photoText="Student Photo" parentId="{!v.parentId}" isrequired="{!v.stdPhoto}"/> </span>
+                    </aura:if>
+                </div>
+                <div class="slds-col">
+                    <aura:if isTrue="{!v.fateherPhoto}">
+                        <span> <c:FileUpload photoName="FatherPhoto" photoText="Father / Guardian Photo" parentId="{!v.parentId}" isrequired="{!v.fateherPhoto}"/> </span>
+                    </aura:if>
+                </div>
+                <div class="slds-col">
+                    <aura:if isTrue="{!v.motherPhoto}">
+                        <span> <c:FileUpload photoName="MotherPhoto" photoText="Mother / Guardian Photo" parentId="{!v.parentId}" isrequired="{!v.motherPhoto}"/> </span>
+                    </aura:if>
+                </div>
+                <div class="slds-col">
+                    <aura:if isTrue="{!v.fateherSignature}">
+                        <span> <c:FileUpload photoName="FatherSignaturePhoto" photoText="Father / Guardian Signature" parentId="{!v.parentId}" isrequired="{!v.fateherSignature}"/> </span>
+                    </aura:if>
+                </div>
+                <div class="slds-col">
+                    <aura:if isTrue="{!v.motherSignature}">
+                        <span> <c:FileUpload photoName="MotherSignaturePhoto" photoText="Mother / Guardian Signature" parentId="{!v.parentId}" isrequired="{!v.motherSignature}"/> </span>
+                    </aura:if>
+                </div>
+            </div>
+        </lightning:card>
+    </aura:if>
+
+    <aura:if isTrue="{!v.showForm}">
+        <lightning:card>
+            <div style="padding-left:10px; padding-right:10px;">
+                <c:AppChecklist enquiryObj="{!v.enquiryObj}" data="{!v.data}" parentId="{!v.parentId}" />
+            </div>
+            <br/>
+        </lightning:card>
+    </aura:if>
+
+</aura:component>

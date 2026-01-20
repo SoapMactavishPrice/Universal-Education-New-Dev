@@ -1,0 +1,22 @@
+<apex:page showHeader="false" Controller="StudentApplicationFormController">
+    <apex:includeLightning />
+    <div id="lightningvf" style="width: 95%; margin-left: 2.5%; margin-right: 2.5%" />
+    <script>
+
+        // document.addEventListener('lightning__showtoast', event => {
+        // 	sforce.one.showToast(event.toastAttributes);
+        // });
+        $Lightning.use("c:StudentApplicationFormApp", function () {
+            // $Lightning.createComponent("c:studentApplicationFormlwc",
+            $Lightning.createComponent("c:parentStudentApplicationForm",
+                { recordId: '' },
+                "lightningvf",
+                function (cmp) {
+                    console.log('LWC Componenet added in VF page', 'DONE!!!');
+                    // do some stuff
+                }
+            );
+        });
+    </script>
+
+</apex:page>

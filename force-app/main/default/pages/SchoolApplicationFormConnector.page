@@ -1,0 +1,18 @@
+<apex:page showHeader="false" sidebar="false" standardStylesheets="false">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </head>
+    <apex:includeLightning />
+    <div id="lightning" />
+    <script>
+        $Lightning.use("c:ParentApplication", function() {
+            $Lightning.createComponent("c:parentStudentApplicationForm",
+                { enquiryId : "{!$CurrentPage.parameters.eid}"},
+                "lightning",
+                function(cmp) {
+                    console.log("component was created");
+                }
+            );
+        });
+    </script>
+</apex:page>

@@ -1,0 +1,32 @@
+<apex:page sidebar="false" showHeader="false" standardController="Enquiry__c" extensions="LostController" standardStylesheets="true">
+    <apex:form id="theForm">
+        <apex:pageMessages />
+
+        <apex:pageBlock title="Mark Enquiry as Lost" id="out">
+            <apex:pageBlockSection columns="1" collapsible="false">
+                <apex:outputLabel value="Lost Reason:" for="lostReason" />
+                <apex:selectList value="{!Lost_Reasons}" size="1" id="lostReason">
+                    <apex:selectOptions value="{!LeadLost_Reasons}" />
+                </apex:selectList>
+
+                <apex:outputLabel value="Lost Comment:" for="lostComment" />
+                <apex:inputTextarea value="{!LeadReasonLosts}" id="lostComment" style="width: 100%;" cols="4"/>
+            </apex:pageBlockSection>
+
+            <apex:pageBlockButtons location="bottom">
+                <apex:commandButton value="Save" action="{!EnquiryLostPopup}" rerender="out" oncomplete="handleClose();" />
+                <apex:commandButton value="Cancel" onclick="window.close(); return false;" />
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+
+    <script>
+        function handleClose() {
+            // Delay to ensure save completes
+            setTimeout(function () {
+                window.opener.location.reload(); // Refresh parent page
+                window.close(); // Close popup
+            }, 1500);
+        }
+    </script>
+</apex:page>

@@ -1,0 +1,3 @@
+<apex:page standardcontroller="Enquiry__c" tabStyle="Enquiry__c">
+<apex:enhancedList rowsPerPage="100" height="500" type="Enquiry__c"/>
+</apex:page>

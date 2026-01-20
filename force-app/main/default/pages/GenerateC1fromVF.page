@@ -1,0 +1,14 @@
+<apex:page standardController="Admission_Granted__c">
+    <script type="text/javascript">
+        function openApplicationForm() {
+            // Opens the Application Form PDF in a new window
+            var newWin = window.open("/apex/ApplicationFormC1PDF?id={!Admission_Granted__c.Application_Form__c}", "_blank");
+            newWin.focus();
+        }
+    </script>
+
+    <!-- Button to trigger the JavaScript function -->
+    <apex:form >
+        <apex:commandButton value="Open Application Form" onclick="openApplicationForm(); return false;" />
+    </apex:form>
+</apex:page>

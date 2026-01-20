@@ -1,0 +1,19 @@
+<template>
+    <lightning-button label="Mark as Lost" onclick={openModal}></lightning-button>
+
+    <template if:true={isModalOpen}>
+        <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open slds-backdrop">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <h2 class="slds-modal__title">Mark Enquiry as Lost</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium">
+                    <c-enquiry-lost-modal record-id={recordId} onclose={closeModal}></c-enquiry-lost-modal>
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning-button label="Close" variant="neutral" onclick={closeModal}></lightning-button>
+                </footer>
+            </div>
+        </section>
+    </template>
+</template>

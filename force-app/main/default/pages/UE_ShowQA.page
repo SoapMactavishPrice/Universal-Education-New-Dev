@@ -1,0 +1,53 @@
+<apex:page standardController="FAQs__c" extensions="UE_ShowQA">
+    <apex:form >
+        <apex:variable value="{!1}" var="count" />
+   <apex:pageBlock title="FAQs">
+   <!--    <apex:commandbutton value="Search" action="{!search}" Style="float:right;align:right;background:LightBlue;"/> -->
+       <apex:inputText label="Search"  value="{!searchfaq}" />
+      <apex:commandbutton value="Search" action="{!search}" Style="background:LightBlue;"/> 
+     <apex:pageBlockSection rendered="{!show1}">
+         
+    <!-- <apex:pageBlockTable value="{!q}" var="qa" rendered="{!show1}"> 
+          <apex:column headerValue="SR No" >
+                      <apex:outputText value="{!FLOOR(count)}" />
+                     <apex:variable value="{!count+1}" var="count"/>
+                  </apex:column> 
+         
+         <apex:column>
+         <apex:outputField value="{!qa.Questions__c}"/>
+         </apex:column>
+         <apex:column>
+         <apex:outputField value="{!qa.Answer__c}"/>
+         </apex:column> -->
+      <table cellspacing="0" cellpadding="0" border="0px" style="width:100%;float:left;" >
+            <apex:repeat value="{!q}" var="qa">
+                
+            <tr style="Font-size:17px;">
+            <b><th>{!qa.Questions__c}</th></b><br/>
+            </tr> 
+            <tr style="Font-size:14px;">
+                <td>{!qa.Answer__c}</td>
+            </tr>
+            </apex:repeat>    
+        </table> 
+       </apex:pageBlockSection>
+       
+       <apex:pageBlockSection rendered="{!show2}">
+            <table cellspacing="0" cellpadding="0" border="0px" style="width:100%;float:left;" >
+            <apex:repeat value="{!qlist}" var="ql">
+            <tr style="Font-size:17px;">
+                <b><th>{!ql.Questions__c}</th></b><br/></tr>
+            <tr style="Font-size:14px;">
+                <td>{!ql.Answer__c}</td>
+            </tr>
+            </apex:repeat>    
+            </table>              
+         
+   </apex:pageBlockSection>
+        
+   </apex:pageBlock>    
+    
+    
+    </apex:form>
+    
+</apex:page>

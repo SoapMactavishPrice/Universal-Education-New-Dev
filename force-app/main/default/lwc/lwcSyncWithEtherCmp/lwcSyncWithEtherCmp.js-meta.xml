@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+	<masterLabel>lwcSyncWithEtherCmp</masterLabel>
+	<apiVersion>62.0</apiVersion>
+	<description>lwcSyncWithEtherCmp</description>
+	<isExposed>true</isExposed>
+	<targets>
+		<target>lightning__RecordAction</target>
+	</targets>
+</LightningComponentBundle>

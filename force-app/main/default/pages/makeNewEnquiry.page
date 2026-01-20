@@ -1,0 +1,25 @@
+<apex:page standardController="Enquiry__c" extensions="UE_CtrEnquiryForm" lightningStylesheets="true" sidebar="false" showHeader="false" standardStylesheets="true">
+    <apex:form >  
+        <apex:slds />
+        <center> <div style="margin-top: 8%">
+            <Head>
+                <p> 
+                    <font size="6">  <center><b> Application for Admission 2020-21! </b></center> </font>
+                </p>
+                
+            </Head>
+            <apex:panelGrid width="60" border="2"  cellpadding="0" cellspacing="0" bgcolor="white" >
+            <!--   <apex:panelGroup layout="block" style="margin-left:25em;margin-top:1em;"> -->
+                <apex:panelGroup layout="block" style="margin-left:25em;margin-right:25em;">
+                    <b><apex:commandButton value="Make a new Enquiry" action="{!makeNewEnquiry}"  style="width:300px;height:35px;margin-left:15em;margin-top:2em;background-color:DodgerBlue;font-size:16px" styleClass="slds-button slds-button_success"/> <br/>
+                        <br/>
+                        <br/>
+                        <apex:commandButton value="Forget Enquiry No?" action="{!forgotEnquiry}" styleClass="slds-button slds-button_destructive" style="width:300px;height:35px;margin-left:15em;margin-bottom:2em;background-color:Tomato;font-size:16px"/></b>
+                    <!--    <apex:commandButton value="Cancle" action="{!cancle}" immediate="true" styleClass="slds-button slds-button_destructive"/> -->
+                    
+                </apex:panelGroup>
+            </apex:panelGrid>
+            </div>
+        </center>
+    </apex:form>
+</apex:page>

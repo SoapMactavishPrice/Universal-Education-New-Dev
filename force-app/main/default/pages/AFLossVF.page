@@ -1,0 +1,11 @@
+<apex:page standardController="Admission_Form__c">
+    <script type="text/javascript">
+        window.onload = function() {
+            // Open the Lost Admission Form in a new window with specific dimensions
+            var newWindow = window.open('../apex/LostAdmissionForm?id={!Admission_Form__c.Id}', 
+                                        'Popup Name', 
+                                        'width=800, height=600, scrollbars=yes, toolbar=no, status=no');
+            newWindow.focus();
+        }
+    </script>
+</apex:page>

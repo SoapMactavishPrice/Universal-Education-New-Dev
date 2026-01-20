@@ -1,0 +1,6 @@
+<apex:page >
+  <!-- Begin Default Content REMOVE THIS -->
+  <h1>Transaction Cancelled</h1>
+  
+  <!-- End Default Content REMOVE THIS -->
+</apex:page>

@@ -1,0 +1,30 @@
+<apex:page standardController="Application_Form__c" extensions="ApplicationFormC1Ctrl" lightningStylesheets="false" sidebar="false" showHeader="false" renderAs="pdf">
+    <apex:outputPanel >    
+        <!-- Document Checklist -->
+        <hr/>
+        <h3>
+            <b>
+                {!documentList.Name} 
+            </b>
+        </h3>
+        To,
+        <br/>{!enq.School_Name__c}
+        <br/>We <b>{!parentNamesToShowFormC}</b> parents/guardians of
+        <b> {!form.Student_Name__c} </b>
+        <apex:outputText value="{!documentList.Terms__c}" escape="false"/>
+        <table style="border: 1px solid #D3D3D3; border-collapse: collapse;"  width="100%">
+            <tr>
+                <td><apex:outputText value="\n1\" style="color:white;"/></td>
+                <td><apex:outputText value="\d1\" style="color:white;"/></td>
+            </tr>
+            <tr>
+                <td><apex:outputText value="\s1\" style="color:white;"/></td>
+                <td></td>
+            </tr>
+        </table>
+        
+        <apex:outputText value="ParentSignature" style="color:white;"/><br />
+        <apex:outputText value="\n1\" style="color:white;"/><br />
+        <apex:outputText value="\d1\" style="color:white;"/>
+    </apex:outputPanel>
+</apex:page>
