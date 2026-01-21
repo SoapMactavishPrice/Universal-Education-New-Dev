@@ -62,9 +62,7 @@ global class OzonetelCreateLead_API {
             dmlOpts.DuplicateRuleHeader.allowSave = true;
             dmlOpts.DuplicateRuleHeader.runAsCurrentUser = false;
 
-            newLead.setOptions(dmlOpts);
-            
-            insert newLead;
+            Database.insert(newLead, dmlOpts);
             
             responseDataMap.put('status', 'success');
             responseDataMap.put('message', 'Lead Created');

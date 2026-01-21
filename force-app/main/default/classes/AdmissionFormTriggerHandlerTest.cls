@@ -40,6 +40,7 @@ public class AdmissionFormTriggerHandlerTest {
         af2.Status__c = 'New';
         af2.Nationality__c='Indian';
         af2.Registration_No__c='2019-20/II/UHSC/REG/9';
+        af2.Lead__c = ld.Id;
         addlist.add(af2);       
         insert addlist;
         
@@ -52,14 +53,5 @@ public class AdmissionFormTriggerHandlerTest {
         AdmissionFormTriggerHandler.fakeMethod();
         Test.stopTest();
     }
-    
-    
-     @isTest
-    static void testFakeMethod() {
-        // Call the method to ensure coverage
-        AdmissionFormTriggerHandler.fakeMethod();
-    }
-
-
     
 }

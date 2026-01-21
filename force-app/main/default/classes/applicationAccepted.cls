@@ -257,48 +257,6 @@ public class applicationAccepted {
             system.debug('updated Field Application+++'+app.Status__c);
             pg1 = new pageReference('/'+adf.Id);
 
-            //Creating records from parent App Form
-            List<ContentDocumentLink> oldContentDocumentLinks = [
-            SELECT
-                Id,
-                LinkedEntityId,
-                ContentDocumentId
-            FROM
-                ContentDocumentLink
-            WHERE
-                LinkedEntityId = :adf.Id
-            ];
-            List<Id> contentDocIds = new List<Id>();
-            List<Id> contentVerIds = new List<Id>();
-            for (ContentDocumentLink cdl : oldContentDocumentLinks) {                contentDocIds.add(cdl.ContentDocumentId);
-            }
-
-            // List<ContentVersion> lstConVer = [
-            //     Select Id,Description FROM ContentVersion WHERE ContentDocumentId IN :contentDocIds
-            // ];
-            // for (ContentVersion cv : lstConVer) {
-            //     String enquiryId = cv.description.split('-')[0];
-            //     String photoName = cv.description.split('-')[1];
-            //     String appFormId = enquiryToAppForm.get(enquiryId);
-            //     // cv.description = appFormId + '-' + photoName;
-            //     cv.Title = photoName + '-' + appFormId ;
-            // }
-            // update lstConVer;
-            // System.debug('after converting files ====' + lstConver);
-            // delete lstConDist;
-            // delete oldContentDocumentLinks;
-            List<ContentDocumentLink> newContentDocumentLinks = new List<ContentDocumentLink>();
-            for (ContentDocumentLink cdl : oldContentDocumentLinks) {
-                newContentDocumentLinks.add(                    new ContentDocumentLink(
-                        LinkedEntityId = form.Id,                        ContentDocumentId = cdl.ContentDocumentId
-                    )
-                );
-            }
-            //Update public links for application form
-            // for (type variable : List_or_set) {
-
-            // }
-            insert newContentDocumentLinks;
         }
         return pg1;
     }

@@ -54,13 +54,13 @@ ApexPages.addmessage(new ApexPages.message(ApexPages.severity.FATAL,'Application
             
           
             
-            if(enq.Interested__c == false){
-                back = true;
-                ApexPages.addmessage(new ApexPages.message(ApexPages.severity.FATAL,'Parent Interest is Pending!'));
-            }
+            // if(enq.Interested__c == false){
+            //     back = true;
+            //     ApexPages.addmessage(new ApexPages.message(ApexPages.severity.FATAL,'Parent Interest is Pending!'));
+            // }
             
 
-            if(enq.Email__c != null && enq.Interested__c == true){
+            if(enq.Email__c != null){
                 system.debug('##inside##');
                 //          String body='Dear Parent,<br><br>Thank you for registering with the Universal Admission Enquiry System. Your Enquiry no. is '+enq.Name+' You may continue with the admission process. To access the Application form please <a href="http://newdev-universaleducation.cs57.force.com/UE_applicationForm_Site?eid='+enq.id+'">click here.</a><br><br>Best Regards,<br>Universal Admission Enquiry System';
                // String Recordlink = URL.getSalesforceBaseUrl().toExternalForm()+'/'+enq.id;

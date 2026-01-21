@@ -1,0 +1,92 @@
+/* Container for path */
+.path-container {
+    display: flex;
+    align-items: center;
+    margin: 1rem 0;
+}
+
+/* Each stage */
+.path-stage {
+    flex: 1;
+    text-align: center;
+    position: relative;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 60px; /* optional, to prevent text overlapping */
+}
+
+/* Separator chevron between stages */
+.path-stage:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: -15px;
+    width: 0;
+    height: 0;
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid transparent;
+    border-left: 15px solid #d8dde6;
+    transform: translateY(-50%);
+    z-index: 1;
+}
+
+.slds-path__stage {
+    display: contents;
+    color: inherit; /* keep text color from parent li */
+}
+
+/* Completed stages */
+.path-stage.completed {
+    background-color: #4bca81;
+    color: white;
+    font-weight: bold;
+}
+
+.path-stage.completed::after {
+    border-left-color: #4bca81;
+}
+
+.path-stage.completed::before {
+    content: "✔";
+    position: absolute;
+    left: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    color: white;
+}
+
+/* Current stage */
+.path-stage.current {
+    background-color: #1589ee;
+    color: white;
+    font-weight: bold;
+}
+
+.path-stage.current::after {
+    border-left-color: #1589ee;
+}
+
+/* Future/incomplete stages */
+.path-stage.incomplete {
+    background-color: #0555cd;
+    color: black;
+}
+
+/* Hover / focus highlight */
+.path-stage:hover,
+.path-stage:focus,
+.path-stage:active {
+    outline: none;
+    background-color: #e5f2ff; /* light blue highlight */
+    color: inherit;             /* keep text visible */
+}
+
+/* Stage label */
+.path-stage span {
+    display: inline-block;
+    white-space: nowrap;
+    color: inherit; /* always inherit color */
+}

@@ -131,9 +131,13 @@ export default class ScheduleCampusVisit extends NavigationMixin(LightningElemen
     }
 
     handleSubmit() {
+        
         if (!this.selectedSubject || !this.eventRecord.StartDateTime || !this.eventRecord.EndDateTime) {
             this.showToast('Error', 'All fields are required.', 'error');
             return;
+        }
+        if (!this.validateEventDates()) {
+            return; // stop execution if dates are invalid
         }
 
         // Start loading (show spinner)
@@ -185,5 +189,37 @@ export default class ScheduleCampusVisit extends NavigationMixin(LightningElemen
     showToast(title, message, variant) {
         const event = new ShowToastEvent({ title, message, variant });
         this.dispatchEvent(event);
+    }
+
+    validateEventDates() {
+        const { StartDateTime, EndDateTime } = this.eventRecord;
+
+        if (!StartDateTime || !EndDateTime) {
+            this.showToast('Error', 'Both Start and End dates are required.', 'error');
+            return false;
+        }
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // ignore time for comparison
+
+        const startDate = new Date(StartDateTime);
+        const endDate = new Date(EndDateTime);
+
+        if (startDate < today) {
+            this.showToast('Error', 'Start date cannot be in the past.', 'error');
+            return false;
+        }
+
+        if (endDate < today) {
+            this.showToast('Error', 'End date cannot be in the past.', 'error');
+            return false;
+        }
+
+        if (endDate < startDate) {
+            this.showToast('Error', 'End date cannot be before Start date.', 'error');
+            return false;
+        }
+
+        return true; // dates are valid
     }
 }

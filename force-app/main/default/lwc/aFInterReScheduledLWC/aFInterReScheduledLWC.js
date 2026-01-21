@@ -132,6 +132,11 @@ export default class CalledForInteractionOnline_LWC extends NavigationMixin(Ligh
     }
 
     handleSubmit() {
+        if (!this.validateEventDates()) {
+            return; // stop execution if dates are invalid
+        }
+
+        this.isLoading = true;
         // if (!this.selectedSubject || !this.eventRecord.StartDateTime || !this.eventRecord.EndDateTime) {
         //     this.showToast('Error', 'All fields are required.', 'error');
         //     return;
@@ -171,6 +176,7 @@ export default class CalledForInteractionOnline_LWC extends NavigationMixin(Ligh
                 }, 1500);
             })
             .catch(error => {
+                this.isLoading = false;
                 console.error('Error creating event:', error);
                 this.showToast('Error', 'Failed to create event.', 'error');
             });
@@ -200,5 +206,37 @@ export default class CalledForInteractionOnline_LWC extends NavigationMixin(Ligh
             variant: variant,
         });
         this.dispatchEvent(event);
+    }
+
+    validateEventDates() {
+        const { StartDateTime, EndDateTime } = this.eventRecord;
+
+        if (!StartDateTime || !EndDateTime) {
+            this.showToast('Error', 'Both Start and End dates are required.', 'error');
+            return false;
+        }
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // ignore time for comparison
+
+        const startDate = new Date(StartDateTime);
+        const endDate = new Date(EndDateTime);
+
+        if (startDate < today) {
+            this.showToast('Error', 'Start date cannot be in the past.', 'error');
+            return false;
+        }
+
+        if (endDate < today) {
+            this.showToast('Error', 'End date cannot be in the past.', 'error');
+            return false;
+        }
+
+        if (endDate < startDate) {
+            this.showToast('Error', 'End date cannot be before Start date.', 'error');
+            return false;
+        }
+
+        return true; // dates are valid
     }
 }

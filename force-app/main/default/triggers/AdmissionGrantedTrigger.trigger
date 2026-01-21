@@ -13,4 +13,19 @@ if(Trigger.isafter && Trigger.isUpdate){
     if (Trigger.isBefore && (Trigger.isInsert || Trigger.isUpdate)) {
         AdmissionGrantedHandler.updateApplicationCompletedDate(Trigger.new);
     }
+
+    if (Trigger.isAfter && Trigger.isInsert) {
+        TransferNotesAcrossSystem.syncAdmissionFormNotesToAdmissionGranted(Trigger.new, null);
+    }
+
+    if (Trigger.isAfter && Trigger.isUpdate) {
+        RecursiveTriComCurrStatusHandler.isFirstTime = true;
+        List<Lead> leads = new List<Lead> ();
+        for (Admission_Granted__c eachForm:Trigger.new) {
+            Lead lead = new Lead();
+            lead.Id = eachForm.Lead__c;
+            leads.add(lead);
+        }
+        UPDATE leads;
+    }
 }
