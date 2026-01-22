@@ -40,6 +40,7 @@ global class OzonetelCreateLead_API {
             newLead.LastName = jsonObj.LastName;
          //   newLead.Phone = jsonObj.Phone;
             newLead.Email = jsonObj.Email;
+            newLead.Acadmic_Year__c = getCurrentAcademicYear();
             newLead.Company = 'Ozonetel Lead';
             newLead.LeadSource = 'Incoming call';
             
@@ -108,6 +109,18 @@ global class OzonetelCreateLead_API {
     
     public static JSON2ApexData parse(String json) {
         return (JSON2ApexData) System.JSON.deserialize(json, JSON2ApexData.class);
+    }
+
+    private static String getCurrentAcademicYear() {
+        Integer academicYearStartMonth = 6;
+
+        Date today = Date.today();
+        Integer year = today.year();
+
+        Integer startYear = (today.month() >= academicYearStartMonth) ? year : year;
+        Integer endYear = startYear + 1;
+
+        return String.valueOf(startYear) + '-' + String.valueOf(endYear);
     }
     
 }
