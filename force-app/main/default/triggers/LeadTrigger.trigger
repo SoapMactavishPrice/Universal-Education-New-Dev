@@ -11,32 +11,38 @@ trigger LeadTrigger on Lead (before insert, before update, after update) {
         }
     }
     
-    if(Trigger.isBefore && (Trigger.isInsert || Trigger.isUpdate)) {
-        for(Lead ld : Trigger.New) {
-            if(string.isNotBlank(ld.MobilePhone)) {
-                String mobilePhone = ld.MobilePhone;
-                mobilePhone = mobilePhone.replaceAll(' ', '');
-                if(mobilePhone.length() == 10) {
-                    mobilePhone = '91' + mobilePhone;
-                } else if(mobilePhone.startsWith('0')) {
-                    mobilePhone = mobilePhone.replaceFirst('0', '91');
-                }
-                mobilePhone = mobilePhone.replaceAll('\\+', '');
-                ld.MC_Mobile_No__c = mobilePhone;
+    if (Trigger.isBefore && (Trigger.isInsert || Trigger.isUpdate)) {
+        for (Lead ld : Trigger.New) {
+
+            String inputNumber;
+
+            if (String.isNotBlank(ld.MobilePhone)) {
+                inputNumber = ld.MobilePhone;
+            } else if (String.isNotBlank(ld.Phone)) {
+                inputNumber = ld.Phone;
+            } else {
+                continue;
             }
-            else if(string.isNotBlank(ld.Phone)) {
-                String phone = ld.Phone;
-                phone = phone.replaceAll(' ', '');
-                if(phone.length() == 10) {
-                    phone = '91' + phone;
-                } else if(phone.startsWith('0')) {
-                    phone = phone.replaceFirst('0', '91');
-                }
-                phone = phone.replaceAll('\\+', '');
-                ld.MC_Mobile_No__c = phone ;
+
+            inputNumber = inputNumber.replaceAll('\\s', '');
+            inputNumber = inputNumber.replaceAll('\\+', '');
+
+            if (inputNumber.startsWith('91')) {
+                inputNumber = inputNumber.substring(2);
             }
+
+            if (inputNumber.startsWith('0')) {
+                inputNumber = inputNumber.substring(1);
+            }
+
+            if (inputNumber.length() == 10) {
+                inputNumber = '91' + inputNumber;
+            }
+
+            ld.MC_Mobile_No__c = inputNumber;
         }
     }
+
     
     
     if (Test.isRunningTest()) {

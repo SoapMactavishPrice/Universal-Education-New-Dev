@@ -80,6 +80,7 @@ global class OzonetalCreateTaskApi {
             newTask.TransferTo__c = taskObj.transferTo;
             newTask.ucid__c = taskObj.ucid;
             newTask.UUI__c = taskObj.uui;
+            newTask.Call_Status__c = taskObj.callStatus;
             
             insert newTask;
             
@@ -124,6 +125,7 @@ global class OzonetalCreateTaskApi {
         public String subject;
         public String status;
         public String priority;
+        public String callStatus;
         
         public String agentStatus;
         public String agentId;
