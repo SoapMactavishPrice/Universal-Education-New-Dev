@@ -44,6 +44,8 @@ global class getLeadDetailsAPI {
                 FROM Lead
                 WHERE MobilePhone = :jsonObj.customerNumber
                 AND School_Short_Code__c = :schoolShortCode
+                AND Company = 'Ozonetel Lead'
+                AND Acadmic_Year__c = :getCurrentAcademicYear()
                 LIMIT 1
             ];
 
@@ -120,5 +122,17 @@ global class getLeadDetailsAPI {
     public static JSON2ApexData parse(String json) {
         if (String.isBlank(json)) return null;
         return (JSON2ApexData) System.JSON.deserialize(json, JSON2ApexData.class);
+    }
+
+    private static String getCurrentAcademicYear() {
+        Integer academicYearStartMonth = 6;
+
+        Date today = Date.today();
+        Integer year = today.year();
+
+        Integer startYear = year;
+        Integer endYear = startYear + 1;
+
+        return String.valueOf(startYear) + '-' + String.valueOf(endYear);
     }
 }

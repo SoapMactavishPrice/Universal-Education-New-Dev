@@ -69,7 +69,7 @@ public class UpdateLeadOwnerQueueable implements Queueable {
             return;
         }
 
-        if (t.Call_Status__c == 'Fail') {
+        if (new List<String>{'Missed','NA','None','Done','Customer Missed','NO_ANSWER','User Disconnected','Unanswered','NOT ANSWERED', 'Fail'}.contains(t.Call_Status__c)) {
 
             Lead leadForNotify = [
                 SELECT Id, OwnerId
@@ -94,6 +94,8 @@ public class UpdateLeadOwnerQueueable implements Queueable {
 
             Set<String> recipients = new Set<String>{ String.valueOf(leadForNotify.OwnerId) };
             notification.send(recipients);
+
+            return;
         }
 
         if (t.WhoId == null || 
@@ -107,6 +109,7 @@ public class UpdateLeadOwnerQueueable implements Queueable {
             SELECT Id
             FROM Task
             WHERE WhoId = :t.WhoId
+            AND Subject LIKE 'CTI%'
         ];
 
         if (relatedTasks.size() > 1) {
