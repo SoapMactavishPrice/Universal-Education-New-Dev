@@ -110,6 +110,7 @@ public class UpdateLeadOwnerQueueable implements Queueable {
             FROM Task
             WHERE WhoId = :t.WhoId
             AND Subject LIKE 'CTI%'
+            AND Call_Status__c NOT IN ('Missed','NA','None','Done','Customer Missed','NO_ANSWER','User Disconnected','Unanswered','NOT ANSWERED', 'Fail')
         ];
 
         if (relatedTasks.size() > 1) {

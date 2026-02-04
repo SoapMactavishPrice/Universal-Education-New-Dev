@@ -417,6 +417,8 @@ public class ActivityTasksCountHandler_test {
       email.HtmlBody = 'Test email body';
       email.RelatedToId = af2.Id;
       insert email;
+
+      ActivityTasksCountHandler.testMethod1();
       
    }
    
@@ -542,7 +544,6 @@ public class ActivityTasksCountHandler_test {
       insert email;
 
       ActivityTasksCountHandler.testMethod1();
-      
       
       
       
