@@ -167,6 +167,7 @@ public without sharing class StudentApplicationFormController {
         applicationForm.Adhaar_Card_No__c = (String)studentData.get('aadharNo');
         //
         applicationForm.Student_UDISE_No__c = (String)studentData.get('udiseNo');
+        applicationForm.PEN__c = (String)studentData.get('penNo');
         applicationForm.Name_of_the_person__c = (String)studentData.get('contactName');
         applicationForm.Emergency_Contact_No__c = (String)studentData.get('countryCode')+(String)studentData.get('contactMobile');
         applicationForm.Relationship_with_the_Student__c = (String)studentData.get('contactRelation');
@@ -235,7 +236,7 @@ public without sharing class StudentApplicationFormController {
             Application_Form__c student = [
                 SELECT Id, Academic_Year__c, Name,Student_Name__c, Gender__c, Curriculum__c, Seeking_Grade__c, Country1__c, Mental_Problem_Please_Specify__c,
                        Category__c, Sibling_Grade_applying_for__c, Email_Address__c, Mobile_Number__c,Lead__c, Is_Sibling__c, Sibling_Status__c, Sibling_Current_School_Grade__c,
-                       Enquiry__c,Nationality__c, Country__c, Passport_No__c, Expiry_Date__c, OCI_Visa__c,Student_Flat_No_House_No__c,Student_Building_Apartment_Name__c,Student_Street__c,Student_Landmark__c, Student_Area__c, City__c,State__c,Pincode__c,Date_of_Birth__c,Birth_Place__c,Caste__c,Mother_Tongue__c, Country_Code__c,
+                       Enquiry__c,Nationality__c, Country__c, Passport_No__c, Expiry_Date__c, OCI_Visa__c,Student_Flat_No_House_No__c,Student_Building_Apartment_Name__c,Student_Street__c,Student_Landmark__c, Student_Area__c, City__c,State__c,Pincode__c,Date_of_Birth__c,Birth_Place__c,Caste__c,Mother_Tongue__c, Country_Code__c, PEN__c,
                        Adhaar_Card_No__c,Student_UDISE_No__c,Religion__c,Name_of_the_person__c,Emergency_Contact_No__c,Relationship_with_the_Student__c,Grade__c,Past_School_Institute__c,Past_School_Place__c,Sibling_First_Name__c,Sibling_Last_Name__c,Sibling_Gender__c,Sibling_Date_of_Birth__c,Sibling_School_Name__c,Sibling_Enrollment_Number__c,Blood_Group__c,Is_the_child_taking_any_medication__c,Please_specify_any_medication__c,Allergies__c,Share_the_Allergies__c,Any_mental_physical_problem__c,Practitioner_Name__c,Practitioner_Address__c,Practitioner_Clinic_Phone__c,Practitioner_Mobile__c
                 FROM Application_Form__c 
                 WHERE Id = :studentId 
@@ -276,6 +277,7 @@ public without sharing class StudentApplicationFormController {
                 'motherTongue' => student.Mother_Tongue__c,
                 'aadharNo' => student.Adhaar_Card_No__c,
                 'udiseNo' => student.Student_UDISE_No__c,
+                'penNo' => student.PEN__c,
                 'contactName' => student.Name_of_the_person__c,
                 'contactMobile' => student.Emergency_Contact_No__c,
                 'contactRelation' => student.Relationship_with_the_Student__c,

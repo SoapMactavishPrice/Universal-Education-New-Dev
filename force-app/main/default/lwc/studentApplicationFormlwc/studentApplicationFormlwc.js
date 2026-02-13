@@ -465,6 +465,10 @@ export default class StudentApplicationFormlwc extends LightningElement {
         return this.isSaveClicked && this.student.udiseNo && this.student.udiseNo.length != 11;
     }
 
+    get showPenNoValidation() {
+        return this.isSaveClicked && this.student.penNo && this.student.penNo.length != 12;
+    }
+
     get showDobValidation() {
         return this.isSaveClicked && (!this.student.dob || this.isFutureDate(this.student.dob));
     }
@@ -653,7 +657,8 @@ export default class StudentApplicationFormlwc extends LightningElement {
             !this.showClinePhoneNumberValidation &&
             !this.showAadharCardValidation &&
             !this.showUdiseNoValidation &&
-            !this.showBloodGroupValidation;
+            !this.showBloodGroupValidation &&
+            !this.showPenNoValidation;
     }
 
     get mobileNumberConcatinated() {
@@ -877,6 +882,7 @@ export default class StudentApplicationFormlwc extends LightningElement {
                     siblingEnrollmentNumber: result.siblingEnrollmentNumber,
                     siblingCurrentSchool: result.siblingCurrentSchool,
                     countryCode: result.countryCode,
+                    penNo: result.penNo
                 };
 
                 this.student.contactMobile = this.removeSubstring(this.student.countryCode, this.student.contactMobile);
@@ -930,12 +936,13 @@ export default class StudentApplicationFormlwc extends LightningElement {
             return;
         }
 
-        if (field == 'passportNo') {
+        if (field == 'passportNo' || field == 'penNo') {
             const input = value.toUpperCase();
             this.student = { ...this.student, [field]: input };
             event.target.value = input;
             return;
         }
+
         this.student = { ...this.student, [field]: value };
 
         if (this.errors[field]) {
@@ -1012,6 +1019,8 @@ export default class StudentApplicationFormlwc extends LightningElement {
         }
         // this.debugWholeValidation(); //Uncomment it to debug the whole validation.
         console.log('wholeValidation', this.wholeValidation);
+
+        console.log('student info: ', JSON.parse(JSON.stringify(this.student)));
 
         if (this.isIndian) {
             this.student.country = 'India';

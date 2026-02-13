@@ -19,12 +19,24 @@ trigger LeadDuplicateInsertTrigger on Lead (before insert, after insert, before 
             lg.Name = l.Name;
             
             if (l.MobilePhone != null && !String.isBlank(l.MobilePhone)) {
-                l.DupMobileNumber__c = l.MobilePhone.right(10);
-                
-                if (l.MobilePhone.length() == 10 || l.MobilePhone.contains('+') == false) {
-                    l.MobilePhone = '+91' + l.MobilePhone;
+
+                String phone = l.MobilePhone.replaceAll('\\s','');
+
+                l.DupMobileNumber__c = phone.right(10);
+
+                if (phone.startsWith('91')) {
+                    if (phone.length() == 12) {
+                        l.MobilePhone = '+' + phone;
+                    } else if (phone.length() == 10) {
+                        l.MobilePhone = '+91' + phone;
+                    }
+                } else {
+                    if (phone.length() == 10) {
+                        l.MobilePhone = '+91' + phone;
+                    }
                 }
             }
+
             
             if (String.isBlank(l.MobilePhone)) {
                 if (!String.isBlank(l.Phone)) {

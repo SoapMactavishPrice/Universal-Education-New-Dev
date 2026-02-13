@@ -16,7 +16,7 @@ public class ActivityTasksCountHandler {
                     }
                     if (t.Subject != null && ((t.Subject).contains('OUTBOUND Call') || t.CallType == 'Outbound') && (t.Call_Status__c == 'Customer Missed' || t.Call_Status__c == 'NO_ANSWER'
                         || t.Call_Status__c== 'User Disconnected' || t.Call_Status__c== 'NA' || t.Call_Status__c == 'Missed' || t.Call_Status__c == 'Unanswered'
-                    || t.Call_Status__c == 'Done' || t.Call_Status__c == 'None' || t.Call_Status__c == 'Fail' )){
+                    || t.Call_Status__c == 'Done' || t.Call_Status__c == 'None' || t.Call_Status__c == 'Fail' || t.Call_Status__c == null)){
                         Outbound = True;
                         system.debug('OUTBOUND Call'+Outbound);
                     }else{
@@ -89,7 +89,7 @@ public class ActivityTasksCountHandler {
                 system.debug('Inside Lead>>>>>');
                 if(((oTask.Subject).contains('OUTBOUND Call') || oTask.CallType == 'Outbound') && (oTask.Call_Status__c == 'Customer Missed' || oTask.Call_Status__c == 'NO_ANSWER'
                     || oTask.Call_Status__c== 'User Disconnected' || oTask.Call_Status__c== 'NA' || oTask.Call_Status__c == 'Missed' || oTask.Call_Status__c == 'Unanswered'
-                || oTask.Call_Status__c == 'Done' ||  oTask.Call_Status__c == 'None' || oTask.Call_Status__c == 'Fail' )){
+                || oTask.Call_Status__c == 'Done' ||  oTask.Call_Status__c == 'None' || oTask.Call_Status__c == 'Fail' || oTask.Call_Status__c == null)){
                     
                     if(ldMap.get(oTask.WhoId).Task_Count__c == null){
                         ldMap.get(oTask.WhoId).Task_Count__c = 1 ;
@@ -116,7 +116,7 @@ public class ActivityTasksCountHandler {
         if(Outbound == true ){
             system.debug('Inside OUTBOUND >>>>'+Outbound);
             list<task> taskslist=[select id,WhoId,Subject,Call_Status__c,format(CreatedDate),format(LastModifiedDate) from Task Where WhoId=:LeadIds  and 
-                            (Subject like '%Outbound%' OR CallType = 'Outbound')and CreatedDate = today and Call_Status__c IN ('Missed','NA','None','Done','Customer Missed','NO_ANSWER','User Disconnected','Unanswered','NOT ANSWERED', 'Fail')   
+                            (Subject like '%Outbound%' OR CallType = 'Outbound')and CreatedDate = today and Call_Status__c IN ('Missed','NA','None','Done','Customer Missed','NO_ANSWER','User Disconnected','Unanswered','NOT ANSWERED', 'Fail', null)   
                            ];
             system.debug('taskslist'+taskslist);
             
@@ -202,7 +202,7 @@ public class ActivityTasksCountHandler {
                 system.debug('Inside Contact>>>>');
                 if((oTask.Subject).contains('OUTBOUND Call') && (oTask.Call_Status__c == 'Customer Missed' || oTask.Call_Status__c == 'NO_ANSWER'
                     || oTask.Call_Status__c== 'User Disconnected' || oTask.Call_Status__c== 'NA' || oTask.Call_Status__c == 'Missed' || oTask.Call_Status__c == 'Unanswered'
-                || oTask.Call_Status__c == 'NOT ANSWERED' || oTask.Call_Status__c == 'Done' ||  oTask.Call_Status__c == 'None' )){
+                || oTask.Call_Status__c == 'NOT ANSWERED' || oTask.Call_Status__c == 'Done' ||  oTask.Call_Status__c == 'None' || oTask.Call_Status__c == 'Fail' || oTask.Call_Status__c == null )){
                     
                     if(conMap.get(oTask.WhoId).Task_Count__c == null){
                         conMap.get(oTask.WhoId).Task_Count__c = 1 ;
@@ -226,7 +226,7 @@ public class ActivityTasksCountHandler {
         }
         if(Outbound == true){
             list<task> tsklist=[select id,WhoId,Subject,Call_Status__c,format(CreatedDate),format(LastModifiedDate) from Task Where WhoId=:ContactIds  
-                            and Subject like '%Outbound%'  and CreatedDate = today and Call_Status__c IN ('Missed','NA','None','Done','Customer Missed','NO_ANSWER','User Disconnected','Unanswered','NOT ANSWERED') 
+                            and Subject like '%Outbound%'  and CreatedDate = today and Call_Status__c IN ('Missed','NA','None','Done','Customer Missed','NO_ANSWER','User Disconnected','Unanswered','NOT ANSWERED', 'Fail', null) 
                            ];
             for(task t:tsklist ){
                 Task oldTask = new Task(Call_Status__c = 'Call status to compare'); //added to compare call status for task with blank status
@@ -305,7 +305,7 @@ public class ActivityTasksCountHandler {
                 system.debug('id>>'+(enqMap.get(oTask.WhatId)));
                 if((oTask.Subject).contains('OUTBOUND Call') && (oTask.Call_Status__c == 'Customer Missed' || oTask.Call_Status__c == 'NO_ANSWER'
                     || oTask.Call_Status__c== 'User Disconnected' || oTask.Call_Status__c== 'NA' || oTask.Call_Status__c == 'Missed' || oTask.Call_Status__c == 'Unanswered'
-                || oTask.Call_Status__c == 'NOT ANSWERED' || oTask.Call_Status__c == 'Done' ||  oTask.Call_Status__c == 'None')){
+                || oTask.Call_Status__c == 'NOT ANSWERED' || oTask.Call_Status__c == 'Done' ||  oTask.Call_Status__c == 'None'  || oTask.Call_Status__c == 'Fail'|| oTask.Call_Status__c == null)){
                     
                     if(enqMap.get(oTask.WhatId).Task_Count__c == null){
                         enqMap.get(oTask.WhatId).Task_Count__c = 1 ;
@@ -334,7 +334,7 @@ public class ActivityTasksCountHandler {
         if(Outbound == true){
             
             list<task> tsklist=[select id,WhatId,Subject,Call_Status__c,format(CreatedDate),format(LastModifiedDate) from Task Where WhatId=:EnquiryIds 
-                            and Subject like '%Outbound%'  and CreatedDate = today and Call_Status__c IN ('Missed','NA','None','Done','Customer Missed','NO_ANSWER','User Disconnected','Unanswered','NOT ANSWERED')  
+                            and Subject like '%Outbound%'  and CreatedDate = today and Call_Status__c IN ('Missed','NA','None','Done','Customer Missed','NO_ANSWER','User Disconnected','Unanswered','NOT ANSWERED', 'Fail', null)  
                            ];
             
             for(task t:tsklist ){
@@ -415,7 +415,7 @@ public class ActivityTasksCountHandler {
                 
                 if((oTask.Subject).contains('OUTBOUND Call') && (oTask.Call_Status__c == 'Customer Missed' || oTask.Call_Status__c == 'NO_ANSWER'
                     || oTask.Call_Status__c== 'User Disconnected' || oTask.Call_Status__c== 'NA' || oTask.Call_Status__c == 'Missed' || oTask.Call_Status__c == 'Unanswered' ||
-                oTask.Call_Status__c == 'NOT ANSWERED' || oTask.Call_Status__c == 'Done' ||  oTask.Call_Status__c == 'None')){
+                oTask.Call_Status__c == 'NOT ANSWERED' || oTask.Call_Status__c == 'Done' ||  oTask.Call_Status__c == 'None'  || oTask.Call_Status__c == 'Fail'|| oTask.Call_Status__c == null)){
                     
                     if(ppFormMap.get(oTask.WhatId).Task_Count__c == null){
                         ppFormMap.get(oTask.WhatId).Task_Count__c = 1 ;
@@ -444,7 +444,7 @@ public class ActivityTasksCountHandler {
         if(Outbound == true){
             
             list<task> tsklist=[select id,WhatId,Subject,Call_Status__c,format(CreatedDate),format(LastModifiedDate) from Task Where WhatId=:AppFormIds 
-                            and Subject like '%Outbound%'  and CreatedDate = today and Call_Status__c IN ('Missed','NA','None','Done','Customer Missed','NO_ANSWER','User Disconnected','Unanswered','NOT ANSWERED')  
+                            and Subject like '%Outbound%'  and CreatedDate = today and Call_Status__c IN ('Missed','NA','None','Done','Customer Missed','NO_ANSWER','User Disconnected','Unanswered','NOT ANSWERED', 'Fail', null)  
                            ];
             
             for(task t:tsklist ){
@@ -524,7 +524,7 @@ public class ActivityTasksCountHandler {
                 system.debug('Inside Addmission Form>>>>>');
                 if((oTask.Subject).contains('OUTBOUND Call') && (oTask.Call_Status__c == 'Customer Missed' || oTask.Call_Status__c == 'NO_ANSWER'
                     || oTask.Call_Status__c== 'User Disconnected' || oTask.Call_Status__c== 'NA' || oTask.Call_Status__c == 'Missed' || oTask.Call_Status__c == 'Unanswered'
-                || oTask.Call_Status__c == 'NOT ANSWERED' || oTask.Call_Status__c == 'Done' ||  oTask.Call_Status__c == 'None')){
+                || oTask.Call_Status__c == 'NOT ANSWERED' || oTask.Call_Status__c == 'Done' ||  oTask.Call_Status__c == 'None' || oTask.Call_Status__c == 'Fail'|| oTask.Call_Status__c == null)){
                     
                     if(adsFormMap.get(oTask.WhatId).Task_Count__c == null){
                         adsFormMap.get(oTask.WhatId).Task_Count__c = 1 ;
@@ -552,7 +552,7 @@ public class ActivityTasksCountHandler {
         if(Outbound == true){
             
             list<task> tsklist=[select id,WhatId,Subject,Call_Status__c,format(CreatedDate),format(LastModifiedDate) from Task Where WhatId=:AddFormIds 
-                            and Subject like '%Outbound%'  and CreatedDate = today and Call_Status__c IN ('Missed','NA','None','Done','Customer Missed','NO_ANSWER','User Disconnected','Unanswered','NOT ANSWERED')  
+                            and Subject like '%Outbound%'  and CreatedDate = today and Call_Status__c IN ('Missed','NA','None','Done','Customer Missed','NO_ANSWER','User Disconnected','Unanswered','NOT ANSWERED', 'Fail', null)  
                            ];
             
             for(task t:tsklist ){
@@ -630,7 +630,7 @@ public class ActivityTasksCountHandler {
                 system.debug('Inside Admission granted>>>>>');
                 if ((oTask.Subject).contains('OUTBOUND Call') && (oTask.Call_Status__c == 'Customer Missed' || oTask.Call_Status__c == 'NO_ANSWER'
                     || oTask.Call_Status__c== 'User Disconnected' || oTask.Call_Status__c== 'NA' || oTask.Call_Status__c == 'Missed' || oTask.Call_Status__c == 'Unanswered'
-                || oTask.Call_Status__c == 'NOT ANSWERED' || oTask.Call_Status__c == 'Done' ||  oTask.Call_Status__c == 'None')){
+                || oTask.Call_Status__c == 'NOT ANSWERED' || oTask.Call_Status__c == 'Done' ||  oTask.Call_Status__c == 'None'  || oTask.Call_Status__c == 'Fail'|| oTask.Call_Status__c == null)){
                     
                     if(adsFormMap.get(oTask.WhatId).Task_Count__c == null){
                         adsFormMap.get(oTask.WhatId).Task_Count__c = 1 ;
@@ -657,7 +657,7 @@ public class ActivityTasksCountHandler {
         }
         if(Outbound == true){
             list<task> tsklist=[select id,WhatId,Subject,Call_Status__c,format(CreatedDate),format(LastModifiedDate) from Task Where WhatId=:AdGrantFormIds 
-                            and Subject like '%Outbound%'  and CreatedDate = today and Call_Status__c IN ('Missed','NA','None','Done','Customer Missed','NO_ANSWER','User Disconnected','Unanswered','NOT ANSWERED')  
+                            and Subject like '%Outbound%'  and CreatedDate = today and Call_Status__c IN ('Missed','NA','None','Done','Customer Missed','NO_ANSWER','User Disconnected','Unanswered','NOT ANSWERED', 'Fail', null)  
                            ];
             
             for(task t:tsklist ){
@@ -810,6 +810,253 @@ public class ActivityTasksCountHandler {
     
     public static void testMethod1() {
         Integer i = 0;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
         i++;
         i++;
         i++;

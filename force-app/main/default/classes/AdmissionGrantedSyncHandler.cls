@@ -337,7 +337,7 @@ Global class AdmissionGrantedSyncHandler {
                                    Annual_Income_FF__c,
                                    Guardian_Aadhaar_Card_No_FF__c,
                                    Guardian_Pan_Card_No_FF__c,
-                                   Name_of_Department_FF__c,
+                                   Name_of_Department_FF__c, PEN__c,
                                    FR_PaymentLink__c,Request__c,Responce__c,Ether_Remark__c
                                    FROM Admission_Granted__c Where ID=:AGid ];
         
@@ -409,6 +409,9 @@ Global class AdmissionGrantedSyncHandler {
         }
         if (ag.EMIS_No_FF__c != null) {
             fieldkeymap.put('disecode',ag.EMIS_No_FF__c);
+        }
+        if (ag.PEN__c != null) {
+            fieldkeymap.put('penNo', ag.PEN__c);
         }
         fieldkeymap.put('mother_tongue',ag.mother_tongue__c);
         fieldkeymap.put('address',ag.Final_Address__c);

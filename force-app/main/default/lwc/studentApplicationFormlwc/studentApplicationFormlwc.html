@@ -448,6 +448,16 @@
 										</template>
 									</lightning-layout-item>
 
+									<lightning-layout-item size="12" small-device-size="12" medium-device-size="12"
+										large-device-size="4" class="slds-p-horizontal_small">
+										<lightning-input class="input-element"
+											label="PEN (only for Grade-2 and above)" name="penNo" max-length="12"
+											value={student.penNo} onchange={handleInputChange}></lightning-input>
+										<template if:true={showPenNoValidation}>
+											<div class="slds-text-color_error">Please enter 12 digits</div>
+										</template>
+									</lightning-layout-item>
+
 								</lightning-layout>
 							</lightning-accordion-section>
 

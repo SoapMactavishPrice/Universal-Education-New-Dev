@@ -55,7 +55,7 @@ global class OzonetalCreateTaskApi {
                 newTask.Priority = taskObj.priority;
             }
             
-            newTask.Subject = 'Missed CTI Lead';
+            newTask.Subject = 'CTI Task';
             newTask.Priority = 'Normal';
             newTask.Status = 'Completed';
             newTask.Agent_Status__c = taskObj.agentStatus;

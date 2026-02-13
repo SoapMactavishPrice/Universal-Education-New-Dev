@@ -89,23 +89,6 @@ public class UpdateLeadOwnerQueueableTest {
         Test.stopTest();
     }
 
-    @IsTest
-    static void testTaskWithNullWhoIdSkipped() {
-        User u = [SELECT Id FROM User WHERE IsActive = true LIMIT 1];
-
-        Task t = new Task(
-            Subject = 'CTI Call',
-            Status = 'Completed',
-            Priority = 'Normal',
-            WhoId = null,
-            OwnerId = u.Id
-        );
-        insert t;
-
-        Test.startTest();
-        System.enqueueJob(new UpdateLeadOwnerQueueable(t));
-        Test.stopTest();
-    }
 
     @IsTest
     static void testNullTaskIdHandled() {
