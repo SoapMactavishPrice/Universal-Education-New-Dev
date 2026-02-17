@@ -222,6 +222,12 @@ public class LeadStageAndStatusHandler {
                     continue;
                 }
 
+                if (l.Dormant__c == true) {
+                    l.Lead_Status__c = 'Dormant';
+                    System.debug('Lead ' + l.Id + ' is marked as Dormant, setting Lead_Status__c to "Dormant"');
+                    continue;
+                }
+
                 System.debug('Processing Lead ' + l.Id + ' starting Status: ' + l.Lead_Status__c);
                 Enquiry__c enq = enquiryByLead.get(l.Id);
                 if (enq != null && enq.Application_Link_Sent__c == true) {

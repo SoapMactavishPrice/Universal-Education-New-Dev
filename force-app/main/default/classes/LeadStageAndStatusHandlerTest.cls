@@ -46,7 +46,7 @@ public class LeadStageAndStatusHandlerTest {
         insert admGranted;
 
         // Re-query lead to simulate trigger.new
-        Lead leadToUpdate = [SELECT Id, Converted__c, Lead_Stage__c, Lead_Status__c FROM Lead WHERE Id = :l.Id LIMIT 1];
+        Lead leadToUpdate = [SELECT Id, Converted__c, Lead_Stage__c, Lead_Status__c, Dormant__c FROM Lead WHERE Id = :l.Id LIMIT 1];
         leadToUpdate.Converted__c = true;
 
         Test.startTest();
