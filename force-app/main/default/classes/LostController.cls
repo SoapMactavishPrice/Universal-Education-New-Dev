@@ -34,7 +34,6 @@ public class LostController {
         List<SelectOption> options = new List<SelectOption>();
         Schema.DescribeFieldResult fieldResult = Lead.Lost_Reasons__c.getDescribe();
         List<Schema.PicklistEntry> ple = fieldResult.getPicklistValues();
-        options.add(new SelectOption('','Reject'));
         for( Schema.PicklistEntry f : ple)
         {
             options.add(new SelectOption(f.getLabel(), f.getValue()));
@@ -117,6 +116,16 @@ public class LostController {
         
     }
     public PageReference EnquiryLostPopup(){
+        if (String.isBlank(Lost_Reasons) || Lost_Reasons == 'Reject') {
+            ApexPages.addMessage(new ApexPages.Message(
+                ApexPages.Severity.ERROR, 'Lost Reason is mandatory.'));
+            return null;
+        }
+        if (String.isBlank(LeadReasonLosts)) {
+            ApexPages.addMessage(new ApexPages.Message(
+                ApexPages.Severity.ERROR, 'Lost Comment is mandatory.'));
+            return null;
+        }
         PageReference pg;
         List<Enquiry__c> slstlead = [select Id,Lost_Date_Time__c,Stages__c,Lead_ID__c,Reason_Lost__c,Reason_Losts__c,Reason_Lost_Object__c from Enquiry__c where Id=:IdParamName];
         for(Enquiry__c olead : slstlead){ErrorTrue = olead.Reason_Lost__c;}

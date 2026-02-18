@@ -1,49 +1,127 @@
 <apex:page sidebar="false" showHeader="false" standardController="Enquiry__c" extensions="LostController" standardStylesheets="true">
     <style>
-        .modal {
-        display: none;
+        .modal { display: none; }
+        .errorMsg { 
+            color: red; 
+            font-weight: bold; 
+            margin: 5px 0; 
+            padding: 8px; 
+            background: #fff3f3; 
+            border: 1px solid #c00; 
+            display: none; 
         }
+        .reqMark { color: red; font-weight: bold; margin-right: 3px; }
     </style>
+
     <script>
-    function Closewindow()
-    {
-        if({!ErrorTrue}== true){
-            alert("Reason Lost Already Done !");
-        }else{
-        window.opener.location.href="/{!IdParamName}";
-        self.close();}
-    }
-    function Countle()
-    {
-        var strlen = document.getElementById('{!$Component.theForm.out.LeadReasonLosts}').value.length;
-        if(strlen <= 200){
-            alert("Make sure the input is greater than 200 characters long !");
+        function Closewindow() {
+            if ({!ErrorTrue} == true) {
+                alert("Reason Lost Already Done!");
+            } else {
+                window.opener.location.href = "/{!IdParamName}";
+                self.close();
+            }
         }
-    }
+
+        function runValidationAndSave() {
+            var errorDiv = document.getElementById('clientErrorMsg');
+            var errors   = [];
+
+            var reasonEl  = null;
+            var commentEl = null;
+
+            var allSelects   = document.getElementsByTagName('select');
+            var allTextareas = document.getElementsByTagName('textarea');
+
+            for (var i = 0; i < allSelects.length; i++) {
+                if (allSelects[i].id.indexOf('lostReasonsList') !== -1) {
+                    reasonEl = allSelects[i];
+                    break;
+                }
+            }
+            for (var i = 0; i < allTextareas.length; i++) {
+                if (allTextareas[i].id.indexOf('LeadReasonLosts') !== -1) {
+                    commentEl = allTextareas[i];
+                    break;
+                }
+            }
+
+            // Lost Reason — blank means nothing selected
+            if (!reasonEl || reasonEl.value === '') {
+                errors.push('Lost Reason is mandatory.');
+            }
+
+            // Lost Comment — non-empty check only
+            var comment = commentEl ? commentEl.value.trim() : '';
+            if (comment === '') {
+                errors.push('Lost Comment is mandatory.');
+            }
+
+            if (errors.length > 0) {
+                errorDiv.innerHTML = errors.join('<br/>');
+                errorDiv.style.display = 'block';
+                return; // stop here, Apex never called
+            }
+
+            errorDiv.style.display = 'none';
+            doEnquiryLostSave(); // call Apex only when validation passes
+        }
     </script>
+
     <apex:slds />
     <apex:form id="theForm">
-        
-        <apex:pageBlock title="" id="out" >
-            
-            <apex:pageBlockButtons >
-                <apex:commandButton value="Save" action="{!EnquiryLostPopup}" rerender="out,LeadReasonLosts" status="actStatusId" onclick="setTimeout(Closewindow, 5000)" />
+
+        <!-- actionFunction — completely separate from the button -->
+        <apex:actionFunction name="doEnquiryLostSave"
+                             action="{!EnquiryLostPopup}"
+                             rerender="out, errorPanel"
+                             status="actStatusId"
+                             oncomplete="setTimeout(Closewindow, 2000);" />
+
+        <apex:pageBlock title="" id="out">
+
+            <apex:pageBlockButtons>
+                <button type="button" onclick="runValidationAndSave();">Save</button>
                 <apex:actionStatus id="actStatusId">
                     <apex:facet name="start">
                         <img src="/img/loading.gif" />
                     </apex:facet>
                 </apex:actionStatus>
             </apex:pageBlockButtons>
-            <apex:outputPanel id="ErrorTrue" rendered="{!ErrorTrue}"><apex:pageMessages ></apex:pageMessages>
+
+            <!-- Client-side errors -->
+            <div id="clientErrorMsg" class="errorMsg"></div>
+
+            <!-- Server-side errors -->
+            <apex:outputPanel id="errorPanel">
+                <apex:pageMessages />
             </apex:outputPanel>
+
+            <!-- Lost Reason (mandatory) -->
             <apex:pageBlockSection collapsible="false" columns="1">
-               Lost Reasons : <apex:selectList value="{!Lost_Reasons}"  size="1">
-                    <apex:selectOptions value="{!LeadLost_Reasons}"/>
-                </apex:selectList>
+                <apex:pageBlockSectionItem>
+                    <apex:outputLabel for="lostReasonsList">
+                        <span class="reqMark">*</span>Lost Reason
+                    </apex:outputLabel>
+                    <apex:selectList value="{!Lost_Reasons}" size="1" id="lostReasonsList">
+                        <apex:selectOptions value="{!LeadLost_Reasons}" />
+                    </apex:selectList>
+                </apex:pageBlockSectionItem>
             </apex:pageBlockSection>
-            <apex:pageBlockSection columns="1" collapsible="false">
-            Lost Comment: <apex:inputTextarea value="{!LeadReasonLosts}" onchange="Countle();" id="LeadReasonLosts" style="width: 670px;" cols="5"/>
+
+            <!-- Lost Comment (mandatory) -->
+            <apex:pageBlockSection collapsible="false" columns="1">
+                <apex:pageBlockSectionItem>
+                    <apex:outputLabel for="LeadReasonLosts">
+                        <span class="reqMark">*</span>Lost Comment
+                    </apex:outputLabel>
+                    <apex:inputTextarea value="{!LeadReasonLosts}"
+                                        id="LeadReasonLosts"
+                                        style="width:670px;"
+                                        cols="5" />
+                </apex:pageBlockSectionItem>
             </apex:pageBlockSection>
-        </apex:pageblock>
+
+        </apex:pageBlock>
     </apex:form>
 </apex:page>
