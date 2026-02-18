@@ -223,7 +223,7 @@ enqname='ENQ/'+SAcademicYear+'/'+nDataName;
                 //ocontact.AccountId
                 if(ocontact.Program__c!=null){
                     
-                    List <Class__c> cl=[ Select id ,name from Class__c where name =:ocontact.Program__c and School_Name__c=:ocontact.AccountId ];
+                    List <Class__c> cl=[ SELECT Id ,Name FROM Class__c WHERE Name =:ocontact.Program__c AND School_Name__c=:ocontact.AccountId ];
                     system.debug('888 '+cl);
                     if(cl!=null && cl.size()>0)
                     {

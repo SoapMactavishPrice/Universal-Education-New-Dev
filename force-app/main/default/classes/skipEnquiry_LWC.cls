@@ -166,7 +166,7 @@ public class skipEnquiry_LWC {
                 system.debug('888'+ocontact.Stellar_Seeking_Admission_in_Grade__c);
                 system.debug('888'+ocontact.AccountId);
                 //ocontact.AccountId
-               /* if(ocontact.Program__c!=null){
+                if(ocontact.Program__c!=null){
                     
                     List <Class__c> cl=[ Select id ,name from Class__c where name =:ocontact.Program__c and School_Name__c=:ocontact.AccountId ];
                     system.debug('888 '+cl);
@@ -174,7 +174,7 @@ public class skipEnquiry_LWC {
                     {
                         oEnquiry.Seeking_Grade__c=cl[0].id;
                     }
-                }*/
+                }
                 // oEnquiry.Seeking_Grade__c=ocontact.Stellar_Seeking_Admission_in_Grade__c;
                 oEnquiry.School_Institution__c = ocontact.Accountid;
                 liistEnquiry.add(oEnquiry);
