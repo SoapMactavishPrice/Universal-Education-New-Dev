@@ -88,4 +88,32 @@ public class ApplicationTrgFormHandler {
             // }
         }
     }
+
+    public static void updateApplicationFormOwnerWithLeadOwner(List<Application_Form__c> appForms) {
+
+        Set<Id> enquiryIds = new Set<Id>();
+        
+        for (Application_Form__c form : appForms) {
+            if (form.Enquiry__c != null) {
+                enquiryIds.add(form.Enquiry__c);
+            }
+        }
+        
+        if (enquiryIds.isEmpty()) return;
+        
+        Map<Id, Enquiry__c> enquiryMap = new Map<Id, Enquiry__c>(
+            [SELECT Id, OwnerId, Lead__c, Lead__r.OwnerId FROM Enquiry__c WHERE Id IN :enquiryIds]
+        );
+        
+        for (Application_Form__c form : appForms) {
+            if (form.Enquiry__c != null && enquiryMap.containsKey(form.Enquiry__c)) {
+                Enquiry__c enq = enquiryMap.get(form.Enquiry__c);
+                
+                if (enq.Lead__c != null && enq.Lead__r != null && enq.Lead__r.OwnerId != null) {
+                    form.OwnerId = enq.Lead__r.OwnerId;
+                }
+            }
+        }
+
+    }
 }

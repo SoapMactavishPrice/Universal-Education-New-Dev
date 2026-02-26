@@ -1,4 +1,4 @@
-trigger ApplicationFormTrigger on Application_Form__c (after Insert, after Update) {
+trigger ApplicationFormTrigger on Application_Form__c (before insert, after Insert, after Update) {
 
     if (Trigger.isAfter) {
         // Call the handler method to process insert and update logic
@@ -6,6 +6,10 @@ trigger ApplicationFormTrigger on Application_Form__c (after Insert, after Updat
      //   ApplicationFormTriggerHandler.updateAddressFields(Trigger.new);
         ApplicationTrgFormHandler.syncLeadFieldsFromApplicationForm(Trigger.new);
         ApplicationTrgFormHandler.syncEnquiryFieldsFromApplicationForm(Trigger.new);
+    }
+
+    if (Trigger.isBefore && Trigger.isInsert) {
+        ApplicationTrgFormHandler.updateApplicationFormOwnerWithLeadOwner(Trigger.new);
     }
 
     if (Trigger.isAfter && Trigger.isUpdate) {

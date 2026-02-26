@@ -411,7 +411,7 @@ Global class AdmissionGrantedSyncHandler {
             fieldkeymap.put('disecode',ag.EMIS_No_FF__c);
         }
         if (ag.PEN__c != null) {
-            fieldkeymap.put('penNo', ag.PEN__c);
+            fieldkeymap.put('pen_no', ag.PEN__c);
         }
         fieldkeymap.put('mother_tongue',ag.mother_tongue__c);
         fieldkeymap.put('address',ag.Final_Address__c);

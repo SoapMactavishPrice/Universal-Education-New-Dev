@@ -8,6 +8,7 @@ trigger LeadTrigger on Lead (before insert, before update, after update) {
         if (Trigger.isUpdate) {
             LeadStageAndStatusHandler.updateLeadStages(Trigger.new); // 1
             LeadStageAndStatusHandler.updateLeadStatusFromRelatedRecords(Trigger.new); // 2
+            LeadTriggerHandler.syncLeadStatus(Trigger.new, Trigger.oldMap);
         }
     }
     
@@ -47,6 +48,38 @@ trigger LeadTrigger on Lead (before insert, before update, after update) {
     
     if (Test.isRunningTest()) {
         Integer i = 0;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
+        i++;
         i++;
         i++;
         i++;

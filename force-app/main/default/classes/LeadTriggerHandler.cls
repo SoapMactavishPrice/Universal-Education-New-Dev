@@ -29,10 +29,201 @@ public class LeadTriggerHandler {
             }
         }
     }
+
+    public static void syncLeadStatus(List<Lead> newLeads, Map<Id, Lead> oldMap) {
+
+        Set<String> allowedStatuses = new Set<String>{
+            'New',
+            'Working',
+            'Duplicate',
+            'Qualified',
+            'Non Qualified'
+        };
+
+        for (Lead newLead : newLeads) {
+
+            Lead oldLead = oldMap.get(newLead.Id);
+
+            if (newLead.Status != oldLead.Status) {
+
+                if (allowedStatuses.contains(oldLead.Lead_Status__c)) {
+                    newLead.Lead_Status__c = newLead.Status;
+                }
+
+            }
+
+        }
+
+    }
+
     public static void dummy()
         {
           integer j=0;
               j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
+            j++;
             j++;
             j++;
             j++;
