@@ -55,7 +55,7 @@ global class OzonetalCreateTaskApi {
                 newTask.Priority = taskObj.priority;
             }
             
-            newTask.Subject = 'CTI Lead';
+            newTask.Subject = 'Missed CTI Lead';
             newTask.Priority = 'Normal';
             newTask.Status = 'Completed';
             newTask.Agent_Status__c = taskObj.agentStatus;
@@ -80,6 +80,7 @@ global class OzonetalCreateTaskApi {
             newTask.TransferTo__c = taskObj.transferTo;
             newTask.ucid__c = taskObj.ucid;
             newTask.UUI__c = taskObj.uui;
+            newTask.Call_Status__c = taskObj.callStatus;
             
             insert newTask;
             
@@ -124,6 +125,7 @@ global class OzonetalCreateTaskApi {
         public String subject;
         public String status;
         public String priority;
+        public String callStatus;
         
         public String agentStatus;
         public String agentId;

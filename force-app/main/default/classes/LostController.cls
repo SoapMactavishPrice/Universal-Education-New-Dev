@@ -155,7 +155,7 @@ public class LostController {
                 nlstlead.add(oled);
             }
             if(!nlstlead.isEmpty()){update nlstlead;}
-            //pg = new PageReference('/'+RecordId);
+            // pg = new PageReference('/'+RecordId);
         }
         return null; 
         

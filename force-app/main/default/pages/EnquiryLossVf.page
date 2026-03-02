@@ -1,0 +1,18 @@
+<apex:page standardController="Enquiry__c" showHeader="false" sidebar="false">
+    <script type="text/javascript">
+        // Wait for the page to load
+        window.onload = function() {
+            // Get the current record's ID (from the standard controller)
+            var recordId = "{!Enquiry__c.Id}";
+
+            // Open a new window (popup) with the desired URL
+            var newWindow = window.open('../apex/LostEnquiryLauncher?id=' + recordId,
+                'Popup Name',
+                'width=800, height=600,scrollbars=yes,toolbar=no,status=no'
+            );
+            
+            // Focus on the newly opened window
+            newWindow.focus();
+        };
+    </script>
+</apex:page>
