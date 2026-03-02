@@ -19,19 +19,11 @@
                 value={lostComment}
                 onchange={handleCommentChange}>
             </lightning-textarea>
-            <p style="font-size: 12px; color: #888;">* Comment must be at least 200 characters.</p>
         </div>
     </lightning-modal-body>
 
     <lightning-modal-footer>
     <div class="slds-grid slds-grid_align-spread slds-grid_vertical-align-center slds-p-around_x-small">
-
-        <!-- Left side: Message -->
-        <div class="slds-col">
-            <template if:true={Message}>
-                <span style="color: red;">{Message}</span>
-            </template>
-        </div>
 
         <!-- Right side: Buttons -->
         <div class="slds-col slds-grid slds-grid_align-right slds-gutter_small">
