@@ -65,7 +65,7 @@ public class reassignLeadController {
     // Save the selected school for the lead and update its status
     @AuraEnabled
     public static String saveLead(String leadId, String accountId) {
-        try {
+        // try {
             // Fetch the lead record
             Lead leadRecord = [SELECT Id, School_Institution__c, Current_Location__c, Status 
                                FROM Lead WHERE Id = :leadId];
@@ -82,11 +82,11 @@ public class reassignLeadController {
 
             // Return success message
             return 'Lead transferred successfully';
-        } catch (Exception e) {
-            // Log the error and throw an exception if something goes wrong
-            System.debug('Error in saveLead: ' + e.getMessage());
-            throw new AuraHandledException('Error saving lead. Please try again.');
-        }
+        // } catch (Exception e) {
+        //     // Log the error and throw an exception if something goes wrong
+        //     System.debug('Error in saveLead: ' + e.getMessage());
+        //     throw new AuraHandledException('Error saving lead. Please try again.');
+        // }
     }
 }
 
