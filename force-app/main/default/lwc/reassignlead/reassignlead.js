@@ -72,14 +72,14 @@ export default class Reassignlead extends NavigationMixin(LightningElement) {
             return;
         }
 
-        if (!this.leadRecord || !this.leadRecord.Current_Location__c) {
-            this.dispatchEvent(new ShowToastEvent({
-                title: 'Error',
-                message: 'Please add a Current Location to the lead before changing the school.',
-                variant: 'error',
-            }));
-            return;
-        }
+        // if (!this.leadRecord || !this.leadRecord.Current_Location__c) {
+        //     this.dispatchEvent(new ShowToastEvent({
+        //         title: 'Error',
+        //         message: 'Please add a Current Location to the lead before changing the school.',
+        //         variant: 'error',
+        //     }));
+        //     return;
+        // }
 
         saveLead({ leadId: this.leadRecordId, accountId: this.selectedSchool })
             .then((result) => {
