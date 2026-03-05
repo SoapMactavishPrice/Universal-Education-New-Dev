@@ -1,0 +1,35 @@
+<template>
+    <lightning-quick-action-panel header="Mark Lead as Lost">
+        <div class="slds-p-around_medium">
+            <lightning-combobox
+                name="lostReason"
+                label="Lost Reasons"
+                value={lostReason}
+                options={lostReasonOptions}
+                onchange={handleReasonChange}
+            ></lightning-combobox>
+
+            <lightning-textarea
+                class="slds-m-top_medium"
+                name="lostComment"
+                label="Lost Comment"
+                value={lostComment}
+                onchange={handleCommentChange}
+            ></lightning-textarea>
+        </div>
+
+        <div slot="footer">
+            <lightning-button
+                label="Cancel"
+                onclick={handleCancel}
+            ></lightning-button>
+            <lightning-button
+                class="slds-m-left_small"
+                variant="brand"
+                label="Save"
+                onclick={handleSave}
+                disabled={isSaving}
+            ></lightning-button>
+        </div>
+    </lightning-quick-action-panel>
+</template>
