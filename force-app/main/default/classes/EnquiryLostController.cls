@@ -22,12 +22,19 @@ public with sharing class EnquiryLostController {
 
     @AuraEnabled
     public static void saveEnquiryLost(Id recordId, String lostReason, String comment) {
-        Enquiry__c enquiry = [SELECT Id, Reason_Lost__c, Reason_Losts__c, Lost_Reasons__c, Stages__c FROM Enquiry__c WHERE Id = :recordId LIMIT 1];
+        Enquiry__c enquiry = [SELECT Id, Reason_Lost__c, Reason_Losts__c, Lost_Reasons__c, Stages__c, Lead__c FROM Enquiry__c WHERE Id = :recordId LIMIT 1];
         enquiry.Reason_Lost__c = true;
         enquiry.Reason_Losts__c = comment;
         enquiry.Lost_Reasons__c = lostReason;
         enquiry.Stages__c = 'Lost';
         enquiry.Lost_Date_Time__c = System.now();
         update enquiry;
+
+        Lead lead = new Lead(Id = enquiry.Lead__c);
+        lead.Reason_Lost__c = true;
+        lead.Reason_Losts__c = comment;
+        lead.Lost_Reasons__c = lostReason;
+        lead.Lost_Date_Time__c = System.now();
+        update lead;
     }
 }
