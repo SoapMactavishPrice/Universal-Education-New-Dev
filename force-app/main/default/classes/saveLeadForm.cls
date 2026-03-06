@@ -110,6 +110,118 @@ global without sharing class saveLeadForm {
                         system.debug('from inside 2 key '+key);
                         Lead ld = new Lead();
                         ld.Id =  LeadMap.get((key).toLowerCase()).Id;
+                        ld.School_Institution__c	 = accMap.get(lds.schoolCode); 
+                        ld.LeadSource = lds.LeadSource;
+                        ld.Lead_Dashboard_Id__c	 = lds.LeadDashBoardId;
+                        
+                        ld.Are_you_a_single_parent__c = lds.Are_you_a_single_parent;
+                        
+                        if(string.isNotBlank(lds.pinCode))
+                            ld.Pin_code__c = lds.pinCode;
+                        if(string.isNotBlank(lds.Father_s_First_Name))
+                            ld.Father_s_First_Name__c = lds.Father_s_First_Name;
+                        if(string.isNotBlank(lds.Mother_s_First_Name))
+                            ld.Mother_s_First_Name__c = lds.Mother_s_First_Name;
+                        if(string.isNotBlank(lds.Father_s_Last_Name))
+                            ld.Father_s_Last_Name__c = lds.Father_s_Last_Name;
+                        if(string.isNotBlank(lds.Mother_s_Last_Name))
+                            ld.Mother_s_Last_Name__c = lds.Mother_s_Last_Name;
+                        if(string.isNotBlank(lds.Father_s_Linkedin_profile))
+                            ld.Father_s_Linkedin_profile__c = lds.Father_s_Linkedin_profile;
+                        if(string.isNotBlank(lds.Mother_s_Linkedin_profile))
+                            ld.Mother_s_Linkedin_profile__c = lds.Mother_s_Linkedin_profile;
+                        if(string.isNotBlank(lds.Name_of_the_organisation_father))
+                            ld.Name_of_the_organisation_father__c  = lds.Name_of_the_organisation_father;
+                        if(string.isNotBlank(lds.Name_of_the_organisation_Mother))
+                            ld.Name_of_the_organisation_Mother__c = lds.Name_of_the_organisation_Mother;
+                        if(string.isNotBlank(lds.Father_s_Mobile_number))
+                            ld.Father_s_Mobile_number__c  = lds.Father_s_Mobile_number;
+                        if(string.isNotBlank(lds.Mother_s_Mobile_number))
+                            ld.Mother_s_Mobile_number__c = lds.Mother_s_Mobile_number;
+                        if(string.isNotBlank(lds.Father_s_Designation))
+                            ld.Father_s_Designation__c = lds.Father_s_Designation;
+                        if(string.isNotBlank(lds.Mother_s_Designation))
+                            ld.Mother_s_Designation__c = lds.Mother_s_Designation;
+                        if(string.isNotBlank(lds.Father_s_Email_ID))
+                            ld.Father_s_Email_ID__c = lds.Father_s_Email_ID;
+                        if(string.isNotBlank(lds.Mother_s_Email_ID))
+                            ld.Mother_s_Email_ID__c = lds.Mother_s_Email_ID;
+                        if(string.isNotBlank(lds.Mother_s_Profession))
+                            ld.Mother_s_Profession__c	 = lds.Mother_s_Profession;
+                        if(string.isNotBlank(lds.Fathers_s_Profession))
+                            ld.Fathers_s_Profession__c	 = lds.Fathers_s_Profession;
+                        if(string.isNotBlank(lds.Parent_Questions_Or_Info))
+                            ld.Parent_Questions_Or_Info__c	 = lds.Parent_Questions_Or_Info;
+                        if(string.isNotBlank(lds.Salutation))
+                            ld.Salutation =lds.Salutation;
+                        if(string.isNotBlank(lds.Your_first_name))
+                            ld.FirstName = lds.Your_first_name;
+                        if(string.isNotBlank(lds.childLastName))
+                            ld.LastName = lds.childLastName;
+                        if(string.isNotBlank(lds.mobile))
+                            ld.MobilePhone = lds.mobile;
+                        if(string.isNotBlank(lds.studentMobile))
+                            ld.phone = lds.studentMobile;
+                        if(string.isNotBlank(lds.DOB))
+                            ld.Date_of_Birth__c = date.parse(lds.DOB);
+                        if(string.isNotBlank(lds.childLastName))
+                            ld.Your_Last_Name__c =lds.childLastName;
+                        if(string.isNotBlank(lds.Apartment_Society))
+                            ld.Apartment_Society__c = lds.Apartment_Society;
+                        if(string.isNotBlank(lds.Landmark))
+                            ld.Landmark__c = lds.Landmark;
+                        if(string.isNotBlank(lds.fatherEducationalQualifications))
+                            ld.Father_s_Educational_Qualifications__c = lds.fatherEducationalQualifications;
+                        if(string.isNotBlank(lds.motherEducationalQualifications))
+                            ld.Mother_s_Educational_Qualifications__c = lds.motherEducationalQualifications;
+                        if(string.isNotBlank(lds.fatherOccupation))
+                            ld.Father_s_Occupation__c	 =lds.fatherOccupation;
+                        if(string.isNotBlank(lds.motherOccupation))
+                            ld.Mother_s_Occupation__c	 = lds.motherOccupation;
+                        if(string.isNotBlank(lds.fatherOtherOccupation))
+                            ld.Father_Other_Occupation__c = lds.fatherOtherOccupation;
+                        if(string.isNotBlank(lds.motherOtherOccupation))
+                            ld.Mother_Other_Occupation__c = lds.motherOtherOccupation;
+                        if(string.isNotBlank(lds.Grade_Applying_For))
+                            ld.Seeking_Admission_in_Grade__c =lds.Grade_Applying_For;
+                        if(string.isNotBlank(lds.howDidYouHearAboutUs))
+                            ld.How_did_you_hear_about_us__c =lds.howDidYouHearAboutUs;
+                        if(string.isNotBlank(lds.category))
+                            ld.Category__c =lds.category;
+                        if(string.isNotBlank(lds.gender))
+                            ld.Gender__c =lds.gender;
+                        if(string.isNotBlank(lds.relation))
+                            ld.Relation__c =lds.relation;
+                        if(string.isNotBlank(lds.leadSubmissionURL))
+                            ld.Lead_Submission_URL__c =lds.leadSubmissionURL;
+                        if(string.isNotBlank(lds.utmAdgroup))
+                            ld.utm_adgroup__c =lds.utmAdgroup;
+                        if(string.isNotBlank(lds.utmAudience))
+                            ld.utm_Audience__c =lds.utmAudience;
+                        if(string.isNotBlank(lds.utmCampaign))
+                            ld.utm_campaign__c =lds.utmCampaign;
+                        if(string.isNotBlank(lds.utmContent))
+                            ld.utm_content__c =lds.utmContent;
+                        if(string.isNotBlank(lds.utmDevice))
+                            ld.utm_device__c =lds.utmDevice;
+                        if(string.isNotBlank(lds.utmMatchtype))
+                            ld.utm_matchtype__c =lds.utmMatchtype;
+                        if(string.isNotBlank(lds.utmMedium))
+                            ld.utm_medium__c =lds.utmMedium;
+                        if(string.isNotBlank(lds.utmNetwork))
+                            ld.utm_network__c =lds.utmNetwork;
+                        if(string.isNotBlank(lds.utmPlacement))
+                            ld.utm_placement__c =lds.utmPlacement;
+                        if(string.isNotBlank(lds.utmSitelink))
+                            ld.utm_Sitelink__c =lds.utmSitelink;
+                        if(string.isNotBlank(lds.utmSource))
+                            ld.utm_source__c =lds.utmSource;
+                        if(string.isNotBlank(lds.utmTerm))
+                            ld.utm_term__c =lds.utmTerm;
+                        if(string.isNotBlank(lds.stellarSeekingAdmissionInGrade))
+                            ld.Stellar_Seeking_Admission_in_Grade__c = lds.stellarSeekingAdmissionInGrade;
+                        if(string.isNotBlank(lds.currentschool))
+                            ld.Current_school__c =lds.currentschool;
                         
                         Lead_Source__c ldsrc = new Lead_Source__c();
                         ldsrc.Name = lds.LeadSource;
@@ -397,7 +509,12 @@ global without sharing class saveLeadForm {
                 system.debug('Insert Results Size: ' + insertResults.size());
             }
             
-            // Perform UPDATE operation
+            system.debug('from  new source 1'+leadSourceList.size() +' task '+taskList.size());  
+            if(leadSourceList.size() > 0){
+                insert leadSourceList;
+            }
+            
+            // Perform UPDATE operation only after lead source insertion
             Database.SaveResult[] updateResults = new Database.SaveResult[]{};
             if(leadList_Update.size() > 0){
                 updateResults = Database.update(leadList_Update, false);
@@ -463,11 +580,6 @@ global without sharing class saveLeadForm {
                     row.put('Lead Dashboard Id',l.Lead_Dashboard_Id__c);
                     resultList.add(row);
                 }
-            }
-            
-            system.debug('from  new source 1'+leadSourceList.size() +' task '+taskList.size());  
-            if(leadSourceList.size() > 0){
-                insert leadSourceList;
             }
             
             if(taskList.size() > 0){

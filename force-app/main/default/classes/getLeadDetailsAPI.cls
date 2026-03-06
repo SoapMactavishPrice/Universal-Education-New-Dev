@@ -44,7 +44,6 @@ global class getLeadDetailsAPI {
                 FROM Lead
                 WHERE MobilePhone = :jsonObj.customerNumber
                 AND School_Short_Code__c = :schoolShortCode
-                AND Company = 'Ozonetel Lead'
                 AND Acadmic_Year__c = :getCurrentAcademicYear()
                 LIMIT 1
             ];
