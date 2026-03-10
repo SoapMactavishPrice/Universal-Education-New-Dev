@@ -1,39 +1,35 @@
 public class SheduleCampusController_LWC {
     @AuraEnabled(cacheable=true)
-    public static Map<String, String> getContactName(Id contactId) {
-        // Query the Contact record based on the provided contactId
-        Contact contactRecord = [SELECT Name, School_Institution__r.Name,School_Short_Code__c,Campus_Visit_Scheduled__c
+    public static Map<String, Object> getContactName(Id contactId) {
+        Contact contactRecord = [SELECT Name, School_Institution__r.Name, School_Institution__c, School_Short_Code__c, Campus_Visit_Scheduled__c
                                  FROM Contact WHERE Id = :contactId LIMIT 1];
-        
-        // Create a map to return multiple fields
-        Map<String, String> contactInfo = new Map<String, String>();
+
+        Map<String, Object> contactInfo = new Map<String, Object>();
         contactInfo.put('ContactName', contactRecord.Name);
-        contactInfo.put('CampusvisitScheduled', String.valueOf(contactRecord.Campus_Visit_Scheduled__c));
+        contactInfo.put('CampusVisitScheduled', contactRecord.Campus_Visit_Scheduled__c);
         contactInfo.put('SchoolName', contactRecord.School_Institution__r != null ? contactRecord.School_Institution__r.Name : null);
-        contactInfo.put('Schoolid', contactRecord.School_Institution__c);
+        contactInfo.put('SchoolId', contactRecord.School_Institution__c);
         contactInfo.put('SchoolShortCode', contactRecord.School_Short_Code__c);
-        
-        
+
         return contactInfo;
     }
     
     
     @AuraEnabled(cacheable=true)
     public static Map<String, object> reSchedule_getContactName(Id contactId) {
-        // Query the Contact record based on the provided contactId
-        Contact contactRecord = [SELECT Name, School_Institution__r.Name,School_Short_Code__c,Re_Scheduled_Campus_Visit__c,Campus_Visit_Scheduled__c
+        Contact contactRecord = [SELECT Name, School_Institution__r.Name, School_Institution__c, School_Short_Code__c,
+                                        Re_Scheduled_Campus_Visit__c, Campus_Visit_Scheduled__c, Campus_Visit_Done__c
                                  FROM Contact WHERE Id = :contactId LIMIT 1];
-        
-        // Create a map to return multiple fields
+
         Map<String, object> contactInfo = new Map<String, object>();
         contactInfo.put('ContactName', contactRecord.Name);
-        contactInfo.put('CampusvisitScheduled', contactRecord.Campus_Visit_Scheduled__c);
-        contactInfo.put('Campusvisitre_Scheduled', contactRecord.Re_Scheduled_Campus_Visit__c);
+        contactInfo.put('CampusVisitScheduled', contactRecord.Campus_Visit_Scheduled__c);
+        contactInfo.put('CampusVisitRescheduled', contactRecord.Re_Scheduled_Campus_Visit__c);
+        contactInfo.put('CampusVisitDone', contactRecord.Campus_Visit_Done__c);
         contactInfo.put('SchoolName', contactRecord.School_Institution__r != null ? contactRecord.School_Institution__r.Name : null);
-        contactInfo.put('Schoolid', contactRecord.School_Institution__c);
+        contactInfo.put('SchoolId', contactRecord.School_Institution__c);
         contactInfo.put('SchoolShortCode', contactRecord.School_Short_Code__c);
-        
-        
+
         return contactInfo;
     }
     
@@ -68,12 +64,21 @@ public class SheduleCampusController_LWC {
     
     @AuraEnabled
     public static String createEvent(
+        String subject,
         Id contactId,
         Id accountId,
         Datetime startDateTime,
         Datetime endDateTime,
+        String description,
         Id ownerId
     ) {
+            if (String.isBlank(subject) || startDateTime == null || endDateTime == null || ownerId == null) {
+                throw new AuraHandledException('All fields are required.');
+            }
+            if (endDateTime < startDateTime) {
+                throw new AuraHandledException('End date cannot be before Start date.');
+            }
+
             Contact con = [
                 SELECT Id, Email, AccountId, Name, School_Short_Code__c, Lead_ID__c,
                        Campus_Visit_Scheduled__c, CV_Scheduled_On__c,
@@ -146,6 +151,9 @@ public class SheduleCampusController_LWC {
                 ev.StartDateTime = startDateTime;
                 ev.EndDateTime = endDateTime;
                 ev.OwnerId = ownerId;
+                ev.Subject = subject;
+                ev.Description = description;
+                ev.Enquiry_Email__c = con.Email;
                 insert ev;
 
                 Event ent = [
@@ -172,6 +180,7 @@ public class SheduleCampusController_LWC {
                 con.CV_scheduled_Assign_To__c = ev.OwnerId;
                 con.CV_Scheduled_Time__c = ev.StartDateTime.format('hh:mm a');
                 con.CV_Scheduled_Date__c = ev.StartDateTime.format('dd-MM-yyyy');
+                con.CV_Scheduled_On__c = System.now();
                 update con;
 
                 // --- Update Leads ---
@@ -195,43 +204,54 @@ public class SheduleCampusController_LWC {
                 // --- External Syncs (Veris / Google Meet) ---
                 // (keeping your logic but shortened here for brevity)
                 // SyncEventDataToVeris.syncData(...)
-                // GoogleCalendarMeetScheduleController.doCreateNewCalendar(...)
+                System.debug('206 Debug Point');
+                Boolean toMakeStellarCallout = StellarAPICallouts.checkIfStellarAPIEnabled(con.School_Short_Code__c);
+                GoogleCalendarMeetScheduleController.doCreateNewCalendar(
+                    ev.Id,
+                    StellarAPICallouts.POST_METHOD,
+                    toMakeStellarCallout,
+                    null
+                );
 
-                return 'Success'; // return Event Id to LWC
+                return 'Campus Visit scheduled successfully.';
             }
 
-            return null;
+            throw new AuraHandledException('Scheduled Campus Visit already booked.');
 
     }
 
     @AuraEnabled
     public static Boolean alreadytourscheduled(Id contactId) {
-        try {
-            Contact con = [
-                SELECT Id, Campus_Visit_Scheduled__c
-                FROM Contact
-                WHERE Id = :contactId
-                LIMIT 1
-            ];
+        Contact con = [
+            SELECT Id, Campus_Visit_Scheduled__c
+            FROM Contact
+            WHERE Id = :contactId
+            LIMIT 1
+        ];
 
-            if (con.Campus_Visit_Scheduled__c == true) {
-                // Instead of VF messages, we throw an AuraHandledException for LWC
-                throw new AuraHandledException('Scheduled Campus Visit already booked.');
-            }
-            return false; // not scheduled yet
-        } catch (Exception ex) {
-            throw new AuraHandledException('Error in alreadytourscheduled: ' + ex.getMessage());
+        if (con.Campus_Visit_Scheduled__c == true) {
+            throw new AuraHandledException('Scheduled Campus Visit already booked.');
         }
+        return false;
     }
 
     @AuraEnabled
     public static String schoolTourRescheduled(
+        String subject,
         Id contactId,
         Id accountId,
         Datetime startDateTime,
         Datetime endDateTime,
+        String description,
         Id ownerId
     ) {
+            if (String.isBlank(subject) || startDateTime == null || endDateTime == null || ownerId == null) {
+                throw new AuraHandledException('All fields are required.');
+            }
+            if (endDateTime < startDateTime) {
+                throw new AuraHandledException('End date cannot be before Start date.');
+            }
+
             Contact con = [
                 SELECT Id, Email, AccountId, Name, School_Short_Code__c, Lead_ID__c,
                     Campus_Visit_Scheduled__c, Campus_Visit_Done__c,
@@ -294,6 +314,8 @@ public class SheduleCampusController_LWC {
                 ev.Contact__c = con.Id;
                 ev.StartDateTime = startDateTime;
                 ev.EndDateTime   = endDateTime;
+                ev.Subject = subject;
+                ev.Description = description;
                 if (Test.isRunningTest()) {
                     ev.DurationInMinutes = 60;
                     ev.ActivityDateTime = System.Datetime.now();
@@ -328,11 +350,19 @@ public class SheduleCampusController_LWC {
                     SendEmail.SendEmailTemplateWithTemplate(emailtemp, con.Id, false, null, se[0], ev.Id);
                 }
 
+                Boolean toMakeStellarCallout = StellarAPICallouts.checkIfStellarAPIEnabled(con.School_Short_Code__c);
+                GoogleCalendarMeetScheduleController.doCreateNewCalendar(
+                    ev.Id,
+                    StellarAPICallouts.POST_METHOD,
+                    toMakeStellarCallout,
+                    null
+                );
+
                 // (external integrations remain same)
-                return 'Success';
+                return 'Campus Visit re-scheduled successfully.';
             }
 
-            return null;
+            throw new AuraHandledException('Campus visit is not scheduled or Campus visit done.');
 
     }
 

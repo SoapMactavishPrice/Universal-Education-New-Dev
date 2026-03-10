@@ -212,10 +212,6 @@ public class LeadStageAndStatusHandler {
                 }
             }
 
-            for (Application_Form__c appForm : appFormByLead.values()) {
-                System.debug('Application Form fetched for Lead ' + appForm.Lead__c + ': ' + appForm);
-            }
-
             for (Lead l : leads) {
 
                 if (l.Id == null) {
@@ -228,16 +224,17 @@ public class LeadStageAndStatusHandler {
                     continue;
                 }
 
+                if (l.Reason_Lost__c == true) {
+                    l.Lead_Status__c = 'Lost';
+                    System.debug('Lead ' + l.Id + ' is marked as Lost, setting Lead_Status__c to "Lost"');
+                    continue;
+                }
+
                 System.debug('Processing Lead ' + l.Id + ' starting Status: ' + l.Lead_Status__c);
                 Enquiry__c enq = enquiryByLead.get(l.Id);
                 if (enq != null && enq.Application_Link_Sent__c == true) {
                     l.Lead_Status__c = 'Application Sent';
                     System.debug('Lead ' + l.Id + ' -> Status set to "Application Sent" because Enquiry__c.Application_Link_Sent__c is true');
-                }
-
-                if (enq != null && enq.Reason_Lost__c == true) {
-                    l.Lead_Status__c = 'Lost';
-                    System.debug('Lead ' + l.Id + ' -> Status set to "Lost" because Enquiry__c.Reason_Lost__c is true');
                 }
 
                 Application_Form__c app = appFormByLead.get(l.Id);
@@ -266,9 +263,9 @@ public class LeadStageAndStatusHandler {
                     l.Lead_Status__c = 'Documents Received';
                     System.debug('Lead ' + l.Id + ' -> Status set to "Documents Received" because Admission_Form__c.Document_Received__c is true');
                 }
-                if (adm != null && adm.Reason_Lost__c == true) {
-                    l.Lead_Status__c = 'Lost';
-                    System.debug('Lead ' + l.Id + ' -> Status set to "Lost" because Admission_Form__c.Reason_Lost__c is true');
+
+                if (l.Lead_Status__c == 'Dormant' && l.Dormant__c == false) {
+                    l.Lead_Status__c = l.Status;
                 }
 
                 System.debug('Processing complete for Lead ' + l.Id + ' final Status: ' + l.Lead_Status__c);

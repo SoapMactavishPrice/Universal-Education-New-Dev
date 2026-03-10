@@ -1,4 +1,4 @@
-import { LightningElement, api, track, wire } from 'lwc';
+import { LightningElement, api, wire } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import reSchedule_getContactName from '@salesforce/apex/SheduleCampusController_LWC.reSchedule_getContactName';
@@ -8,21 +8,19 @@ import schoolTourRescheduled from '@salesforce/apex/SheduleCampusController_LWC.
 import { CurrentPageReference } from 'lightning/navigation';
 
 export default class ReschedulecampusvisitContact extends NavigationMixin(LightningElement) {
-
     @api recordId;
-    @api schoolShortCode;
-    @api CampusvisitScheduled;
-    @api Campusvisitre_Scheduled;
+    schoolShortCode;
+    campusVisitScheduled;
+    campusVisitRescheduled;
+    campusVisitDone;
     isLoading = false;
     contactName;
+    schoolName;
+    schoolId;
     subjectOptions = [];
     userOptions = [];
     selectedSubject = '';
-    selectedUserId;
-    selectedUserName;
-    errorMessage = '';
     showEventInformation = true;
-    showBackButton = false;
 
     eventRecord = {
         Subject: '',
@@ -34,52 +32,52 @@ export default class ReschedulecampusvisitContact extends NavigationMixin(Lightn
 
     @wire(CurrentPageReference)
     setCurrentPageReference(currentPageReference) {
-        this.recordId = currentPageReference?.state?.recordId;
-        if (this.recordId) this.fetchContactName();
+        if (!this.recordId) {
+            this.recordId = currentPageReference?.state?.recordId || currentPageReference?.state?.c__recordId;
+        }
+        if (this.recordId) {
+            this.fetchContactName();
+        }
     }
 
     connectedCallback() {
-        console.log('connectedCallback called');
         this.fetchSubjectPicklistValues();
-        this.fetchContactName();
-        this.fetchLeadUser();
-            
+        if (this.recordId) {
+            this.fetchContactName();
+        }
     }
 
-    fetchContactName() { 
+    fetchContactName() {
         reSchedule_getContactName({ contactId: this.recordId })
             .then(result => {
                 this.contactName = result.ContactName;
                 this.schoolName = result.SchoolName;
-                this.schoolid = result.Schoolid;
+                this.schoolId = result.SchoolId;
                 this.schoolShortCode = result.SchoolShortCode;
-                console.log('this.schoolShortCode:', this.schoolShortCode);
 
-                console.log('result',JSON.stringify(result));
-                
-                
-    
-                if (!result.CampusvisitScheduled) {
-                    this.showToast('Error', 'Please Schedule Campus visit First', 'error');
-                    this.CampusvisitScheduled = result.CampusvisitScheduled;
-                    console.log('this.CampusvisitScheduled', this.CampusvisitScheduled);
+                this.campusVisitScheduled = result.CampusVisitScheduled;
+                this.campusVisitRescheduled = result.CampusVisitRescheduled;
+                this.campusVisitDone = result.CampusVisitDone;
+
+                if (!this.campusVisitScheduled || this.campusVisitDone) {
+                    this.showEventInformation = false;
+                    this.showToast('Error', 'Campus visit is not scheduled or Campus visit done.', 'error');
+                    return;
                 }
-                if (result.Campusvisitre_Scheduled) {
+                if (this.campusVisitRescheduled) {
+                    this.showEventInformation = false;
                     this.showToast('Error', 'Campus visit is already re-scheduled.', 'error');
-                    this.Campusvisitre_Scheduled = result.Campusvisitre_Scheduled;
-                    console.log('this.Campusvisitre_Scheduled', this.Campusvisitre_Scheduled);
-                } else {
-                    // Call fetchLeadUser only after schoolShortCode is set
-                    this.CampusvisitScheduled = result.CampusvisitScheduled;
-                    this.Campusvisitre_Scheduled = result.Campusvisitre_Scheduled;
-                    console.log('this.CampusvisitScheduled', this.CampusvisitScheduled);
-                    console.log('this.Campusvisitre_Scheduled', this.Campusvisitre_Scheduled);
+                    return;
+                }
+
+                this.showEventInformation = true;
+                if (this.schoolShortCode) {
                     this.fetchLeadUser();
                 }
             })
-            .catch(error => {
-                console.error('Error fetching contact info:', error);
+            .catch(() => {
                 this.showToast('Error', 'Failed to fetch contact info.', 'error');
+                this.showEventInformation = false;
             });
     }
 
@@ -88,51 +86,40 @@ export default class ReschedulecampusvisitContact extends NavigationMixin(Lightn
             .then(result => {
                 this.subjectOptions = result.map(value => ({ label: value, value: value }));
             })
-            .catch(error => {
+            .catch(() => {
                 this.showToast('Error', 'Failed to fetch picklist values.', 'error');
             });
     }
+
     fetchLeadUser() {
-        console.log('fetchLeadUser schoolShortCode:', this.schoolShortCode);
-    
         if (!this.schoolShortCode) {
-            console.error('School Short Code is undefined or empty.');
             return;
         }
-    
+
         getLeadUser({ schoolShortCode: this.schoolShortCode })
             .then(result => {
-                console.log('Lead User:', result);
                 this.userOptions = result.map(user => ({ label: user.Name, value: user.Id }));
-                console.log('Lead this.userOptions', this.userOptions);
-                // Process the result as needed
             })
-            .catch(error => {
-                console.error('Error fetching lead user:', error);
-                // Handle the error
+            .catch(() => {
+                this.showToast('Error', 'Failed to fetch users.', 'error');
             });
     }
 
     handleInputChange(event) {
-        const fieldName = event.target.name; // Get the name of the field
-        const fieldValue = event.target.value; // Get the value entered by the user
-    
-        // Update the corresponding field in the eventRecord object
+        const fieldName = event.target.name;
+        const fieldValue = event.target.value;
         this.eventRecord = { ...this.eventRecord, [fieldName]: fieldValue };
     }
-    
+
     handleSubjectSelect(event) {
         this.selectedSubject = event.detail.value;
         this.eventRecord.Subject = this.selectedSubject;
-        console.error(' this.selectedSubject.', this.selectedSubject);
     }
 
     handleUserSelect(event) {
-        this.selectedUserId = event.detail.value;
-        const selectedOption = this.userOptions.find(option => option.value === this.selectedUserId);
-        this.selectedUserName = selectedOption ? selectedOption.label : null;
-        this.eventRecord.OwnerId = this.selectedUserId;
+        this.eventRecord.OwnerId = event.detail.value;
     }
+
     handleCancel() {
         this[NavigationMixin.Navigate]({
             type: 'standard__recordPage',
@@ -144,53 +131,60 @@ export default class ReschedulecampusvisitContact extends NavigationMixin(Lightn
         });
     }
 
+    get cancelLabel() {
+        return this.showEventInformation ? 'Cancel' : 'Back';
+    }
+
     handleSubmit() {
-        if (!this.selectedSubject || !this.eventRecord.StartDateTime || !this.eventRecord.EndDateTime) {
+        if (!this.showEventInformation) {
+            this.showToast('Error', 'Campus visit is not eligible for reschedule.', 'error');
+            return;
+        }
+
+        if (
+            !this.eventRecord.Subject ||
+            !this.eventRecord.StartDateTime ||
+            !this.eventRecord.EndDateTime ||
+            !this.eventRecord.OwnerId
+        ) {
             this.showToast('Error', 'All fields are required.', 'error');
             return;
         }
 
-        // Start loading (show spinner)
+        if (!this.validateEventDates()) {
+            return;
+        }
+
         this.isLoading = true;
-      
-        console.error(' this.selectedSubject.', this.selectedSubject);
-        console.error(' this.eventRecord.StartDateTime.', this.eventRecord.StartDateTime);
-        console.error('this.eventRecord.Description', this.eventRecord.Description);
-        console.error('this.schoolid', this.schoolid);
-        console.error('this.recordId', this.recordId);
-        console.error('this.schoolShortCode', this.schoolShortCode);
-        console.error('this.selectedUserId', this.selectedUserId);
-        console.log('CampusvisitScheduled', this.CampusvisitScheduled);
-        console.log('Campusvisitre_Scheduled', this.Campusvisitre_Scheduled);
-       
+
         schoolTourRescheduled({
+            subject: this.eventRecord.Subject,
             startDateTime: this.eventRecord.StartDateTime,
             endDateTime: this.eventRecord.EndDateTime,
+            description: this.eventRecord.Description,
             contactId: this.recordId,
-            accountId: this.schoolid,
+            accountId: this.schoolId,
             ownerId: this.eventRecord.OwnerId
         })
             .then(result => {
                 this.showToast('Success', result, 'success');
                 this.resetForm();
-                console.error('this.recordid', this.recordId);
                 this[NavigationMixin.Navigate]({
                     type: 'standard__recordPage',
                     attributes: {
-                        recordId: this.recordId, // Replace with the actual record ID or a dynamic ID
-                        objectApiName: 'Enquiry__c', // Replace with the correct object API name
+                        recordId: this.recordId,
+                        objectApiName: 'Contact',
                         actionName: 'view'
                     }
                 });
             })
             .catch(error => {
-                console.error('Error creating event:', error);
-                this.showToast('Error', error.body.message, 'error');
+                const message = error?.body?.message || 'Unable to re-schedule campus visit.';
+                this.showToast('Error', message, 'error');
             })
             .finally(() => {
-                // Stop loading (hide spinner)
                 this.isLoading = false;
-            });;
+            });
     }
 
     resetForm() {
@@ -200,5 +194,28 @@ export default class ReschedulecampusvisitContact extends NavigationMixin(Lightn
     showToast(title, message, variant) {
         const event = new ShowToastEvent({ title, message, variant });
         this.dispatchEvent(event);
+    }
+
+    validateEventDates() {
+        const { StartDateTime, EndDateTime } = this.eventRecord;
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const startDate = new Date(StartDateTime);
+        const endDate = new Date(EndDateTime);
+
+        if (startDate < today) {
+            this.showToast('Error', 'Start date cannot be in the past.', 'error');
+            return false;
+        }
+        if (endDate < today) {
+            this.showToast('Error', 'End date cannot be in the past.', 'error');
+            return false;
+        }
+        if (endDate < startDate) {
+            this.showToast('Error', 'End date cannot be before Start date.', 'error');
+            return false;
+        }
+        return true;
     }
 }

@@ -78,7 +78,7 @@
                                 label="Assigned To"
                                 placeholder="Select a User"
                                 options={userOptions}
-                                value={selectedUserId}
+                                value={eventRecord.OwnerId}
                                 onchange={handleUserSelect}
                                 required
                             ></lightning-combobox>
@@ -100,16 +100,17 @@
 
         <!-- Footer Section with Full-Width Action Buttons -->
         <div class="slds-modal__footer slds-grid slds-grid_align-center slds-p-horizontal_large slds-p-bottom_medium">
-            <!-- Centered Action Buttons -->
+            <template if:true={showEventInformation}>
+                <lightning-button
+                    label="Submit"
+                    variant="brand"
+                    class="slds-m-right_small"
+                    onclick={handleSubmit}
+                    disabled={isLoading}
+                ></lightning-button>
+            </template>
             <lightning-button
-                label="Submit"
-                variant="brand"
-                class="slds-m-right_small"
-                onclick={handleSubmit}
-                disabled={isLoading}
-            ></lightning-button>
-            <lightning-button
-                label="Cancel"
+                label={cancelLabel}
                 variant="neutral"
                 class="slds-m-left_small"
                 onclick={handleCancel}
