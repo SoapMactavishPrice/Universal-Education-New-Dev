@@ -18,12 +18,19 @@ if(Trigger.isafter && Trigger.isUpdate){
     }
 
     if (Trigger.isAfter && Trigger.isUpdate) {
-        List<Lead> leads = new List<Lead> ();
-        for (Admission_Form__c eachForm:Trigger.new) {
-            Lead lead = new Lead();
-            lead.Id = eachForm.Lead__c;
-            leads.add(lead);
+        Set<Id> leadIds = new Set<Id>();
+        
+        for (Admission_Form__c eachForm : Trigger.new) {
+            if(eachForm.Lead__c != null){
+                leadIds.add(eachForm.Lead__c);
+            }
         }
-        UPDATE leads;
+
+        List<Lead> leads = new List<Lead>();
+        for(Id leadId : leadIds){
+            leads.add(new Lead(Id = leadId));
+        }
+
+        update leads;
     }
 }
