@@ -1,4 +1,4 @@
-<apex:page standardController="Application_Form__c" extensions="applicationAccepted" action="{!createAdmissionForm}" sidebar="True" lightningStylesheets="true" standardStylesheets="true" >
+<apex:page standardController="Application_Form__c" extensions="applicationAccepted" sidebar="True" lightningStylesheets="true" standardStylesheets="true" >
     <apex:form >
         <apex:slds /> 
         <apex:outputPanel id="resultPanel" rendered="{!msg}">
@@ -6,8 +6,11 @@
             </apex:pageMessages>
             
             <br />
-         
-			<center><b><apex:commandButton value="Back" action="{!goBack}"  styleClass="slds-button slds-button_neutral"/></b></center>
+
+			<center>
+                <b><apex:commandButton value="Accept Application" action="{!createAdmissionForm}" styleClass="slds-button slds-button_brand"/></b>
+                <b><apex:commandButton value="Back" action="{!goBack}"  styleClass="slds-button slds-button_neutral"/></b>
+            </center>
 
        </apex:outputPanel>
     </apex:form>
