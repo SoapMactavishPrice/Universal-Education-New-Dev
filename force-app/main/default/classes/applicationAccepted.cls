@@ -47,23 +47,48 @@ public class applicationAccepted {
     public pageReference createAdmissionForm()
     {
         pageReference pg1;
+        
+        adf = [
+            SELECT Lead__c, StudentLast_Name__c, Print_Copy_Submitted__c, Academic_Year__c, Address__c, Adhaar_Card_No__c, Father_Annual_Income__c,
+                   Mother_Anual_Income__c, First_Name__c, Application_Form_Declaration__c, Name, Birth_Place__c, Blood_Group__c,
+                   Father_Business_Address__c, Document_Verified__c, Mother_Business_Address__c, Father_Business_Contact__c,
+                   Mother_Business_Contact__c, Category__c, Count__c, Status__c, Do_have_another_child_with_us__c, Email_Address__c,
+                   Guardian_Email_ID__c, Enquiry__c, Enquiry_Number__c, Reason_For_Rejection__c, Expiry_Date__c, Father_Datail_captured__c,
+                   Father_Email_Id__c, Father_Last_Name__c, Father_Occupation__c, Father_Phone__c, Father_Qualification__c,
+                   Mother_First_Name__c, Father_First_Name__c, Having_Children__c, Mother_Last_Name__c, Guardian_Mobile_No__c,
+                   Mobile_Number__c, Mother_Detail_Captured__c, Mother_Email_Id__c, Mother_Occupation__c, Mother_Phone__c,
+                   Mother_Qualification__c, Mother_Tongue__c, Guardian_Name__c, Father_Name_of_Organisation__c, Mother_Name_of_Organisation__c,
+                   Nationality__c, Passport_No__c, Reason_of_this_School__c, Relationship__c, Religion__c, Residence_No__c,
+                   School_Short_Code__c, School_Institution__c, Seeking_Admission_for_another_Child__c, Student_Name__c,
+                   Form_B_captured__c, Physical_disabilities__c, Disabilities_Type__c, Other_Disabilities__c, Medical_History__c,
+                   Other_Medical_History__c, Share_the_Allergies__c, Personalized_learning_needs__c, Personalized_learning_option__c,
+                   Other_Personalized_Option__c, Form_B_Acknowledgement__c, Enquiry__r.Lead_ID__c, Emergency_Contact_No__c,
+                   seeking_grade__c, seeking_grade__r.name, Application_Accepted__c
+            FROM Application_Form__c
+            WHERE Id = :adf.Id
+            LIMIT 1
+            FOR UPDATE
+        ];
 
-        adFormList = [select id,Name,Application_Form__c,Status__c from Admission_Form__c where Application_Form__c=: adf.Id];
-        system.debug('list of Admission Form::'+adFormList.size());
+        customleadValue = adf.Enquiry__r.Lead_ID__c;
+        adFormList = [SELECT Id, Name, Application_Form__c, Status__c FROM Admission_Form__c WHERE Application_Form__c = :adf.Id];
 
-        if(adFormList.size()>0){ApexPages.addmessage(new ApexPages.message(ApexPages.severity.FATAL,'Application Form is already accepted!'));
+        if (adFormList.size() > 0 || adf.Application_Accepted__c == true) {
+            ApexPages.addmessage(new ApexPages.message(ApexPages.severity.FATAL,'Application Form is already accepted!'));
+            return null;
         }
-        if(adf.Document_Verified__c == False && adf.Print_Copy_Submitted__c == False)
-        {
+        if (adf.Document_Verified__c == false && adf.Print_Copy_Submitted__c == false) {
             ApexPages.addmessage(new ApexPages.message(ApexPages.severity.FATAL,'Required document(s) not verified'));
+            return null;
         }
-        if(adf.Document_Verified__c == True && adf.Print_Copy_Submitted__c == False)
-        {
+        if (adf.Document_Verified__c == true && adf.Print_Copy_Submitted__c == false) {
             ApexPages.addmessage(new ApexPages.message(ApexPages.severity.FATAL,'Print copy of Documents is not submitted'));
+            return null;
         }
-        if(adf.Document_Verified__c == False && adf.Print_Copy_Submitted__c == True)        {            ApexPages.addmessage(new ApexPages.message(ApexPages.severity.FATAL,'Required document(s) not verified'));
+        if (adf.Document_Verified__c == false && adf.Print_Copy_Submitted__c == true) {
+            ApexPages.addmessage(new ApexPages.message(ApexPages.severity.FATAL,'Required document(s) not verified'));
+            return null;
         }
-
 
         if(adf.Document_Verified__c == True && adFormList.size()==0 && adf.Print_Copy_Submitted__c == True){
 

@@ -1,103 +1,170 @@
 @isTest
 public class AssignLeadOwnerTest {
     @testSetup
-    static void setupTestData() {
-        // Step 1: Create a Test User (Owner)
+    static void setupData() {
         Profile standardProfile = [SELECT Id FROM Profile WHERE Name = 'Standard User' LIMIT 1];
 
-        User testUser = new User(
-            Alias = 'testusr',
-            Email = 'test' + System.currentTimeMillis() + '@example.com',
-            EmailEncodingKey = 'UTF-8',
-            FirstName = 'John',
-            LastName = 'Doe',
-            LanguageLocaleKey = 'en_US',
-            LocaleSidKey = 'en_US',
-            ProfileId = standardProfile.Id,
-            TimeZoneSidKey = 'America/New_York',
-            UserName = 'test' + System.currentTimeMillis() + '@example.com'
-        );
-        insert testUser;
+        User primusUser = createUser(standardProfile.Id, 'prmusr', 'John', 'Doe', 'primus');
+        User ustUser = createUser(standardProfile.Id, 'ustusr', 'Jane', 'Smith', 'ust');
+        User levelTwoUser = createUser(standardProfile.Id, 'lvlusr', 'Alex', 'LevelTwo', 'leveltwo');
+        insert new List<User>{ primusUser, ustUser, levelTwoUser };
 
-        // Step 2: Create a Test LeadUser__c Record Matching the School Code
-        LeadUser__c testLeadUser = new LeadUser__c(
-            Name = testUser.FirstName + ' ' + testUser.LastName, // Ensure full name matches User.Name
-            SchoolCode__c = 'PRIMUS'
-        );
-        insert testLeadUser;
+        insert new List<LeadUser__c>{
+            createLeadUser(primusUser, 'PRIMUS', 1),
+            createLeadUser(ustUser, 'UST', 1),
+            createLeadUser(levelTwoUser, 'UST', 2)
+        };
 
-        // Step 3: Create a Test Account (School)
-        Account testSchool = new Account(
-            Name = 'Primus Public School',
-            School_Short_Code__c = 'PRIMUS'  // Ensure it matches the Lead
-        );
-        insert testSchool;
+        insert new List<Account>{
+            new Account(Name = 'Primus Public School', School_Short_Code__c = 'PRIMUS'),
+            new Account(Name = 'Universal School, Tardeo', School_Short_Code__c = 'UST'),
+            new Account(Name = 'No Map School', School_Short_Code__c = 'NOMAP')
+        };
     }
 
     @isTest
-    static void testAssignLeadOwner() {
-        // Step 4: Insert Lead with PRIMUS School_Short_Code__c
+    static void testBeforeInsertRunsWithoutError() {
         Lead testLead = new Lead(
             FirstName = 'Test',
-            LastName = 'Lead',
+            LastName = 'Insert Lead',
             Company = 'Test Company',
             Status = 'Open',
-            School_Short_Code__c = 'PRIMUS', // Matches School Code
-            School_Institution__c = [SELECT Id FROM Account WHERE School_Short_Code__c = 'PRIMUS' LIMIT 1].Id,
-            Current_Location__c = 'Mumbai'
+            School_Institution__c = getAccountId('UST')
+        );
+
+        insert testLead;
+
+        Lead insertedLead = [SELECT Id, School_Short_Code__c FROM Lead WHERE Id = :testLead.Id];
+        System.assertEquals('UST', insertedLead.School_Short_Code__c);
+    }
+
+    @isTest
+    static void testBeforeUpdateAssignsOwnerWhenSchoolInstitutionChanges() {
+        Lead testLead = new Lead(
+            FirstName = 'Test',
+            LastName = 'Update Lead',
+            Company = 'Test Company',
+            Status = 'Open',
+            School_Institution__c = getAccountId('PRIMUS')
         );
         insert testLead;
 
-        // Fetch lead before the trigger runs to get the original OwnerId
-        Lead insertedLead = [SELECT Id, OwnerId FROM Lead WHERE Id = :testLead.Id];
-        Id originalOwnerId = insertedLead.OwnerId;
+        testLead.School_Institution__c = getAccountId('UST');
+        update testLead;
 
-        Test.startTest();
-        // Force the trigger execution again in a test context
-        insert new Lead(FirstName = 'Dummy', LastName = 'TriggerTest', Company = 'Dummy');
-        Test.stopTest();
-
-        // Step 5: Fetch Updated Lead and Validate OwnerId Change
-        Lead updatedLead = [SELECT Id, OwnerId FROM Lead WHERE Id = :testLead.Id];
-
-   //     System.assertNotEquals(originalOwnerId, updatedLead.OwnerId, 'Lead OwnerId should be updated.');
-        
-        User expectedUser = [SELECT Id FROM User WHERE FirstName = 'John' AND LastName = 'Doe' LIMIT 1];
-     //   System.assertEquals(expectedUser.Id, updatedLead.OwnerId, 'Lead Owner should be correctly assigned.');
+        Lead updatedLead = [SELECT Id, OwnerId, School_Short_Code__c FROM Lead WHERE Id = :testLead.Id];
+        System.assertEquals('UST', updatedLead.School_Short_Code__c);
+        System.assertEquals(getUserIdByAlias('ustusr'), updatedLead.OwnerId);
     }
 
     @isTest
-    static void testNoMatchingLeadUser() {
-        // Step 3: Create a Test Account (School)
-        Account testSchool = new Account(
-            Name = 'Universal School, Tardeo',
-            School_Short_Code__c = 'UST'  // Ensure it matches the Lead
-        );
-        insert testSchool;
-        
-        // Step 6: Insert a Lead with a different School Code (should not assign an owner)
-        Lead testLeadNoOwner = new Lead(
+    static void testBeforeUpdateSkipsWhenSchoolInstitutionDoesNotChange() {
+        Lead testLead = new Lead(
             FirstName = 'Test',
-            LastName = 'Lead No Owner',
+            LastName = 'No Change Lead',
             Company = 'Test Company',
             Status = 'Open',
-            School_Institution__c = [SELECT Id FROM Account WHERE School_Short_Code__c = 'UST' LIMIT 1].Id,
-            School_Short_Code__c = 'UST', // No matching LeadUser__c record
-            Current_Location__c = 'Test Location'
+            School_Institution__c = getAccountId('PRIMUS')
         );
-        insert testLeadNoOwner;
+        insert testLead;
 
-        Test.startTest();
-        insert new Lead(FirstName = 'Dummy', LastName = 'TriggerTest', Company = 'Dummy');
-        Test.stopTest();
+        Lead beforeUpdateLead = [SELECT Id, OwnerId FROM Lead WHERE Id = :testLead.Id];
 
-        // Step 7: Verify that OwnerId has not changed to an unexpected user
-        Lead fetchedLead = [SELECT Id, OwnerId FROM Lead WHERE Id = :testLeadNoOwner.Id];
-    //    System.assertNotEquals(null, fetchedLead.OwnerId, 'Lead Owner should not be null.');
-   //     System.assertNotEquals(
-    //        [SELECT Id FROM User WHERE FirstName = 'John' AND LastName = 'Doe' LIMIT 1].Id,
-    //        fetchedLead.OwnerId,
-    //        'Lead Owner should not be assigned if there is no matching LeadUser__c.'
-    //    );
+        testLead.Current_Location__c = 'Mumbai';
+        update testLead;
+
+        Lead afterUpdateLead = [SELECT Id, OwnerId FROM Lead WHERE Id = :testLead.Id];
+        System.assertEquals(beforeUpdateLead.OwnerId, afterUpdateLead.OwnerId);
+    }
+
+    @isTest
+    static void testBeforeUpdateUsesOnlyLevelOneLeadUser() {
+        Lead testLead = new Lead(
+            FirstName = 'Test',
+            LastName = 'Level One Lead',
+            Company = 'Test Company',
+            Status = 'Open',
+            School_Institution__c = getAccountId('PRIMUS')
+        );
+        insert testLead;
+
+        testLead.School_Institution__c = getAccountId('UST');
+        update testLead;
+
+        Lead updatedLead = [SELECT Id, OwnerId FROM Lead WHERE Id = :testLead.Id];
+        System.assertEquals(getUserIdByAlias('ustusr'), updatedLead.OwnerId);
+        System.assertNotEquals(getUserIdByAlias('lvlusr'), updatedLead.OwnerId);
+    }
+
+    @isTest
+    static void testBeforeUpdateDoesNotAssignWhenNoMappingExists() {
+        Lead testLead = new Lead(
+            FirstName = 'Test',
+            LastName = 'No Mapping Lead',
+            Company = 'Test Company',
+            Status = 'Open',
+            School_Institution__c = getAccountId('PRIMUS')
+        );
+        insert testLead;
+
+        Lead beforeUpdateLead = [SELECT Id, OwnerId FROM Lead WHERE Id = :testLead.Id];
+
+        testLead.School_Institution__c = getAccountId('NOMAP');
+        update testLead;
+
+        Lead afterUpdateLead = [SELECT Id, OwnerId FROM Lead WHERE Id = :testLead.Id];
+        System.assertEquals(beforeUpdateLead.OwnerId, afterUpdateLead.OwnerId);
+    }
+
+    @isTest
+    static void testBeforeUpdateSkipsOzonetelLead() {
+        Lead testLead = new Lead(
+            FirstName = 'Test',
+            LastName = 'Ozonetel Lead',
+            Company = 'Ozonetel Lead',
+            Status = 'Open',
+            School_Institution__c = getAccountId('PRIMUS')
+        );
+        insert testLead;
+
+        Lead beforeUpdateLead = [SELECT Id, OwnerId FROM Lead WHERE Id = :testLead.Id];
+
+        testLead.School_Institution__c = getAccountId('UST');
+        update testLead;
+
+        Lead afterUpdateLead = [SELECT Id, OwnerId FROM Lead WHERE Id = :testLead.Id];
+        System.assertEquals(beforeUpdateLead.OwnerId, afterUpdateLead.OwnerId);
+    }
+
+    private static User createUser(Id profileId, String aliasValue, String firstName, String lastName, String emailPrefix) {
+        String uniqueValue = emailPrefix + System.currentTimeMillis() + Math.abs(Crypto.getRandomInteger());
+        return new User(
+            Alias = aliasValue,
+            Email = uniqueValue + '@example.com',
+            EmailEncodingKey = 'UTF-8',
+            FirstName = firstName,
+            LastName = lastName,
+            LanguageLocaleKey = 'en_US',
+            LocaleSidKey = 'en_US',
+            ProfileId = profileId,
+            TimeZoneSidKey = 'America/New_York',
+            UserName = uniqueValue + '@example.com'
+        );
+    }
+
+    private static LeadUser__c createLeadUser(User userRecord, String schoolCode, Decimal levelValue) {
+        return new LeadUser__c(
+            Name = userRecord.FirstName + ' ' + userRecord.LastName,
+            SchoolCode__c = schoolCode,
+            Level__c = levelValue
+        );
+    }
+
+    private static Id getUserIdByAlias(String aliasValue) {
+        return [SELECT Id FROM User WHERE Alias = :aliasValue LIMIT 1].Id;
+    }
+
+    private static Id getAccountId(String schoolCode) {
+        return [SELECT Id FROM Account WHERE School_Short_Code__c = :schoolCode LIMIT 1].Id;
     }
 }
