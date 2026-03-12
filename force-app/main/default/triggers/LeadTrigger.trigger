@@ -1,4 +1,4 @@
-trigger LeadTrigger on Lead (before insert, before update, after update) {
+trigger LeadTrigger on Lead (before insert, before update, after insert, after update) {
     if (RecursiveTriggerHandler.skipTrigger) {
         System.debug('--- LeadTrigger skipped due to test flag ---');
         return;
@@ -42,6 +42,13 @@ trigger LeadTrigger on Lead (before insert, before update, after update) {
 
             ld.MC_Mobile_No__c = inputNumber;
         }
+    }
+
+    if (Trigger.isAfter && (Trigger.isInsert || Trigger.isUpdate)) {
+        AssignLeadOwnerHandler.assignOwners(
+            Trigger.new,
+            Trigger.isUpdate ? Trigger.oldMap : null
+        );
     }
 
     

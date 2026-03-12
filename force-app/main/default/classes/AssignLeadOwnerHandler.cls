@@ -1,6 +1,5 @@
 public without sharing class AssignLeadOwnerHandler {
     public static void assignOwners(List<Lead> newLeads, Map<Id, Lead> oldMap) {
-        RecursiveTriggerHandler.skipTrigger = true;
         if (newLeads == null || newLeads.isEmpty()) {
             return;
         }
@@ -47,20 +46,28 @@ public without sharing class AssignLeadOwnerHandler {
             return;
         }
 
-        Map<String, String> schoolCodeToLeadUserName = new Map<String, String>();
+        Map<String, LeadUser__c> schoolCodeToLevelOneLeadUser = new Map<String, LeadUser__c>();
+        Map<String, LeadUser__c> schoolCodeToLevelTwoLeadUser = new Map<String, LeadUser__c>();
+        Set<String> leadUserNames = new Set<String>();
         for (LeadUser__c leadUser : [
-            SELECT Name, SchoolCode__c, Level__c
+            SELECT Id, Name, SchoolCode__c, Level__c
             FROM LeadUser__c
             WHERE SchoolCode__c IN :schoolCodes
-            AND Level__c = 1
         ]) {
             String schoolCode = normalizeSchoolCode(leadUser.SchoolCode__c);
-            if (String.isNotBlank(schoolCode) && !schoolCodeToLeadUserName.containsKey(schoolCode)) {
-                schoolCodeToLeadUserName.put(schoolCode, leadUser.Name);
+            if (String.isBlank(schoolCode)) {
+                continue;
+            }
+
+            if (leadUser.Level__c == 1 && !schoolCodeToLevelOneLeadUser.containsKey(schoolCode)) {
+                schoolCodeToLevelOneLeadUser.put(schoolCode, leadUser);
+                leadUserNames.add(leadUser.Name);
+            } else if (leadUser.Level__c == 2 && !schoolCodeToLevelTwoLeadUser.containsKey(schoolCode)) {
+                schoolCodeToLevelTwoLeadUser.put(schoolCode, leadUser);
             }
         }
 
-        if (schoolCodeToLeadUserName.isEmpty()) {
+        if (leadUserNames.isEmpty()) {
             return;
         }
 
@@ -68,22 +75,45 @@ public without sharing class AssignLeadOwnerHandler {
         for (User userRecord : [
             SELECT Id, Name
             FROM User
-            WHERE Name IN :schoolCodeToLeadUserName.values()
+            WHERE Name IN :leadUserNames
         ]) {
             userNameToUserId.put(userRecord.Name, userRecord.Id);
         }
 
+        List<Lead> leadsToUpdate = new List<Lead>();
+        Set<String> schoolCodesToSwap = new Set<String>();
+        Map<Id, Id> leadIdToAssignedOwnerId = new Map<Id, Id>();
         for (Lead leadRecord : leadsToProcess) {
             String schoolCode = institutionToSchoolCode.get(leadRecord.School_Institution__c);
             if (String.isBlank(schoolCode)) {
                 continue;
             }
-            String leadUserName = schoolCodeToLeadUserName.get(schoolCode);
-            Id ownerId = String.isBlank(leadUserName) ? null : userNameToUserId.get(leadUserName);
-            if (ownerId != null) {
-                leadRecord.OwnerId = ownerId;
+
+            LeadUser__c levelOneLeadUser = schoolCodeToLevelOneLeadUser.get(schoolCode);
+            LeadUser__c levelTwoLeadUser = schoolCodeToLevelTwoLeadUser.get(schoolCode);
+            if (levelOneLeadUser == null || levelTwoLeadUser == null) {
+                continue;
+            }
+
+            Id ownerId = userNameToUserId.get(levelOneLeadUser.Name);
+            if (ownerId == null) {
+                continue;
+            }
+
+            if (!isUpdate) {
+                schoolCodesToSwap.add(schoolCode);
+                leadIdToAssignedOwnerId.put(leadRecord.Id, ownerId);
             }
         }
+
+        if (isUpdate || schoolCodesToSwap.isEmpty()) {
+            return;
+        }
+
+        System.enqueueJob(new AssignLeadOwnerLevelSwapQueueable(
+            new List<String>(schoolCodesToSwap),
+            new Map<Id, Id>(leadIdToAssignedOwnerId)
+        ));
     }
 
     private static String normalizeSchoolCode(String schoolCode) {
