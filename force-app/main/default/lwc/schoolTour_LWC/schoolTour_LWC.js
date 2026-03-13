@@ -8,6 +8,9 @@ import getSubjectPicklistValues from '@salesforce/apex/SchoolTourController_LWC.
 import getLeadUser from '@salesforce/apex/SchoolTourController_LWC.getLeadUser';
 import createEventLWC from '@salesforce/apex/SchoolTourController_LWC.createEventLWC';
 
+import { notifyRecordUpdateAvailable } from 'lightning/uiRecordApi';
+import { CloseActionScreenEvent } from 'lightning/actions';
+
 export default class SchoolTour_LWC extends NavigationMixin(LightningElement) {
 
     showEventInformation = true;
@@ -131,20 +134,18 @@ export default class SchoolTour_LWC extends NavigationMixin(LightningElement) {
         this.selectedUserName = selectedOption ? selectedOption.label : null;
         this.eventRecord.OwnerId = this.selectedUserId;
     }
+
     handleSubmit() {
         console.log('this.eventRecord', JSON.parse(JSON.stringify(this.eventRecord)));
         if (!this.validateEventDates()) {
-            return; // stop execution if dates are invalid
+            return;
         }
+
         this.isLoading = true;
-        // if (!this.selectedSubject || !this.eventRecord.StartDateTime || !this.eventRecord.EndDateTime) {
-        //     this.showToast('Error', 'All fields are required.', 'error');
-        //     return;
-        // }
 
         console.error('this.SchoolTourScheduled-->', this.SchoolTourScheduled);
-        console.error(' this.selectedSubject.', this.selectedSubject);
-        console.error(' this.eventRecord.StartDateTime.', this.eventRecord.StartDateTime);
+        console.error('this.selectedSubject.', this.selectedSubject);
+        console.error('this.eventRecord.StartDateTime.', this.eventRecord.StartDateTime);
         console.error('this.eventRecord.Description', this.eventRecord.Description);
         console.error('this.schoolid', this.schoolid);
         console.error('this.contactId', this.contactId);
@@ -158,30 +159,23 @@ export default class SchoolTour_LWC extends NavigationMixin(LightningElement) {
             subject: this.selectedSubject,
             startDateTime: this.eventRecord.StartDateTime,
             endDateTime: this.eventRecord.EndDateTime,
-            description: this.eventRecord.Description,
+            description: this.eventRecord.Description
         })
-            .then(result => {
-                this.showToast('Success', result, 'success');
-                this.resetForm();
-                console.error('this.recordid', this.recordId);
-                this[NavigationMixin.Navigate]({
-                    type: 'standard__recordPage',
-                    attributes: {
-                        recordId: this.recordId, // Replace with the actual record ID or a dynamic ID
-                        objectApiName: 'Enquiry__c', // Replace with the correct object API name
-                        actionName: 'view'
-                    }
-                });
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1500)
-            })
-            .catch(error => {
-                this.isLoading = false;
-                console.error('Error creating event:', error);
-                this.showToast('Error', 'Failed to create event.', 'error');
-            });
+        .then(result => {
+            this.showToast('Success', result, 'success');
+            this.resetForm();
 
+            notifyRecordUpdateAvailable([{ recordId: this.recordId }]);
+
+            this.dispatchEvent(new CloseActionScreenEvent());
+
+            this.isLoading = false;
+        })
+        .catch(error => {
+            this.isLoading = false;
+            console.error('Error creating event:', error);
+            this.showToast('Error', 'Failed to create event.', 'error');
+        });
     }
     handleCancel() {
         // Programmatically close the quick action modal
