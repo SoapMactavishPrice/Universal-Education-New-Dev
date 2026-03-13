@@ -8,6 +8,9 @@ import getSubjectPicklistValues from '@salesforce/apex/SchoolTourController_LWC.
 import getLeadUser from '@salesforce/apex/SchoolTourController_LWC.getLeadUser';
 import schoolTourRescheduled from '@salesforce/apex/SchoolTourController_LWC.schoolTourRescheduled';
 
+import { notifyRecordUpdateAvailable } from 'lightning/uiRecordApi';
+import { CloseActionScreenEvent } from 'lightning/actions';
+
 export default class SchoolTourReschedule_LWC extends NavigationMixin(LightningElement) {
 
     showEventInformation = true;
@@ -134,16 +137,13 @@ export default class SchoolTourReschedule_LWC extends NavigationMixin(LightningE
     }
     handleSubmit() {
         if (!this.validateEventDates()) {
-            return; // stop execution if dates are invalid
+            return;
         }
-        this.showSpinner = true;
-        // if (!this.selectedSubject || !this.eventRecord.StartDateTime || !this.eventRecord.EndDateTime) {
-        //     this.showToast('Error', 'All fields are required.', 'error');
-        //     return;
-        // }
 
-        console.error(' this.selectedSubject.', this.selectedSubject);
-        console.error(' this.eventRecord.StartDateTime.', this.eventRecord.StartDateTime);
+        this.showSpinner = true;
+
+        console.error('this.selectedSubject.', this.selectedSubject);
+        console.error('this.eventRecord.StartDateTime.', this.eventRecord.StartDateTime);
         console.error('this.eventRecord.Description', this.eventRecord.Description);
         console.error('this.schoolid', this.schoolid);
         console.error('this.contactId', this.contactId);
@@ -160,32 +160,23 @@ export default class SchoolTourReschedule_LWC extends NavigationMixin(LightningE
             ownerId: this.eventRecord.OwnerId,
             enquiryId: this.recordId
         })
-            .then(result => {
-                if (result == 'Success') {
-                    this.showToast('Success', result, 'success');
-                    this.resetForm();
-                    console.error('this.recordid', this.recordId);
-                    this[NavigationMixin.Navigate]({
-                        type: 'standard__recordPage',
-                        attributes: {
-                            recordId: this.recordId, // Replace with the actual record ID or a dynamic ID
-                            objectApiName: 'Enquiry__c', // Replace with the correct object API name
-                            actionName: 'view'
-                        }
-                    });
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 1500)
-                } else {
-                    this.showSpinner = false;
-                }
+        .then(result => {
+            if (result === 'Success') {
+                this.showToast('Success', result, 'success');
+                this.resetForm();
 
-            })
-            .catch(error => {
+                notifyRecordUpdateAvailable([{ recordId: this.recordId }]);
+
+                this.dispatchEvent(new CloseActionScreenEvent());
+            } else {
                 this.showSpinner = false;
-                console.error('Error creating event:', error);
-                this.showToast('Error', 'Failed to create event.', 'error');
-            });
+            }
+        })
+        .catch(error => {
+            this.showSpinner = false;
+            console.error('Error creating event:', error);
+            this.showToast('Error', 'Failed to create event.', 'error');
+        });
     }
    
     showToast(title, message, variant) {
