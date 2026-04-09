@@ -102,7 +102,7 @@ public without sharing class VerifyDocumentsController {
         
         Application_Form__c appForm = [
             SELECT Id, Student_Name__c, Enquiry__r.Owner.Email,
-                Enquiry__r.Email__c, Enquiry__r.School_Institution__r.Name,
+                Enquiry__r.Email__c, Enquiry__r.School_Institution__r.Name, Enquiry__r.School_Institution__r.School_Email__c,
                 Enquiry__r.School_Institution__r.Phone
             FROM Application_Form__c
             WHERE Id = :applicationFormId
@@ -142,7 +142,7 @@ public without sharing class VerifyDocumentsController {
             'Thank you for filling out the application for ' + appForm.Student_Name__c + '\'s admission at ' +
             appForm.Enquiry__r.School_Institution__r.Name + '. Please note that the following mandatory documents were not received or require resubmission.<br/><br/>' +
             tableHtml + '<br/><br/>' +
-            'Kindly furnish the above documents by replying to this email at ' + appForm.Enquiry__r.Owner.Email + 
+            'Kindly furnish the above documents by replying to this email at ' + appForm.Enquiry__r.School_Institution__r.School_Email__c + 
             ' within 3 working days to proceed with the admission process.<br/><br/>' +
             'The admission remains provisional until the above documents are received and accepted by the school. ' +
             'If you have any questions, please reach out to your Admission Counsellor at ' +
