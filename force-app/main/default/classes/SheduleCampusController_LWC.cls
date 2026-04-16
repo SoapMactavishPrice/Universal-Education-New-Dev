@@ -52,11 +52,16 @@ public class SheduleCampusController_LWC {
         System.debug('schoolShortCode: ' + schoolShortCode);
         
         // Query the LeadUser__c records filtered by the provided schoolShortCode
+        String managerLabel = System.Label.Stellar_Manager;
+        User stellarManager = [SELECT Id, Name FROM User WHERE Name = :managerLabel LIMIT 1];
         List<LeadUser__c> leadUsers = [SELECT Name FROM LeadUser__c WHERE SchoolCode__c = :schoolShortCode];
         Set<String> leadUserNames = new Set<String>();
         for (LeadUser__c lead : leadUsers) {
             leadUserNames.add(lead.Name);
             System.debug('leadUserNames'+leadUserNames);
+        }
+        if (stellarManager != null && stellarManager.Name != null && schoolShortCode.startswith('STELR')) {
+            leadUserNames.add(stellarManager.Name);
         }
         System.debug('leadUsers: ' + leadUsers);
         return [SELECT Id, Name FROM User WHERE Name IN :leadUserNames];
