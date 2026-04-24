@@ -167,6 +167,7 @@ global without sharing class SendEmail {
         EmailTemplate emailTemp = [Select id, Subject, Body From EmailTemplate Where DeveloperName = :temname];
         // Contact con = [Select Id, Email from Contact where LastName ='Test'];
         //List<Enquiry__c> listen=[Select Id, Eami from Enquiry__c where id=]
+
         String currentUserEmail = UserInfo.getUserEmail();
         Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
         if (temname.contains('OTP') && mdt.CCAddress__c!=null) {
@@ -191,8 +192,10 @@ global without sharing class SendEmail {
         for(OrgWideEmailAddress owa : [SELECT Id, Address,DisplayName from OrgWideEmailAddress]) {
             // if(owa.DisplayName.contains(orgwideContains)){
                 if(owa.DisplayName.contains(mdt.DisplayName__c)){
-                    
                     mail.setOrgWideEmailAddressId(owa.id);
+                } else if (temname.contains('Send_Application_Link') && mdt.SchoolShortcode__c.startswith('STELR') && owa.DisplayName.startswith('Admissions') && owa.DisplayName.contains(mdt.SchoolShortcode__c)) {
+                    mail.setOrgWideEmailAddressId(owa.id);
+                    break;
                 }
             }
             // mail.
