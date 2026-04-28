@@ -45,6 +45,7 @@ global class getLeadDetailsAPI {
                 WHERE MobilePhone = :jsonObj.customerNumber
                 AND School_Short_Code__c = :schoolShortCode
                 AND Acadmic_Year__c = :getCurrentAcademicYear()
+                ORDER BY CreatedDate DESC
                 LIMIT 1
             ];
 
