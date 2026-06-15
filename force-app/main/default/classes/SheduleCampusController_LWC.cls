@@ -57,7 +57,9 @@ public class SheduleCampusController_LWC {
         List<LeadUser__c> leadUsers = [SELECT Name FROM LeadUser__c WHERE SchoolCode__c = :schoolShortCode];
         Set<String> leadUserNames = new Set<String>();
         for (LeadUser__c lead : leadUsers) {
-            leadUserNames.add(lead.Name);
+            if (!leadUserNames.contains(lead.Name)) {
+                leadUserNames.add(lead.Name);
+            }
             System.debug('leadUserNames'+leadUserNames);
         }
         if (stellarManager != null && stellarManager.Name != null && schoolShortCode.startswith('STELR')) {
